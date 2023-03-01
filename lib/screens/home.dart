@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medeasy/screens/screens.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -95,7 +96,9 @@ class _HomeState extends State<Home> {
             ),
             //const SizedBox(height: 40),
             const Spacer(),
-            const Text('Are you curious about your state of mental health!, Take our Quick online diagnosis test using our app.', style: TextStyle(fontSize: 16)),
+            const Text(
+                'Are you curious about your state of mental health!, Take our Quick online diagnosis test using our app.',
+                style: TextStyle(fontSize: 16)),
             const SizedBox(height: 10),
             GestureDetector(
               onTap: () {},
@@ -115,7 +118,9 @@ class _HomeState extends State<Home> {
               ),
             ),
             const SizedBox(height: 40),
-            const Text('Sign up and join other specialist on our platform and gain access to more people seeking your help online or physically.', style: TextStyle(fontSize: 16)),
+            const Text(
+                'Sign up and join other specialist on our platform and gain access to more people seeking your help online or physically.',
+                style: TextStyle(fontSize: 16)),
             const SizedBox(height: 10),
             GestureDetector(
               onTap: () {},
@@ -139,7 +144,11 @@ class _HomeState extends State<Home> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (BuildContext context) => const Diagnosis(),
+          ));
+        },
         tooltip: 'Schedule an appointment',
         backgroundColor: const Color(0xFF0FA958),
         child: const Icon(Icons.schedule, size: 36),
