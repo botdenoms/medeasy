@@ -44,8 +44,10 @@ class _RegistrationState extends State<Registration> {
               const TextField(
                 decoration: InputDecoration(hintText: 'Lincence'),
               ),
-              const SizedBox(height: 40),
-              const SizedBox(height: 30),
+              const TextField(
+                decoration: InputDecoration(hintText: 'Registration No'),
+              ),
+              const SizedBox(height: 70),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

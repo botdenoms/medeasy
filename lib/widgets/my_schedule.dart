@@ -12,12 +12,12 @@ class _MyScehduleState extends State<MyScehdule> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -44,13 +44,13 @@ class _MyScehduleState extends State<MyScehdule> {
                 const SizedBox(height: 10),
               ],
             ),
-            Expanded(
-              child: ListView(
-                children: const [ScheduleCard()],
-              ),
+          ),
+          Expanded(
+            child: ListView(
+              children: const [ScheduleCard()],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -17,18 +17,26 @@ class _AccountState extends State<Account> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Color(0xFF1E1E1E),
+          ),
         ),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: const Icon(Icons.account_circle_rounded, size: 36),
+            icon: const Icon(
+              Icons.account_circle_rounded,
+              size: 36,
+              color: Color(0xFF1E1E1E),
+            ),
           ),
         ],
       ),

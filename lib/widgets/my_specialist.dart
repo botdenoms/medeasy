@@ -37,36 +37,48 @@ class _MySpecialistState extends State<MySpecialist> {
           Expanded(
             child: Center(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   const Text(
-                    'Create a specialist \n account',
+                    'Create a specialist',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  const Text(
+                    'account',
                     style: TextStyle(fontSize: 15),
                   ),
                   const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              const Registration(),
+                  Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) =>
+                                  const Registration(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            10.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1E1EEE),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Register',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        10.0,
                       ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1E1EEE),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Register',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
+                    ],
                   ),
                 ],
               ),
