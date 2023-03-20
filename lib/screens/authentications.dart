@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './screens.dart';
+import '../widgets/widgets.dart';
 
 class Authentications extends StatefulWidget {
   const Authentications({super.key});
@@ -10,6 +11,12 @@ class Authentications extends StatefulWidget {
 }
 
 class _AuthenticationsState extends State<Authentications> {
+  bool user = false;
+  bool reset = false;
+  String signUpText = 'Join others already on the platform';
+  String logInText = 'Welcome back';
+  String resetText = 'Password reset';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,35 +36,57 @@ class _AuthenticationsState extends State<Authentications> {
                 icon: const Icon(Icons.arrow_back_ios_new_rounded),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Join others already on the platform',
-                style: TextStyle(fontSize: 17),
+              Text(
+                reset? resetText: user ? logInText : signUpText,
+                style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 20),
-              const TextField(
-                decoration: InputDecoration(hintText: 'Name'),
-              ),
-              const TextField(
-                decoration: InputDecoration(hintText: '07...'),
-              ),
-              const TextField(
-                decoration: InputDecoration(hintText: 'Email@sm.com'),
-              ),
-              const TextField(
-                decoration: InputDecoration(hintText: 'password'),
-              ),
+              reset
+                  ? const ResetWidget()
+                  : user
+                      ? const LogInWidget()
+                      : const SignUpWidget(),
+              // const TextField(
+              //   decoration: InputDecoration(hintText: 'Name'),
+              // ),
+              // const TextField(
+              //   decoration: InputDecoration(hintText: '07...'),
+              // ),
+              // const TextField(
+              //   decoration: InputDecoration(hintText: 'Email@sm.com'),
+              // ),
+              // const TextField(
+              //   decoration: InputDecoration(hintText: 'password'),
+              // ),
               const SizedBox(height: 40),
-              const Center(
-                child: Text(
-                  'Have an account, log in',
-                  style: TextStyle(fontSize: 17),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      reset = false;
+                      user = !user;
+                    });
+                  },
+                  child: Text(
+                    user
+                        ? 'Don\'t have an account, SignUp'
+                        : 'Have an account, log in',
+                    style: const TextStyle(fontSize: 17),
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
-              const Center(
-                child: Text(
-                  'Forgot the password!',
-                  style: TextStyle(fontSize: 14),
+              reset? const SizedBox():Center(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      reset = true;
+                    });
+                  },
+                  child: const Text(
+                    'Forgot the password!',
+                    style: TextStyle(fontSize: 14),
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
@@ -81,10 +110,14 @@ class _AuthenticationsState extends State<Authentications> {
                         color: const Color(0xFF1E1EEE),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          'Sign Up',
-                          style: TextStyle(fontSize: 16),
+                          reset
+                              ? 'Reset'
+                              : user
+                                  ? 'Log In'
+                                  : 'Sign Up',
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                     ),
