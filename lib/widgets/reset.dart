@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ResetWidget extends StatefulWidget {
-  const ResetWidget({super.key});
+  const ResetWidget({super.key, required this.email, required this.name});
+
+  final TextEditingController email;
+  final TextEditingController name;
 
   @override
   State<ResetWidget> createState() => _ResetWidgetState();
@@ -11,12 +14,14 @@ class _ResetWidgetState extends State<ResetWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: const [
+      children: [
         TextField(
-          decoration: InputDecoration(hintText: 'Name'),
+          controller: widget.name,
+          decoration: const InputDecoration(hintText: 'Name'),
         ),
         TextField(
-          decoration: InputDecoration(hintText: 'Email@sm.com'),
+          controller: widget.email,
+          decoration: const InputDecoration(hintText: 'Email@sm.com'),
         ),
       ],
     );
