@@ -35,4 +35,9 @@ class UserController extends GetxController {
       return null;
     }
   }
+
+  Future<bool> logOut() async {
+    await auth.signOut();
+    return true;
+  }
 }
