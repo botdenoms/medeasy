@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import './screens.dart';
 import '../widgets/widgets.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../model/models.dart';
+import 'package:get/get.dart';
+import 'package:medeasy/controllers/controllers.dart';
 
 class Authentications extends StatefulWidget {
   const Authentications({super.key});
@@ -169,26 +170,29 @@ class _AuthenticationsState extends State<Authentications> {
         // empty fields
         return false;
       } else {
+        final UserController userCon = Get.find();
+        bool success = await userCon.logIn(email.text, password.text);
+        return success;
         // check user pass
-        try {
-          // ignore: unused_local_variable
-          final credential =
-              await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: email.text,
-            password: password.text,
-          );
-          return true;
-        } catch (e) {
-          // on FirebaseAuthException
-          // if (e.code == 'user-not-found') {
-          //   print('No user found for that email.');
-          // } else if (e.code == 'wrong-password') {
-          //   print('Wrong password provided for that user.');
-          // }
-          // ignore: avoid_print
-          print(e);
-          return false;
-        }
+        // try {
+        //   // ignore: unused_local_variable
+        //   final credential =
+        //       await FirebaseAuth.instance.signInWithEmailAndPassword(
+        //     email: email.text,
+        //     password: password.text,
+        //   );
+        //   return true;
+        // } catch (e) {
+        //   // on FirebaseAuthException
+        //   // if (e.code == 'user-not-found') {
+        //   //   print('No user found for that email.');
+        //   // } else if (e.code == 'wrong-password') {
+        //   //   print('Wrong password provided for that user.');
+        //   // }
+        //   // ignore: avoid_print
+        //   print(e);
+        //   return false;
+        // }
       }
     } else {
       // sign up
@@ -199,40 +203,55 @@ class _AuthenticationsState extends State<Authentications> {
         // empty fields
         return false;
       } else {
-        // new user
-        try {
-          // ignore: unused_local_variable
-          final credential =
-              await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: email.text,
-            password: password.text,
-          );
-          //  firestore add user data
-final db = FirebaseFirestore.instance;
-          Map<String, dynamic> data = {
-            'name': name.text,
-            'telephone': telephone.text,
-            'email': email.text,
-            'specialist': false,
-            'at': DateTime.now(),
-          };
-          await db
-              .collection('users')
-              .doc(credential.user?.uid)
-              .set(data)
-              // ignore: avoid_print
-              .onError((e, _) => print(e));
-          return true;
-        } catch (e) {
-          // if (e.code == 'weak-password') {
-          //   print('The password provided is too weak.');
-          // } else if (e.code == 'email-already-in-use') {
-          //   print('The account already exists for that email.');
-          // }
-          // ignore: avoid_print
-          print(e);
+        final UserController userCon = Get.find();
+        final FireStoreController fireCon = Get.find();
+        String? id = await userCon.singUp(email.text, password.text);
+        if (id == null) {
           return false;
+        } else {
+          User user = User(
+            name: name.text,
+            email: email.text,
+            telephone: telephone.text,
+            at: DateTime.now(),
+          );
+          bool success = await fireCon.addUser(user, id);
+          return success;
         }
+        // new user
+//         try {
+//           // ignore: unused_local_variable
+//           final credential =
+//               await FirebaseAuth.instance.createUserWithEmailAndPassword(
+//             email: email.text,
+//             password: password.text,
+//           );
+//           //  firestore add user data
+// final db = FirebaseFirestore.instance;
+//           Map<String, dynamic> data = {
+//             'name': name.text,
+//             'telephone': telephone.text,
+//             'email': email.text,
+//             'specialist': false,
+//             'at': DateTime.now(),
+//           };
+//           await db
+//               .collection('users')
+//               .doc(credential.user?.uid)
+//               .set(data)
+//               // ignore: avoid_print
+//               .onError((e, _) => print(e));
+//           return true;
+//         } catch (e) {
+//           // if (e.code == 'weak-password') {
+//           //   print('The password provided is too weak.');
+//           // } else if (e.code == 'email-already-in-use') {
+//           //   print('The account already exists for that email.');
+//           // }
+//           // ignore: avoid_print
+//           print(e);
+//           return false;
+//         }
       }
     }
   }

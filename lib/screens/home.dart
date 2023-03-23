@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:medeasy/screens/screens.dart';
 import 'package:medeasy/widgets/widgets.dart';
 
+import 'package:get/get.dart';
+import 'package:medeasy/controllers/controllers.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -10,6 +13,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final UserController userCon = Get.put(UserController());
+  final FireStoreController fireCon = Get.put(FireStoreController());
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
@@ -23,12 +28,20 @@ class _HomeScreenState extends State<HomeScreen> {
             actions: [
               IconButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          const Authentications(),
-                    ),
-                  );
+                  if (userCon.user() == null) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const Authentications(),
+                      ),
+                    );
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const Account(),
+                      ),
+                    );
+                  }
                 },
                 icon: const Icon(Icons.account_circle_rounded,
                     color: Colors.black, size: 36),
