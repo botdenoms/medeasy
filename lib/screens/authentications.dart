@@ -117,7 +117,7 @@ class _AuthenticationsState extends State<Authentications> {
                         return;
                       }
                       // ignore: use_build_context_synchronously
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushReplacement(
                         MaterialPageRoute<void>(
                           builder: (BuildContext context) => const Account(),
                         ),
@@ -173,26 +173,6 @@ class _AuthenticationsState extends State<Authentications> {
         final UserController userCon = Get.find();
         bool success = await userCon.logIn(email.text, password.text);
         return success;
-        // check user pass
-        // try {
-        //   // ignore: unused_local_variable
-        //   final credential =
-        //       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        //     email: email.text,
-        //     password: password.text,
-        //   );
-        //   return true;
-        // } catch (e) {
-        //   // on FirebaseAuthException
-        //   // if (e.code == 'user-not-found') {
-        //   //   print('No user found for that email.');
-        //   // } else if (e.code == 'wrong-password') {
-        //   //   print('Wrong password provided for that user.');
-        //   // }
-        //   // ignore: avoid_print
-        //   print(e);
-        //   return false;
-        // }
       }
     } else {
       // sign up
@@ -218,40 +198,6 @@ class _AuthenticationsState extends State<Authentications> {
           bool success = await fireCon.addUser(user, id);
           return success;
         }
-        // new user
-//         try {
-//           // ignore: unused_local_variable
-//           final credential =
-//               await FirebaseAuth.instance.createUserWithEmailAndPassword(
-//             email: email.text,
-//             password: password.text,
-//           );
-//           //  firestore add user data
-// final db = FirebaseFirestore.instance;
-//           Map<String, dynamic> data = {
-//             'name': name.text,
-//             'telephone': telephone.text,
-//             'email': email.text,
-//             'specialist': false,
-//             'at': DateTime.now(),
-//           };
-//           await db
-//               .collection('users')
-//               .doc(credential.user?.uid)
-//               .set(data)
-//               // ignore: avoid_print
-//               .onError((e, _) => print(e));
-//           return true;
-//         } catch (e) {
-//           // if (e.code == 'weak-password') {
-//           //   print('The password provided is too weak.');
-//           // } else if (e.code == 'email-already-in-use') {
-//           //   print('The account already exists for that email.');
-//           // }
-//           // ignore: avoid_print
-//           print(e);
-//           return false;
-//         }
       }
     }
   }

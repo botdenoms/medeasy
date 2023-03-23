@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medeasy/screens/screens.dart';
 import 'package:medeasy/widgets/widgets.dart';
 
+import '../model/models.dart';
 import 'package:get/get.dart';
 import 'package:medeasy/controllers/controllers.dart';
 
@@ -15,6 +16,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final UserController userCon = Get.put(UserController());
   final FireStoreController fireCon = Get.put(FireStoreController());
+  List<Specialist> specialists = [];
+
+  featuredSpecialist() async {
+    final resp = await fireCon.getSpecialists();
+    setState(() {
+      specialists = resp!;
+    });
+  }
+
+  @override
+  void initState() {
+    featuredSpecialist();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
@@ -126,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
               (_, int index) {
                 return const SpecialistCard();
               },
-              childCount: 20,
+              childCount: specialists.length,
             ),
           )
         ],

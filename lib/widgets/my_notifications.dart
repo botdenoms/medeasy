@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:medeasy/widgets/widgets.dart';
 
+import '../model/models.dart';
+
 class MyNotifications extends StatefulWidget {
-  const MyNotifications({super.key});
+  const MyNotifications({super.key, required this.user});
+  final User user;
 
   @override
   State<MyNotifications> createState() => _MyNotificationsState();
@@ -22,11 +25,12 @@ class _MyNotificationsState extends State<MyNotifications> {
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: const [
-                    CircleAvatar(radius: 28, backgroundColor: Colors.amber),
+                  children: [
+                    const CircleAvatar(
+                        radius: 28, backgroundColor: Colors.amber),
                     Text(
-                      'User Name',
-                      style: TextStyle(fontSize: 16),
+                      widget.user.name,
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ],
                 ),

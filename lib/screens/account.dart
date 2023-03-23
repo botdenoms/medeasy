@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/widgets.dart';
+import '../screens/screens.dart';
+import '../model/models.dart';
+
+import 'package:get/get.dart';
+import 'package:medeasy/controllers/controllers.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -11,7 +16,25 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   int tab = 0;
-  List<Widget> bodys = const [MyScehdule(), MyNotifications(), MySpecialist()];
+
+  late User user;
+
+  @override
+  void initState() {
+    userRecords();
+    super.initState();
+  }
+
+  void userRecords() async {
+    final UserController userCon = Get.find();
+    final FireStoreController fireCon = Get.find();
+    String? id = userCon.user()!.uid;
+    User? usr = await fireCon.userData(id);
+    setState(() {
+      user = usr!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +43,11 @@ class _AccountState extends State<Account> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => const HomeScreen(),
+              ),
+            );
           },
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
@@ -30,6 +57,9 @@ class _AccountState extends State<Account> {
         actions: [
           IconButton(
             onPressed: () {
+              // log out
+              final UserController userCon = Get.find();
+              userCon.logOut();
               Navigator.of(context).pop();
             },
             icon: const Icon(
@@ -40,7 +70,17 @@ class _AccountState extends State<Account> {
           ),
         ],
       ),
-      body: bodys[tab],
+      body: tab == 0
+          ? MyScehdule(
+              user: user,
+            )
+          : tab == 1
+              ? MyNotifications(
+                  user: user,
+                )
+              : MySpecialist(
+                  user: user,
+                ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: tab,
         selectedItemColor: Colors.greenAccent,

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:medeasy/widgets/widgets.dart';
 
+import '../model/models.dart';
+
 class MyScehdule extends StatefulWidget {
-  const MyScehdule({super.key});
+  const MyScehdule({super.key, required this.user});
+  final User user;
 
   @override
   State<MyScehdule> createState() => _MyScehduleState();
@@ -23,11 +26,12 @@ class _MyScehduleState extends State<MyScehdule> {
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: const [
-                    CircleAvatar(radius: 28, backgroundColor: Colors.amber),
+                  children: [
+                    const CircleAvatar(
+                        radius: 28, backgroundColor: Colors.amber),
                     Text(
-                      'User Name',
-                      style: TextStyle(fontSize: 16),
+                      widget.user.name,
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
