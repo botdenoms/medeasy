@@ -12,6 +12,16 @@ class FireStoreController extends GetxController {
     return _fireStore;
   }
 
+  Future<bool> addSpecialist(Specialist user) async {
+    try {
+      await _fireStore.collection('specialists').doc().set(user.toMap());
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
   Future<List<Specialist>?> getSpecialists() async {
     List<Specialist> retList = [];
     try {

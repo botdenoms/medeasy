@@ -16,12 +16,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final UserController userCon = Get.put(UserController());
   final FireStoreController fireCon = Get.put(FireStoreController());
+  final StorageController storeCon = Get.put(StorageController());
   List<Specialist> specialists = [];
+
+  bool loading = true;
 
   featuredSpecialist() async {
     final resp = await fireCon.getSpecialists();
     setState(() {
       specialists = resp!;
+      loading = false;
     });
   }
 
@@ -137,14 +141,36 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text('Featured specialist'),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (_, int index) {
-                return const SpecialistCard();
-              },
-              childCount: specialists.length,
-            ),
-          )
+          loading
+              ? const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black38,
+                      ),
+                    ),
+                  ),
+                )
+              : specialists.isEmpty
+                  ? const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 200,
+                        width: double.infinity,
+                        child: Center(
+                          child: Text('No specialist found'),
+                        ),
+                      ),
+                    )
+                  : SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (_, int index) {
+                          return const SpecialistCard();
+                        },
+                        childCount: specialists.length,
+                      ),
+                    ),
         ],
       ),
     );

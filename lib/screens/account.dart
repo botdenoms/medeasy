@@ -16,7 +16,7 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   int tab = 0;
-
+  bool loading = true;
   late User user;
 
   @override
@@ -32,6 +32,7 @@ class _AccountState extends State<Account> {
     User? usr = await fireCon.userData(id);
     setState(() {
       user = usr!;
+      loading = false;
     });
   }
 
@@ -70,17 +71,21 @@ class _AccountState extends State<Account> {
           ),
         ],
       ),
-      body: tab == 0
-          ? MyScehdule(
-              user: user,
+      body: loading
+          ? const Center(
+              child: CircularProgressIndicator(color: Colors.black38),
             )
-          : tab == 1
-              ? MyNotifications(
+          : tab == 0
+              ? MyScehdule(
                   user: user,
                 )
-              : MySpecialist(
-                  user: user,
-                ),
+              : tab == 1
+                  ? MyNotifications(
+                      user: user,
+                    )
+                  : MySpecialist(
+                      user: user,
+                    ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: tab,
         selectedItemColor: Colors.greenAccent,

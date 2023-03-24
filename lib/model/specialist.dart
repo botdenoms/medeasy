@@ -5,6 +5,7 @@ class Specialist {
   final String regNo;
   final String cert;
   final String id;
+  bool verified = false;
 
   Specialist({
     required this.speciality,

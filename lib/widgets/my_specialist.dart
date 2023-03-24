@@ -40,7 +40,7 @@ class _MySpecialistState extends State<MySpecialist> {
           ),
           Expanded(
             child: Center(
-              child: widget.user.specialist == true
+              child: widget.user.specialist == false
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
