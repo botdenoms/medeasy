@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import './screens.dart';
+import '../model/models.dart';
 
 class SpecialistView extends StatefulWidget {
-  const SpecialistView({super.key});
+  const SpecialistView({super.key, required this.specialist});
+  final Specialist specialist;
 
   @override
   State<SpecialistView> createState() => _SpecialistViewState();
@@ -32,22 +34,38 @@ class _SpecialistViewState extends State<SpecialistView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: const [
-                  CircleAvatar(radius: 28, backgroundColor: Colors.amber),
+                children: [
+                  ClipOval(
+                    child: SizedBox(
+                      height: 56,
+                      width: 56,
+                      child: Image.network(
+                        widget.specialist.profile,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                   Text(
-                    'Verified',
-                    style: TextStyle(color: Colors.greenAccent, fontSize: 14),
+                    widget.specialist.verified ? 'Verified' : 'UnVerified',
+                    style: TextStyle(
+                        color: widget.specialist.verified
+                            ? Colors.greenAccent
+                            : Colors.redAccent,
+                        fontSize: 14),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
-              const Text('Dr Doc Name', style: TextStyle(fontSize: 16)),
+              Text(widget.specialist.name,
+                  style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text('Dermatologist', style: TextStyle(fontSize: 16)),
-                  Text('Nairobi, Kenya', style: TextStyle(fontSize: 16)),
+                children: [
+                  Text(widget.specialist.speciality,
+                      style: const TextStyle(fontSize: 16)),
+                  Text(widget.specialist.location,
+                      style: const TextStyle(fontSize: 16)),
                 ],
               ),
               const SizedBox(height: 20),

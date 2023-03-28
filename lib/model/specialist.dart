@@ -4,6 +4,7 @@ class Specialist {
   final String profile;
   final String regNo;
   final String cert;
+  final String name;
   final String id;
   bool verified = false;
 
@@ -13,6 +14,7 @@ class Specialist {
     required this.profile,
     required this.regNo,
     required this.cert,
+    required this.name,
     required this.id,
   });
 
@@ -23,6 +25,7 @@ class Specialist {
       'profile': profile,
       'regNo': regNo,
       'cert': cert,
+      'name': name,
       'id': id,
     };
   }

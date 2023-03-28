@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../screens/screens.dart';
+import '../model/models.dart';
 
 class SpecialistCard extends StatefulWidget {
-  const SpecialistCard({super.key});
+  const SpecialistCard({super.key, required this.specialist});
+  final Specialist specialist;
 
   @override
   State<SpecialistCard> createState() => _SpecialistCardState();
@@ -16,7 +18,9 @@ class _SpecialistCardState extends State<SpecialistCard> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute<void>(
-            builder: (BuildContext context) => const SpecialistView(),
+            builder: (BuildContext context) => SpecialistView(
+              specialist: widget.specialist,
+            ),
           ),
         );
       },
@@ -31,7 +35,7 @@ class _SpecialistCardState extends State<SpecialistCard> {
               spreadRadius: 2,
               blurRadius: 1,
               offset: Offset(2, 2),
-            )
+            ),
           ],
         ),
         child: Column(
@@ -39,27 +43,37 @@ class _SpecialistCardState extends State<SpecialistCard> {
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: const [
-                CircleAvatar(backgroundColor: Color(0xFF0FA958)),
+              children: [
+                ClipOval(
+                  child: SizedBox(
+                    height: 48,
+                    width: 48,
+                    child: Image.network(
+                      widget.specialist.profile,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
                 Text(
-                  'Dr doc name',
-                  style: TextStyle(fontSize: 14),
+                  widget.specialist.name,
+                  style: const TextStyle(fontSize: 14),
                 )
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Dermatologist',
-                  style: TextStyle(fontSize: 17, color: Color(0xFF4AC4AA)),
+                Text(
+                  widget.specialist.speciality,
+                  style:
+                      const TextStyle(fontSize: 17, color: Color(0xFF4AC4AA)),
                 ),
                 Row(
-                  children: const [
-                    Icon(Icons.location_on_rounded),
+                  children: [
+                    const Icon(Icons.location_on_rounded),
                     Text(
-                      'Nairobi, kenya',
-                      style: TextStyle(fontSize: 15),
+                      widget.specialist.location,
+                      style: const TextStyle(fontSize: 15),
                     ),
                   ],
                 ),

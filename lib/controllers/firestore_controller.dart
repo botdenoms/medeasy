@@ -35,6 +35,7 @@ class FireStoreController extends GetxController {
           profile: element['profile'],
           regNo: element['regNo'],
           cert: element['cert'],
+          name: element['name'],
           id: element['id'],
         );
         retList.add(spl);

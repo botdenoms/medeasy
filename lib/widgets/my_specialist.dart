@@ -63,7 +63,9 @@ class _MySpecialistState extends State<MySpecialist> {
                                 Navigator.of(context).push(
                                   MaterialPageRoute<void>(
                                     builder: (BuildContext context) =>
-                                        const Registration(),
+                                        Registration(
+                                      name: widget.user.name,
+                                    ),
                                   ),
                                 );
                               },

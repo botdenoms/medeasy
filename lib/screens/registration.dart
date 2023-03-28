@@ -9,7 +9,8 @@ import '../controllers/controllers.dart';
 import '../model/models.dart';
 
 class Registration extends StatefulWidget {
-  const Registration({super.key});
+  const Registration({super.key, required this.name});
+  final String name;
 
   @override
   State<Registration> createState() => _RegistrationState();
@@ -206,6 +207,7 @@ class _RegistrationState extends State<Registration> {
       profile: profileUrl!,
       regNo: 'regNo',
       cert: certUrl!,
+      name: widget.name,
       id: userCon.user()!.uid,
     );
     final FireStoreController fireCon = Get.find();

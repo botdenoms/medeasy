@@ -166,7 +166,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   : SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (_, int index) {
-                          return const SpecialistCard();
+                          return SpecialistCard(
+                            specialist: specialists[index],
+                          );
                         },
                         childCount: specialists.length,
                       ),
