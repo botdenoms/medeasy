@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:table_calendar/table_calendar.dart';
+
 import './screens.dart';
 import '../model/models.dart';
 
@@ -12,6 +14,9 @@ class SpecialistView extends StatefulWidget {
 }
 
 class _SpecialistViewState extends State<SpecialistView> {
+  DateTime? selectedDate;
+  DateTime focusedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,17 +76,39 @@ class _SpecialistViewState extends State<SpecialistView> {
               const SizedBox(height: 20),
               const Text('Calendar', style: TextStyle(fontSize: 14)),
               const SizedBox(height: 5),
-              GestureDetector(
-                onTap: () {
+              TableCalendar(
+                firstDay: DateTime.now().subtract(
+                  const Duration(days: 1),
+                ),
+                lastDay: DateTime(2030),
+                focusedDay: focusedDate,
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    selectedDate = selectedDay;
+                    focusedDate = focusedDay;
+                  });
                   Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const Schedule(),
+                    builder: (BuildContext context) => Schedule(
+                      date: selectedDate!,
+                    ),
                   ));
                 },
-                child: Container(
-                  height: 200,
-                  color: Colors.green,
-                ),
+                onPageChanged: (focusedDay) {
+                  focusedDate = focusedDay;
+                },
               ),
+              const SizedBox(height: 5),
+              // GestureDetector(
+              //   onTap: () {
+              //     Navigator.of(context).push(MaterialPageRoute<void>(
+              //       builder: (BuildContext context) =>  Schedule(date: selectedDate!,),
+              //     ));
+              //   },
+              //   child: Container(
+              //     height: 200,
+              //     color: Colors.green,
+              //   ),
+              // ),
             ],
           ),
         ),
