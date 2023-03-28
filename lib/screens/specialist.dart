@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 
+import 'package:table_calendar/table_calendar.dart';
+
 import './screens.dart';
+import '../model/models.dart';
 
 class SpecialistView extends StatefulWidget {
-  const SpecialistView({super.key});
+  const SpecialistView({super.key, required this.specialist});
+  final Specialist specialist;
 
   @override
   State<SpecialistView> createState() => _SpecialistViewState();
 }
 
 class _SpecialistViewState extends State<SpecialistView> {
+  DateTime? selectedDate;
+  DateTime focusedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,38 +39,76 @@ class _SpecialistViewState extends State<SpecialistView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: const [
-                  CircleAvatar(radius: 28, backgroundColor: Colors.amber),
+                children: [
+                  ClipOval(
+                    child: SizedBox(
+                      height: 56,
+                      width: 56,
+                      child: Image.network(
+                        widget.specialist.profile,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                   Text(
-                    'Verified',
-                    style: TextStyle(color: Colors.greenAccent, fontSize: 14),
+                    widget.specialist.verified ? 'Verified' : 'UnVerified',
+                    style: TextStyle(
+                        color: widget.specialist.verified
+                            ? Colors.greenAccent
+                            : Colors.redAccent,
+                        fontSize: 14),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
-              const Text('Dr Doc Name', style: TextStyle(fontSize: 16)),
+              Text(widget.specialist.name,
+                  style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text('Dermatologist', style: TextStyle(fontSize: 16)),
-                  Text('Nairobi, Kenya', style: TextStyle(fontSize: 16)),
+                children: [
+                  Text(widget.specialist.speciality,
+                      style: const TextStyle(fontSize: 16)),
+                  Text(widget.specialist.location,
+                      style: const TextStyle(fontSize: 16)),
                 ],
               ),
               const SizedBox(height: 20),
               const Text('Calendar', style: TextStyle(fontSize: 14)),
               const SizedBox(height: 5),
-              GestureDetector(
-                onTap: () {
+              TableCalendar(
+                firstDay: DateTime.now().subtract(
+                  const Duration(days: 1),
+                ),
+                lastDay: DateTime(2030),
+                focusedDay: focusedDate,
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    selectedDate = selectedDay;
+                    focusedDate = focusedDay;
+                  });
                   Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const Schedule(),
+                    builder: (BuildContext context) => Schedule(
+                      date: selectedDate!,
+                    ),
                   ));
                 },
-                child: Container(
-                  height: 200,
-                  color: Colors.green,
-                ),
+                onPageChanged: (focusedDay) {
+                  focusedDate = focusedDay;
+                },
               ),
+              const SizedBox(height: 5),
+              // GestureDetector(
+              //   onTap: () {
+              //     Navigator.of(context).push(MaterialPageRoute<void>(
+              //       builder: (BuildContext context) =>  Schedule(date: selectedDate!,),
+              //     ));
+              //   },
+              //   child: Container(
+              //     height: 200,
+              //     color: Colors.green,
+              //   ),
+              // ),
             ],
           ),
         ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Schedule extends StatefulWidget {
-  const Schedule({super.key});
+  const Schedule({super.key, required this.date});
+  final DateTime date;
 
   @override
   State<Schedule> createState() => _ScheduleState();
@@ -32,9 +33,9 @@ class _ScheduleState extends State<Schedule> {
                 style: TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'On 5th June, 2023',
-                style: TextStyle(fontSize: 17),
+              Text(
+                formatDate(widget.date),
+                style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 20),
               const Text(
@@ -97,5 +98,64 @@ class _ScheduleState extends State<Schedule> {
         ),
       ),
     );
+  }
+
+  String formatDate(DateTime dt) {
+    String day = '';
+    String month = '';
+    switch (dt.day) {
+      case 1:
+        day = '1st';
+        break;
+      case 2:
+        day = '2nd';
+        break;
+      case 3:
+        day = '3rd';
+        break;
+      default:
+        day = '${dt.day}th';
+    }
+    switch (dt.month) {
+      case 0:
+        month = 'January';
+        break;
+      case 1:
+        month = 'February';
+        break;
+      case 2:
+        month = 'March';
+        break;
+      case 3:
+        month = 'April';
+        break;
+      case 4:
+        month = 'May';
+        break;
+      case 5:
+        month = 'June';
+        break;
+      case 6:
+        month = 'July';
+        break;
+      case 7:
+        month = 'August';
+        break;
+      case 8:
+        month = 'September';
+        break;
+      case 9:
+        month = 'Octorber';
+        break;
+      case 10:
+        month = 'November';
+        break;
+      case 11:
+        month = 'December';
+        break;
+      default:
+        break;
+    }
+    return 'On $day $month,${dt.year}';
   }
 }

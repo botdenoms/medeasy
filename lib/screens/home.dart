@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:medeasy/screens/screens.dart';
 import 'package:medeasy/widgets/widgets.dart';
 
+import '../model/models.dart';
+import 'package:get/get.dart';
+import 'package:medeasy/controllers/controllers.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -10,6 +14,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final UserController userCon = Get.put(UserController());
+  final FireStoreController fireCon = Get.put(FireStoreController());
+  final StorageController storeCon = Get.put(StorageController());
+  List<Specialist> specialists = [];
+
+  bool loading = true;
+
+  featuredSpecialist() async {
+    final resp = await fireCon.getSpecialists();
+    setState(() {
+      specialists = resp!;
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    featuredSpecialist();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
@@ -23,12 +48,20 @@ class _HomeScreenState extends State<HomeScreen> {
             actions: [
               IconButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          const Authentications(),
-                    ),
-                  );
+                  if (userCon.user() == null) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const Authentications(),
+                      ),
+                    );
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const Account(),
+                      ),
+                    );
+                  }
                 },
                 icon: const Icon(Icons.account_circle_rounded,
                     color: Colors.black, size: 36),
@@ -108,14 +141,38 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text('Featured specialist'),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (_, int index) {
-                return const SpecialistCard();
-              },
-              childCount: 20,
-            ),
-          )
+          loading
+              ? const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black38,
+                      ),
+                    ),
+                  ),
+                )
+              : specialists.isEmpty
+                  ? const SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 200,
+                        width: double.infinity,
+                        child: Center(
+                          child: Text('No specialist found'),
+                        ),
+                      ),
+                    )
+                  : SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (_, int index) {
+                          return SpecialistCard(
+                            specialist: specialists[index],
+                          );
+                        },
+                        childCount: specialists.length,
+                      ),
+                    ),
         ],
       ),
     );
