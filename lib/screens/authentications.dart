@@ -128,8 +128,16 @@ class _AuthenticationsState extends State<Authentications> {
                         10.0,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E1EEE),
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x22000000),
+                            spreadRadius: 2,
+                            blurRadius: 1,
+                            offset: Offset(2, 2),
+                          )
+                        ],
                       ),
                       child: Center(
                         child: Text(
@@ -138,7 +146,10 @@ class _AuthenticationsState extends State<Authentications> {
                               : user
                                   ? 'Log In'
                                   : 'Sign Up',
-                          style: const TextStyle(fontSize: 16),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFF1E1E1E),
+                          ),
                         ),
                       ),
                     ),

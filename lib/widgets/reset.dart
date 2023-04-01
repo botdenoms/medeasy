@@ -22,6 +22,7 @@ class _ResetWidgetState extends State<ResetWidget> {
         TextField(
           controller: widget.email,
           decoration: const InputDecoration(hintText: 'Email@sm.com'),
+          keyboardType: TextInputType.emailAddress,
         ),
       ],
     );

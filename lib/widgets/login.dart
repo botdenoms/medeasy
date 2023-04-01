@@ -18,10 +18,12 @@ class _LogInWidgetState extends State<LogInWidget> {
         TextField(
           controller: widget.email,
           decoration: const InputDecoration(hintText: 'Email@sm.com'),
+          keyboardType: TextInputType.emailAddress,
         ),
         TextField(
           controller: widget.password,
           decoration: const InputDecoration(hintText: 'password'),
+          obscureText: true,
         ),
       ],
     );
