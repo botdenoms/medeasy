@@ -23,6 +23,9 @@ class _RegistrationState extends State<Registration> {
   String certNm = '';
   String profilePath = '';
   String profileNm = '';
+  TextEditingController speciality = TextEditingController();
+  TextEditingController location = TextEditingController();
+  TextEditingController regno = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,22 +50,25 @@ class _RegistrationState extends State<Registration> {
                 'Speciality',
                 style: TextStyle(fontSize: 12),
               ),
-              const TextField(
-                decoration: InputDecoration(hintText: 'Speciality'),
+              TextField(
+                decoration: const InputDecoration(hintText: 'Speciality'),
+                controller: speciality,
               ),
               const Text(
                 'Locality',
                 style: TextStyle(fontSize: 12),
               ),
-              const TextField(
-                decoration: InputDecoration(hintText: 'Location'),
+              TextField(
+                decoration: const InputDecoration(hintText: 'County, Location'),
+                controller: location,
               ),
               const Text(
                 'Credentails',
                 style: TextStyle(fontSize: 12),
               ),
-              const TextField(
-                decoration: InputDecoration(hintText: 'Registration No'),
+              TextField(
+                decoration: const InputDecoration(hintText: 'Registration No'),
+                controller: regno,
               ),
               const Text(
                 'Certification',
@@ -94,7 +100,7 @@ class _RegistrationState extends State<Registration> {
                             10.0,
                           ),
                           decoration: BoxDecoration(
-                            // color: const Color(0xFF1E1EEE),
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: const [
                               BoxShadow(
@@ -148,7 +154,7 @@ class _RegistrationState extends State<Registration> {
                             10.0,
                           ),
                           decoration: BoxDecoration(
-                            // color: const Color(0xFF1E1EEE),
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: const [
                               BoxShadow(
@@ -220,22 +226,30 @@ class _RegistrationState extends State<Registration> {
     if (!cert || !profile) {
       return false;
     }
+    if (speciality.text == '' || location.text == '' || regno.text == '') {
+      return false;
+    }
     final StorageController storeCon = Get.find();
     final profileUrl =
         await storeCon.upLoadProfile(File(profilePath), profileNm);
     final certUrl = await storeCon.upLoadCert(File(certPath), certNm);
     final UserController userCon = Get.find();
     Specialist spl = Specialist(
-      speciality: 'speciality',
-      location: 'location',
+      speciality: speciality.text,
+      location: location.text,
       profile: profileUrl!,
-      regNo: 'regNo',
+      regNo: regno.text,
       cert: certUrl!,
       name: widget.name,
       id: userCon.user()!.uid,
     );
     final FireStoreController fireCon = Get.find();
     bool success = await fireCon.addSpecialist(spl);
+    if (success) {
+      String? id = userCon.user()!.uid;
+      final resp = fireCon.updateUser(id);
+      return resp;
+    }
     return success;
   }
 

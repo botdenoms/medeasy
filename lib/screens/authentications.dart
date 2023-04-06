@@ -91,7 +91,9 @@ class _AuthenticationsState extends State<Authentications> {
               const SizedBox(height: 30),
               reset
                   ? const SizedBox()
-                  : Center(
+                  : 
+                  user?
+                  Center(
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -103,7 +105,9 @@ class _AuthenticationsState extends State<Authentications> {
                           style: TextStyle(fontSize: 14),
                         ),
                       ),
-                    ),
+                    )
+                    :
+                    const SizedBox(),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -205,6 +209,7 @@ class _AuthenticationsState extends State<Authentications> {
             email: email.text,
             telephone: telephone.text,
             at: DateTime.now(),
+	    specialist: false,
           );
           bool success = await fireCon.addUser(user, id);
           return success;

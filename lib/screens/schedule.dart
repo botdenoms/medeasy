@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'package:get/get.dart';
+import 'package:medeasy/controllers/controllers.dart';
+import '../model/models.dart';
+
 class Schedule extends StatefulWidget {
-  const Schedule({super.key, required this.date});
+  const Schedule({
+    super.key,
+    required this.date,
+    required this.specialist,
+  });
   final DateTime date;
+  final Specialist specialist;
 
   @override
   State<Schedule> createState() => _ScheduleState();
@@ -56,12 +65,18 @@ class _ScheduleState extends State<Schedule> {
                   height: 40,
                   width: double.infinity,
                   color: Colors.greenAccent,
-                  child: Center(
-                    child: Text(
-                      online ? 'Online' : 'Physical',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          online ? 'Online' : 'Physical',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const Icon(
+                          Icons.change_circle_rounded,
+                          color: Color(0xFF1E1E1E),
+                        ),
+                      ]),
                 ),
               ),
               const SizedBox(height: 20),
@@ -206,7 +221,7 @@ class _ScheduleState extends State<Schedule> {
     // set up for date and Time
     _showMyDialog();
   }
-  
+
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -231,13 +246,40 @@ class _ScheduleState extends State<Schedule> {
             ),
             TextButton(
               child: const Text('Send'),
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
+                final success = await requestSend();
+                if (success) {
+                  // success response
+                  Navigator.of(context).pop();
+                }
+                // failure response
               },
             ),
           ],
         );
       },
     );
+  }
+
+  Future<bool> requestSend() async {
+    // send request on the given date and time
+    // attach user records to doctor in view
+    final UserController userCon = Get.find();
+    final FireStoreController fireCon = Get.find();
+    String? id = userCon.user()!.uid;
+    Request req = Request(
+      specialist: widget.specialist,
+      online: online,
+      time: DateTime(
+        widget.date.year,
+        widget.date.month,
+        widget.date.day,
+        time.hour,
+        time.minute,
+      ),
+      patient: id!,
+    );
+    final resp = await fireCon.createRequest(req);
+    return resp;
   }
 }

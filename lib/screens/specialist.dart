@@ -29,14 +29,13 @@ class _SpecialistViewState extends State<SpecialistView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 30),
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                   icon: const Icon(Icons.arrow_back_ios_new_rounded),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -91,6 +90,7 @@ class _SpecialistViewState extends State<SpecialistView> {
                     Navigator.of(context).push(MaterialPageRoute<void>(
                       builder: (BuildContext context) => Schedule(
                         date: selectedDate!,
+                        specialist: widget.specialist,
                       ),
                     ));
                   },
@@ -99,17 +99,6 @@ class _SpecialistViewState extends State<SpecialistView> {
                   },
                 ),
                 const SizedBox(height: 5),
-                // GestureDetector(
-                //   onTap: () {
-                //     Navigator.of(context).push(MaterialPageRoute<void>(
-                //       builder: (BuildContext context) =>  Schedule(date: selectedDate!,),
-                //     ));
-                //   },
-                //   child: Container(
-                //     height: 200,
-                //     color: Colors.green,
-                //   ),
-                // ),
               ],
             ),
           ),
