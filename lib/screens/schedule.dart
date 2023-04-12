@@ -20,6 +20,7 @@ class Schedule extends StatefulWidget {
 class _ScheduleState extends State<Schedule> {
   TimeOfDay time = TimeOfDay.now();
   bool online = true;
+  bool sending = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +63,7 @@ class _ScheduleState extends State<Schedule> {
                   });
                 },
                 child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   height: 40,
                   width: double.infinity,
                   color: Colors.greenAccent,
@@ -245,13 +247,27 @@ class _ScheduleState extends State<Schedule> {
               },
             ),
             TextButton(
-              child: const Text('Send'),
+              child: sending
+                  ? const CircularProgressIndicator(
+                      color: Colors.greenAccent,
+                    )
+                  : const Text('Send'),
               onPressed: () async {
+                setState(() {
+                  sending = !sending;
+                });
                 final success = await requestSend();
+                setState(() {
+                  sending = !sending;
+                });
                 if (success) {
                   // success response
+                  Get.snackbar('Success', 'Request send',
+                      backgroundColor: Colors.greenAccent);
                   Navigator.of(context).pop();
                 }
+                Get.snackbar('Failed', 'Request failed to send',
+                    backgroundColor: Colors.redAccent);
                 // failure response
               },
             ),
@@ -277,7 +293,7 @@ class _ScheduleState extends State<Schedule> {
         time.hour,
         time.minute,
       ),
-      patient: id!,
+      patient: id,
     );
     final resp = await fireCon.createRequest(req);
     return resp;

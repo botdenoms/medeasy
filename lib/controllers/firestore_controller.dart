@@ -113,6 +113,31 @@ class FireStoreController extends GetxController {
     }
   }
 
+  Future<List<Request>?> getRequests() async {
+    List<Request> retList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query =
+          await _fireStore.collection('requests').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      for (var element in data) {
+        Request spl = Request(
+          specialist: element['patient'],
+          patient: element['user'],
+          online: element['online'],
+          time: DateTime.parse(element['at']),
+          // 'at': time,
+          // 'pending': pending,
+          // 'ok': ok,
+        );
+        retList.add(spl);
+      }
+      return retList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
   Future<bool> updateUser(String id) async {
     try {
       await _fireStore.collection('users').doc(id).update({

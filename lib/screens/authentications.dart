@@ -20,6 +20,7 @@ class _AuthenticationsState extends State<Authentications> {
   String signUpText = 'Join others already on the platform';
   String logInText = 'Welcome back';
   String resetText = 'Password reset';
+  bool resolving = false;
 
   // Text controllers
   TextEditingController name = TextEditingController();
@@ -91,76 +92,94 @@ class _AuthenticationsState extends State<Authentications> {
               const SizedBox(height: 30),
               reset
                   ? const SizedBox()
-                  : 
-                  user?
-                  Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            reset = true;
-                          });
-                        },
-                        child: const Text(
-                          'Forgot the password!',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ),
-                    )
-                    :
-                    const SizedBox(),
+                  : user
+                      ? Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                reset = true;
+                              });
+                            },
+                            child: const Text(
+                              'Forgot the password!',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
               const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(width: 20),
-                  GestureDetector(
-                    onTap: () async {
-                      bool success = await authHander();
-                      if (!success) {
-                        // display error
-                        return;
-                      }
-                      // ignore: use_build_context_synchronously
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) => const Account(),
+              resolving
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        CircularProgressIndicator(
+                          color: Colors.greenAccent,
                         ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        10.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x22000000),
-                            spreadRadius: 2,
-                            blurRadius: 1,
-                            offset: Offset(2, 2),
-                          )
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          reset
-                              ? 'Reset'
-                              : user
-                                  ? 'Log In'
-                                  : 'Sign Up',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Color(0xFF1E1E1E),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(width: 20),
+                        GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              resolving = !resolving;
+                            });
+                            bool success = await authHander();
+                            setState(() {
+                              resolving = !resolving;
+                            });
+                            if (!success) {
+                              // display error
+                              Get.snackbar(
+                                  'Failed', 'Failed to process your request',
+                                  backgroundColor: Colors.redAccent);
+                              return;
+                            }
+                            // ignore: use_build_context_synchronously
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    const Account(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(
+                              10.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x22000000),
+                                  spreadRadius: 2,
+                                  blurRadius: 1,
+                                  offset: Offset(2, 2),
+                                )
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                reset
+                                    ? 'Reset'
+                                    : user
+                                        ? 'Log In'
+                                        : 'Sign Up',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFF1E1E1E),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        const SizedBox(width: 20),
+                      ],
                     ),
-                  ),
-                  const SizedBox(width: 20),
-                ],
-              ),
             ],
           ),
         ),
@@ -209,7 +228,7 @@ class _AuthenticationsState extends State<Authentications> {
             email: email.text,
             telephone: telephone.text,
             at: DateTime.now(),
-	    specialist: false,
+            specialist: false,
           );
           bool success = await fireCon.addUser(user, id);
           return success;

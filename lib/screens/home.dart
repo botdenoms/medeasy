@@ -86,7 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const SizedBox(width: 20),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) => const MapView(),
+                          ),
+                        );
+                      },
                       icon: const Icon(Icons.location_on_rounded),
                     ),
                     Container(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:medeasy/widgets/widgets.dart';
 
 import '../model/models.dart';
+import 'package:get/get.dart';
+import 'package:medeasy/controllers/controllers.dart';
 
 class MyNotifications extends StatefulWidget {
   const MyNotifications({super.key, required this.user});
@@ -12,6 +14,24 @@ class MyNotifications extends StatefulWidget {
 }
 
 class _MyNotificationsState extends State<MyNotifications> {
+  bool loading = true;
+  List<Request> notificactions = [];
+
+  notifications() async {
+    final FireStoreController fireCon = Get.put(FireStoreController());
+    final resp = await fireCon.getRequests();
+    setState(() {
+      notificactions = resp!;
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    notifications();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,14 +69,27 @@ class _MyNotificationsState extends State<MyNotifications> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: const [
-                ScheduleCard(),
-                ScheduleCard(),
-                ScheduleCard(),
-                ScheduleCard(),
-              ],
-            ),
+            child: loading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : notificactions.isEmpty
+                    ? const Center(
+                        child: Text('No Notifications for you'),
+                      )
+                    : ListView.builder(
+                        itemBuilder: (context, index) => const ScheduleCard(),
+                        itemCount: notificactions.length,
+                      ),
+            // (
+            //   children: const [
+
+            //     ScheduleCard(),
+            //     ScheduleCard(),
+            //     ScheduleCard(),
+            //     ScheduleCard(),
+            //   ],
+            // ),
           ),
         ],
       ),

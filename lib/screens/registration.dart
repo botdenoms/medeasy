@@ -184,8 +184,11 @@ class _RegistrationState extends State<Registration> {
                 children: [
                   const SizedBox(width: 20),
                   GestureDetector(
-                    onTap: () {
-                      register();
+                    onTap: () async{
+                      final rsp = await register();
+                      if(rsp){
+                        Navigator.of(context).pop;
+                      }
                     },
                     child: Container(
                       padding: const EdgeInsets.all(
@@ -247,7 +250,7 @@ class _RegistrationState extends State<Registration> {
     bool success = await fireCon.addSpecialist(spl);
     if (success) {
       String? id = userCon.user()!.uid;
-      final resp = fireCon.updateUser(id);
+      final resp = await fireCon.updateUser(id);
       return resp;
     }
     return success;
