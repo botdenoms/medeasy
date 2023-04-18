@@ -1,7 +1,7 @@
 import 'package:medeasy/model/models.dart';
 
 class Request {
-  final Specialist specialist;
+  final String specialist;
   final String patient;
   final bool online;
   final DateTime time;
@@ -17,7 +17,7 @@ class Request {
 
   Map<String, dynamic> toMap() {
     return {
-      'specialist': specialist.id,
+      'specialist': specialist,
       'user': patient,
       'online': online,
       'at': time,

@@ -284,7 +284,7 @@ class _ScheduleState extends State<Schedule> {
     final FireStoreController fireCon = Get.find();
     String? id = userCon.user()!.uid;
     Request req = Request(
-      specialist: widget.specialist,
+      specialist: widget.specialist.id,
       online: online,
       time: DateTime(
         widget.date.year,

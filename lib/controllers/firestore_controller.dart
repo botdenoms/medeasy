@@ -119,16 +119,23 @@ class FireStoreController extends GetxController {
       QuerySnapshot<Map<String, dynamic>> query =
           await _fireStore.collection('requests').get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      // DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch)
+
       for (var element in data) {
+        // ignore: avoid_print
+        print(element['at']);
         Request spl = Request(
-          specialist: element['patient'],
+          specialist: element['specialist'],
           patient: element['user'],
           online: element['online'],
-          time: DateTime.parse(element['at']),
+          time: DateTime.fromMillisecondsSinceEpoch(element['at'].seconds * 1000),
+          // DateTime.parse(element['at']),
           // 'at': time,
           // 'pending': pending,
           // 'ok': ok,
         );
+        // ignore: avoid_print
+        print(spl.time.toString());
         retList.add(spl);
       }
       return retList;
