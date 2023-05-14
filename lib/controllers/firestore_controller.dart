@@ -78,4 +78,82 @@ class FireStoreController extends GetxController {
       return null;
     }
   }
+
+  Future<Specialist?> specialistData(String id) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> data =
+          await _fireStore.collection('specialists').doc(id).get();
+      if (data.exists) {
+        final map = data.data()!;
+        Specialist spl = Specialist(
+          speciality: map['speciality'],
+          location: map['location'],
+          profile: map['profile'],
+          regNo: map['regNo'],
+          cert: map['cert'],
+          name: map['name'],
+          id: map['id'],
+        );
+        return spl;
+      }
+      return null;
+    } catch (e) {
+      //Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<bool> createRequest(Request req) async {
+    try {
+      await _fireStore.collection('requests').doc().set(req.toMap());
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<List<Request>?> getRequests() async {
+    List<Request> retList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query =
+          await _fireStore.collection('requests').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      // DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch)
+
+      for (var element in data) {
+        // ignore: avoid_print
+        print(element['at']);
+        Request spl = Request(
+          specialist: element['specialist'],
+          patient: element['user'],
+          online: element['online'],
+          time: DateTime.fromMillisecondsSinceEpoch(element['at'].seconds * 1000),
+          // DateTime.parse(element['at']),
+          // 'at': time,
+          // 'pending': pending,
+          // 'ok': ok,
+        );
+        // ignore: avoid_print
+        print(spl.time.toString());
+        retList.add(spl);
+      }
+      return retList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<bool> updateUser(String id) async {
+    try {
+      await _fireStore.collection('users').doc(id).update({
+        'specialist': true,
+      });
+      return true;
+    } catch (e) {
+      //Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
 }

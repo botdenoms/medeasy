@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
 
+import 'package:get/get.dart';
+import 'package:medeasy/controllers/controllers.dart';
+import '../model/models.dart';
+
 class Schedule extends StatefulWidget {
-  const Schedule({super.key, required this.date});
+  const Schedule({
+    super.key,
+    required this.date,
+    required this.specialist,
+  });
   final DateTime date;
+  final Specialist specialist;
 
   @override
   State<Schedule> createState() => _ScheduleState();
 }
 
 class _ScheduleState extends State<Schedule> {
+  TimeOfDay time = TimeOfDay.now();
+  bool online = true;
+  bool sending = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,15 +56,29 @@ class _ScheduleState extends State<Schedule> {
                 style: TextStyle(fontSize: 11),
               ),
               const SizedBox(height: 10),
-              Container(
-                height: 40,
-                width: double.infinity,
-                color: Colors.greenAccent,
-                child: const Center(
-                  child: Text(
-                    'Physical',
-                    style: TextStyle(fontSize: 16),
-                  ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    online = !online;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  height: 40,
+                  width: double.infinity,
+                  color: Colors.greenAccent,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          online ? 'Online' : 'Physical',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const Icon(
+                          Icons.change_circle_rounded,
+                          color: Color(0xFF1E1E1E),
+                        ),
+                      ]),
                 ),
               ),
               const SizedBox(height: 20),
@@ -60,14 +87,19 @@ class _ScheduleState extends State<Schedule> {
                 style: TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 10),
-              Row(
-                children: const [
-                  Icon(Icons.timer_outlined),
-                  Text(
-                    '14:05 PM',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ],
+              GestureDetector(
+                onTap: () {
+                  timePick();
+                },
+                child: Row(
+                  children: [
+                    const Icon(Icons.timer_outlined),
+                    Text(
+                      timeFormat(time),
+                      style: const TextStyle(fontSize: 17),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 40),
               Row(
@@ -75,12 +107,22 @@ class _ScheduleState extends State<Schedule> {
                 children: [
                   const SizedBox(width: 20),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      request();
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E1E1E),
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x22000000),
+                            spreadRadius: 2,
+                            blurRadius: 1,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
                       ),
                       child: const Center(
                         child: Text(
@@ -157,5 +199,103 @@ class _ScheduleState extends State<Schedule> {
         break;
     }
     return 'On $day $month,${dt.year}';
+  }
+
+  String timeFormat(TimeOfDay time) {
+    String hr = time.hour.toString().padLeft(2, '0');
+    String min = time.minute.toString().padLeft(2, '0');
+    return '$hr:$min ${time.period.name}';
+  }
+
+  timePick() async {
+    final tm = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (tm != null) {
+      setState(() {
+        time = tm;
+      });
+    }
+  }
+
+  request() {
+    // set up for date and Time
+    _showMyDialog();
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Schedule setup'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Date: ${formatDate(widget.date)}'),
+                Text('Time: ${timeFormat(time)}'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancle'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: sending
+                  ? const CircularProgressIndicator(
+                      color: Colors.greenAccent,
+                    )
+                  : const Text('Send'),
+              onPressed: () async {
+                setState(() {
+                  sending = !sending;
+                });
+                final success = await requestSend();
+                setState(() {
+                  sending = !sending;
+                });
+                if (success) {
+                  // success response
+                  Get.snackbar('Success', 'Request send',
+                      backgroundColor: Colors.greenAccent);
+                  Navigator.of(context).pop();
+                }
+                Get.snackbar('Failed', 'Request failed to send',
+                    backgroundColor: Colors.redAccent);
+                // failure response
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> requestSend() async {
+    // send request on the given date and time
+    // attach user records to doctor in view
+    final UserController userCon = Get.find();
+    final FireStoreController fireCon = Get.find();
+    String? id = userCon.user()!.uid;
+    Request req = Request(
+      specialist: widget.specialist.id,
+      online: online,
+      time: DateTime(
+        widget.date.year,
+        widget.date.month,
+        widget.date.day,
+        time.hour,
+        time.minute,
+      ),
+      patient: id,
+    );
+    final resp = await fireCon.createRequest(req);
+    return resp;
   }
 }
