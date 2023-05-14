@@ -1,5 +1,3 @@
-import 'package:medeasy/model/models.dart';
-
 class Request {
   final String specialist;
   final String patient;
