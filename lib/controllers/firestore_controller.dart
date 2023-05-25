@@ -74,7 +74,7 @@ class FireStoreController extends GetxController {
       }
       return null;
     } catch (e) {
-      //Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
       return null;
     }
   }
@@ -98,7 +98,7 @@ class FireStoreController extends GetxController {
       }
       return null;
     } catch (e) {
-      //Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
       return null;
     }
   }
@@ -122,26 +122,92 @@ class FireStoreController extends GetxController {
       // DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch)
 
       for (var element in data) {
-        // ignore: avoid_print
-        print(element['at']);
         Request spl = Request(
           specialist: element['specialist'],
           patient: element['user'],
           online: element['online'],
-          time: DateTime.fromMillisecondsSinceEpoch(element['at'].seconds * 1000),
-          // DateTime.parse(element['at']),
-          // 'at': time,
-          // 'pending': pending,
-          // 'ok': ok,
+          time:
+              DateTime.fromMillisecondsSinceEpoch(element['at'].seconds * 1000),
+          adjusted: DateTime.fromMillisecondsSinceEpoch(
+              element['adjusted']!.seconds * 1000),
         );
-        // ignore: avoid_print
-        print(spl.time.toString());
         retList.add(spl);
       }
       return retList;
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
       return null;
+    }
+  }
+
+  Future<List<Request>?> getRequestsOf(String id) async {
+    List<Request> retList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _fireStore
+          .collection('requests')
+          .where('pending', isEqualTo: true)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      // DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch)
+
+      for (QueryDocumentSnapshot<Map<String, dynamic>> element in data) {
+        Request spl;
+        if (element.data().containsKey('adjusted')) {
+          spl = Request(
+            specialist: element['specialist'],
+            patient: element['user'],
+            online: element['online'],
+            time: DateTime.fromMillisecondsSinceEpoch(
+                element['at'].seconds * 1000),
+            adjusted: DateTime.fromMillisecondsSinceEpoch(
+                element['adjusted'].seconds * 1000),
+            id: element.id,
+          );
+        } else {
+          spl = Request(
+            specialist: element['specialist'],
+            patient: element['user'],
+            online: element['online'],
+            time: DateTime.fromMillisecondsSinceEpoch(
+                element['at'].seconds * 1000),
+            id: element.id,
+          );
+        }
+        if (spl.patient == id || spl.specialist == id) {
+          retList.add(spl);
+        }
+      }
+      return retList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<bool> approveRequest(String id, Schedule sch) async {
+    try {
+      await _fireStore.collection('requests').doc(id).update({
+        'pending': false,
+        'ok': true,
+      });
+      return await createSchedule(sch);
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<bool> editRequest(String id, DateTime adjusted) async {
+    try {
+      await _fireStore.collection('requests').doc(id).update({
+        'adjusted': adjusted,
+        'pending': false,
+        'ok': true,
+      });
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
     }
   }
 
@@ -152,8 +218,42 @@ class FireStoreController extends GetxController {
       });
       return true;
     } catch (e) {
-      //Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
       return false;
+    }
+  }
+
+  Future<bool> createSchedule(Schedule sch) async {
+    try {
+      await _fireStore.collection('schedules').doc().set(sch.toMap());
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<List<Schedule>?> getSchedulesOf(String id) async {
+    List<Schedule> retList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query =
+          await _fireStore.collection('schedules').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      // DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch)
+      for (QueryDocumentSnapshot<Map<String, dynamic>> element in data) {
+        var sch = Schedule(
+          patient: element['patient'],
+          specialist: element['specialist'],
+          online: element['online'],
+          time:
+              DateTime.fromMillisecondsSinceEpoch(element['at'].seconds * 1000),
+        );
+        retList.add(sch);
+      }
+      return retList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
     }
   }
 }

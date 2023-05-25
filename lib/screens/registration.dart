@@ -184,10 +184,10 @@ class _RegistrationState extends State<Registration> {
                 children: [
                   const SizedBox(width: 20),
                   GestureDetector(
-                    onTap: () async{
+                    onTap: () async {
                       final rsp = await register();
-                      if(rsp){
-                        Navigator.of(context).pop;
+                      if (rsp) {
+                        Navigator.of(context).pop();
                       }
                     },
                     child: Container(
