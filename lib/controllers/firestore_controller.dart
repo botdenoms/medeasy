@@ -201,8 +201,6 @@ class FireStoreController extends GetxController {
     try {
       await _fireStore.collection('requests').doc(id).update({
         'adjusted': adjusted,
-        'pending': false,
-        'ok': true,
       });
       return true;
     } catch (e) {
@@ -239,7 +237,6 @@ class FireStoreController extends GetxController {
       QuerySnapshot<Map<String, dynamic>> query =
           await _fireStore.collection('schedules').get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
-      // DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch)
       for (QueryDocumentSnapshot<Map<String, dynamic>> element in data) {
         var sch = Schedule(
           patient: element['patient'],
@@ -248,7 +245,9 @@ class FireStoreController extends GetxController {
           time:
               DateTime.fromMillisecondsSinceEpoch(element['at'].seconds * 1000),
         );
-        retList.add(sch);
+        if (sch.patient == id || sch.specialist == id) {
+          retList.add(sch);
+        }
       }
       return retList;
     } catch (e) {

@@ -267,14 +267,26 @@ class _RequestCardState extends State<RequestCard> {
           DateTime(dt!.year, dt!.month, dt!.day, time!.hour, time!.minute);
       final suc = await firecon.editRequest(widget.request.id!, adjusted);
       if (suc) {
-        setState(() {
-          spinPros = false;
-          closed = true;
-        });
+        final res = await firecon.approveRequest(
+          widget.request.id!,
+          Schedule(
+            patient: widget.request.patient,
+            specialist: widget.request.specialist,
+            online: widget.request.online,
+            time: adjusted,
+          ),
+        );
+        if (res) {
+          setState(() {
+            spinPros = false;
+            closed = true;
+          });
+        }
       }
       setState(() {
         spinPros = false;
       });
+      return;
     }
     if (modTime) {
       DateTime adjusted = DateTime(
@@ -286,14 +298,26 @@ class _RequestCardState extends State<RequestCard> {
       );
       final suc = await firecon.editRequest(widget.request.id!, adjusted);
       if (suc) {
-        setState(() {
-          spinPros = false;
-          closed = true;
-        });
+        final res = await firecon.approveRequest(
+          widget.request.id!,
+          Schedule(
+            patient: widget.request.patient,
+            specialist: widget.request.specialist,
+            online: widget.request.online,
+            time: adjusted,
+          ),
+        );
+        if (res) {
+          setState(() {
+            spinPros = false;
+            closed = true;
+          });
+        }
       }
       setState(() {
         spinPros = false;
       });
+      return;
     }
     if (modDate) {
       DateTime adjusted = DateTime(
@@ -305,14 +329,26 @@ class _RequestCardState extends State<RequestCard> {
       );
       final suc = await firecon.editRequest(widget.request.id!, adjusted);
       if (suc) {
-        setState(() {
-          spinPros = false;
-          closed = true;
-        });
+        final res = await firecon.approveRequest(
+          widget.request.id!,
+          Schedule(
+            patient: widget.request.patient,
+            specialist: widget.request.specialist,
+            online: widget.request.online,
+            time: adjusted,
+          ),
+        );
+        if (res) {
+          setState(() {
+            spinPros = false;
+            closed = true;
+          });
+        }
       }
       setState(() {
         spinPros = false;
       });
+      return;
     }
     final suc = await firecon.approveRequest(
       widget.request.id!,
