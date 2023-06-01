@@ -16,10 +16,13 @@ class MyNotifications extends StatefulWidget {
 class _MyNotificationsState extends State<MyNotifications> {
   bool loading = true;
   List<Request> notificactions = [];
+  late String userId;
 
   notifications() async {
-    final FireStoreController fireCon = Get.put(FireStoreController());
-    final resp = await fireCon.getRequests();
+    final FireStoreController fireCon = Get.find();
+    final UserController usr = Get.find();
+    userId = usr.user()!.uid;
+    final resp = await fireCon.getRequestsOf(usr.user()!.uid);
     setState(() {
       notificactions = resp!;
       loading = false;
@@ -78,18 +81,13 @@ class _MyNotificationsState extends State<MyNotifications> {
                         child: Text('No Notifications for you'),
                       )
                     : ListView.builder(
-                        itemBuilder: (context, index) => const ScheduleCard(),
+                        itemBuilder: (context, index) => RequestCard(
+                          request: notificactions[index],
+                          specialist: widget.user.specialist!,
+                          userId: userId,
+                        ),
                         itemCount: notificactions.length,
                       ),
-            // (
-            //   children: const [
-
-            //     ScheduleCard(),
-            //     ScheduleCard(),
-            //     ScheduleCard(),
-            //     ScheduleCard(),
-            //   ],
-            // ),
           ),
         ],
       ),

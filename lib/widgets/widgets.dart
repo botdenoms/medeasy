@@ -6,3 +6,4 @@ export './schedule_card.dart';
 export './login.dart';
 export './signup.dart';
 export './reset.dart';
+export './request_card.dart';

@@ -88,7 +88,7 @@ class _SpecialistViewState extends State<SpecialistView> {
                       focusedDate = focusedDay;
                     });
                     Navigator.of(context).push(MaterialPageRoute<void>(
-                      builder: (BuildContext context) => Schedule(
+                      builder: (BuildContext context) => Scheduler(
                         date: selectedDate!,
                         specialist: widget.specialist,
                       ),

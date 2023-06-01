@@ -59,7 +59,7 @@ class _MySpecialistState extends State<MySpecialist> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 Navigator.of(context).push(
                                   MaterialPageRoute<void>(
                                     builder: (BuildContext context) =>

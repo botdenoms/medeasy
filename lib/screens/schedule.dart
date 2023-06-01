@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:medeasy/controllers/controllers.dart';
 import '../model/models.dart';
 
-class Schedule extends StatefulWidget {
-  const Schedule({
+class Scheduler extends StatefulWidget {
+  const Scheduler({
     super.key,
     required this.date,
     required this.specialist,
@@ -14,10 +14,10 @@ class Schedule extends StatefulWidget {
   final Specialist specialist;
 
   @override
-  State<Schedule> createState() => _ScheduleState();
+  State<Scheduler> createState() => _SchedulerState();
 }
 
-class _ScheduleState extends State<Schedule> {
+class _SchedulerState extends State<Scheduler> {
   TimeOfDay time = TimeOfDay.now();
   bool online = true;
   bool sending = false;

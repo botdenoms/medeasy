@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:medeasy/widgets/widgets.dart';
 
+import 'package:get/get.dart';
 import '../model/models.dart';
+import '../controllers/controllers.dart';
 
 class MyScehdule extends StatefulWidget {
   const MyScehdule({super.key, required this.user});
@@ -12,6 +14,27 @@ class MyScehdule extends StatefulWidget {
 }
 
 class _MyScehduleState extends State<MyScehdule> {
+  bool loading = true;
+  List<Schedule> schedules = [];
+  late String userId;
+
+  mySchedules() async {
+    final FireStoreController fireCon = Get.find();
+    final UserController usr = Get.find();
+    userId = usr.user()!.uid;
+    final resp = await fireCon.getSchedulesOf(usr.user()!.uid);
+    setState(() {
+      schedules = resp!;
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    mySchedules();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +73,19 @@ class _MyScehduleState extends State<MyScehdule> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: const [ScheduleCard()],
-            ),
+            child: loading
+                ? const Center(
+                    child: LinearProgressIndicator(
+                      color: Colors.greenAccent,
+                    ),
+                  )
+                : ListView.builder(
+                    itemBuilder: (c, i) => ScheduleCard(
+                      schedule: schedules[i],
+                      id: userId,
+                    ),
+                    itemCount: schedules.length,
+                  ),
           ),
         ],
       ),
