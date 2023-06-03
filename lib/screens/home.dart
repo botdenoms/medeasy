@@ -5,6 +5,7 @@ import 'package:medeasy/widgets/widgets.dart';
 import '../model/models.dart';
 import 'package:get/get.dart';
 import 'package:medeasy/controllers/controllers.dart';
+import 'package:searchfield/searchfield.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +21,39 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Specialist> specialists = [];
 
   bool loading = true;
+  
+  TextEditingController searchCon = TextEditingController();
+  final List<String> suggestions = [
+    'Pediatricians',
+    'Allergists',
+    'Dermatologists',
+    'Ophthalmologists',
+    'Obstetrician/gynecologists',
+    'Cardiologists',
+    'Endocrinologists',
+    'Gastroenterologists',
+    'Nephrologists',
+    'Urologists',
+    'Pulmonologists',
+    'Otolaryngologists',
+    'Neurologists',
+    'Psychiatrists',
+    'Oncologists',
+    'Radiologists',
+    'Rheumatologists',
+    'General surgeons',
+    'Orthopedic surgeons',
+    'Cardiac surgeons',
+    'Anesthesiologists',
+    'Emergency Medicine Specialists',
+    'Hematologists',
+    'Medical Geneticists',
+    'Osteopaths',
+    'Pathologists',
+    'Physiatrists',
+    'Plastic Surgeons',
+    'Podiatrists'
+];
 
   featuredSpecialist() async {
     final resp = await fireCon.getSpecialists();
@@ -115,13 +149,23 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       width: screen.width * .7,
-                      child: TextField(
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
+                      child: SearchField<String>(
+                        suggestions: suggestions.map((e){
+                            return SearchFieldListItem<String>(
+                              e,
+                              item: e,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(e, style: const TextStyle(fontSize: 15.0),),
+                              )
+                            );
+                          }).toList(),
+                        controller: searchCon,
+                        searchInputDecoration: InputDecoration(
                           hintText: 'Search',
+                          hintStyle: const TextStyle(fontSize: 17),
                           border: InputBorder.none,
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 10),
+                          contentPadding: const EdgeInsets.only(left: 10, top: 15),
                           suffixIcon: Container(
                             width: 40,
                             decoration: const BoxDecoration(
@@ -134,6 +178,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: const Center(child: Icon(Icons.search)),
                           ),
                         ),
+                        suggestionsDecoration: SuggestionDecoration(
+                          padding: const EdgeInsets.all(5),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                            color: Color(0x22000000),
+                            spreadRadius: 2,
+                            blurRadius: 1,
+                            offset: Offset(2, 2),
+                          )
+                          ]
+                        ),
+                        onSubmit: (text){
+                          Get.snackbar("Submitted", text);
+                          FocusScope.of(context).unfocus();
+                        },
+                        onSuggestionTap: (listItem){
+                          Get.snackbar("Submitted", listItem.item!);
+                          FocusScope.of(context).unfocus();
+                        },
                       ),
                     ),
                   ],
