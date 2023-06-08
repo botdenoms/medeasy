@@ -66,8 +66,6 @@ class _ScheduleCardState extends State<ScheduleCard> {
                               await getSpecialist(widget.schedule.specialist);
                           setState(() {
                             specialist = usr;
-                            print("usr: ${usr}");
-                            print("field: ${specialist}");
                             view = true;
                           });
                         } else {
@@ -93,7 +91,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
             children: const [
               SizedBox(width: 5),
               Icon(Icons.call, color: Colors.blueAccent, size: 24),
-              Icon(Icons.whatsapp_rounded, color: Colors.greenAccent, size: 24),
+              Icon(Icons.facebook_rounded),
               Icon(Icons.message_rounded, color: Colors.blueAccent, size: 24),
               SizedBox(width: 5),
             ],

@@ -19,46 +19,48 @@ class _HomeScreenState extends State<HomeScreen> {
   final FireStoreController fireCon = Get.put(FireStoreController());
   final StorageController storeCon = Get.put(StorageController());
   List<Specialist> specialists = [];
+  List<Specialist> filtered = [];
 
   bool loading = true;
-  
+
   TextEditingController searchCon = TextEditingController();
   final List<String> suggestions = [
-    'Pediatricians',
-    'Allergists',
-    'Dermatologists',
-    'Ophthalmologists',
-    'Obstetrician/gynecologists',
-    'Cardiologists',
-    'Endocrinologists',
-    'Gastroenterologists',
-    'Nephrologists',
-    'Urologists',
-    'Pulmonologists',
-    'Otolaryngologists',
-    'Neurologists',
-    'Psychiatrists',
-    'Oncologists',
-    'Radiologists',
-    'Rheumatologists',
-    'General surgeons',
-    'Orthopedic surgeons',
-    'Cardiac surgeons',
-    'Anesthesiologists',
-    'Emergency Medicine Specialists',
-    'Hematologists',
-    'Medical Geneticists',
-    'Osteopaths',
-    'Pathologists',
-    'Physiatrists',
-    'Plastic Surgeons',
-    'Podiatrists'
-];
+    'Pediatrician',
+    'Allergist',
+    'Dermatologist',
+    'Ophthalmologist',
+    'Obstetrician/gynecologist',
+    'Cardiologist',
+    'Endocrinologist',
+    'Gastroenterologist',
+    'Nephrologist',
+    'Urologist',
+    'Pulmonologist',
+    'Otolaryngologist',
+    'Neurologist',
+    'Psychiatrist',
+    'Oncologist',
+    'Radiologist',
+    'Rheumatologist',
+    'General surgeon',
+    'Orthopedic surgeon',
+    'Cardiac surgeon',
+    'Anesthesiologist',
+    'Emergency Medicine Specialist',
+    'Hematologist',
+    'Medical Geneticist',
+    'Osteopath',
+    'Pathologist',
+    'Physiatrist',
+    'Plastic Surgeon',
+    'Podiatrist'
+  ];
 
   featuredSpecialist() async {
     final resp = await fireCon.getSpecialists();
     setState(() {
       specialists = resp!;
+      filtered = specialists;
       loading = false;
     });
   }
@@ -150,22 +152,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       width: screen.width * .7,
                       child: SearchField<String>(
-                        suggestions: suggestions.map((e){
-                            return SearchFieldListItem<String>(
-                              e,
+                        suggestions: suggestions.map((e) {
+                          return SearchFieldListItem<String>(e,
                               item: e,
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: Text(e, style: const TextStyle(fontSize: 15.0),),
-                              )
-                            );
-                          }).toList(),
+                                child: Text(
+                                  e,
+                                  style: const TextStyle(fontSize: 15.0),
+                                ),
+                              ));
+                        }).toList(),
                         controller: searchCon,
                         searchInputDecoration: InputDecoration(
                           hintText: 'Search',
                           hintStyle: const TextStyle(fontSize: 17),
                           border: InputBorder.none,
-                          contentPadding: const EdgeInsets.only(left: 10, top: 15),
+                          contentPadding:
+                              const EdgeInsets.only(left: 10, top: 15),
                           suffixIcon: Container(
                             width: 40,
                             decoration: const BoxDecoration(
@@ -179,24 +183,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         suggestionsDecoration: SuggestionDecoration(
-                          padding: const EdgeInsets.all(5),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                            color: Color(0x22000000),
-                            spreadRadius: 2,
-                            blurRadius: 1,
-                            offset: Offset(2, 2),
-                          )
-                          ]
-                        ),
-                        onSubmit: (text){
-                          Get.snackbar("Submitted", text);
+                            padding: const EdgeInsets.all(5),
+                            color: Colors.white,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x22000000),
+                                spreadRadius: 2,
+                                blurRadius: 1,
+                                offset: Offset(2, 2),
+                              )
+                            ]),
+                        onSubmit: (text) {
                           FocusScope.of(context).unfocus();
+                          search(text);
                         },
-                        onSuggestionTap: (listItem){
-                          Get.snackbar("Submitted", listItem.item!);
+                        onSuggestionTap: (listItem) {
                           FocusScope.of(context).unfocus();
+                          search(listItem.item!);
                         },
                       ),
                     ),
@@ -223,10 +226,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 )
-              : specialists.isEmpty
+              : filtered.isEmpty
                   ? const SliverToBoxAdapter(
                       child: SizedBox(
-                        height: 200,
+                        height: 400,
                         width: double.infinity,
                         child: Center(
                           child: Text('No specialist found'),
@@ -237,14 +240,37 @@ class _HomeScreenState extends State<HomeScreen> {
                       delegate: SliverChildBuilderDelegate(
                         (_, int index) {
                           return SpecialistCard(
-                            specialist: specialists[index],
+                            specialist: filtered[index],
                           );
                         },
-                        childCount: specialists.length,
+                        childCount: filtered.length,
                       ),
                     ),
         ],
       ),
     );
+  }
+
+  search(String searchText) {
+    if (searchText == '') {
+      setState(() {
+        filtered = specialists;
+      });
+      return;
+    }
+    setState(() {
+      loading = true;
+    });
+    List<Specialist> tmp = [];
+    // Filter list with specialist that match the text
+    for (var element in specialists) {
+      if (element.speciality == searchText) {
+        tmp.add(element);
+      }
+    }
+    setState(() {
+      filtered = tmp;
+      loading = false;
+    });
   }
 }
