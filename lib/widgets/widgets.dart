@@ -7,3 +7,6 @@ export './login.dart';
 export './signup.dart';
 export './reset.dart';
 export './request_card.dart';
+export './user_status.dart';
+export './stats_card.dart';
+export './account_options.dart';
