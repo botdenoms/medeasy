@@ -20,12 +20,11 @@ class Request {
   Map<String, dynamic> toMap() {
     return {
       'specialist': specialist,
-      'user': patient,
+      'patient': patient,
       'online': online,
       'at': time,
       'pending': pending,
       'ok': ok,
-      'adjusted': adjusted,
     };
   }
 }

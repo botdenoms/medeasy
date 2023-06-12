@@ -124,7 +124,7 @@ class FireStoreController extends GetxController {
       for (var element in data) {
         Request spl = Request(
           specialist: element['specialist'],
-          patient: element['user'],
+          patient: element['patient'],
           online: element['online'],
           time:
               DateTime.fromMillisecondsSinceEpoch(element['at'].seconds * 1000),
@@ -155,7 +155,7 @@ class FireStoreController extends GetxController {
         if (element.data().containsKey('adjusted')) {
           spl = Request(
             specialist: element['specialist'],
-            patient: element['user'],
+            patient: element['patient'],
             online: element['online'],
             time: DateTime.fromMillisecondsSinceEpoch(
                 element['at'].seconds * 1000),
@@ -166,7 +166,7 @@ class FireStoreController extends GetxController {
         } else {
           spl = Request(
             specialist: element['specialist'],
-            patient: element['user'],
+            patient: element['patient'],
             online: element['online'],
             time: DateTime.fromMillisecondsSinceEpoch(
                 element['at'].seconds * 1000),
