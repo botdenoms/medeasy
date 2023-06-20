@@ -14,7 +14,7 @@ class FireStoreController extends GetxController {
 
   Future<bool> addSpecialist(Specialist user) async {
     try {
-      await _fireStore.collection('specialists').doc().set(user.toMap());
+      await _fireStore.collection('specialists').doc(user.id).set(user.toMap());
       return true;
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
@@ -31,7 +31,7 @@ class FireStoreController extends GetxController {
       for (var element in data) {
         Specialist spl = Specialist(
           speciality: element['speciality'],
-          location: element['location'],
+          location: [...element['location']],
           profile: element['profile'],
           regNo: element['regNo'],
           cert: element['cert'],
@@ -39,6 +39,37 @@ class FireStoreController extends GetxController {
           id: element['id'],
         );
         retList.add(spl);
+      }
+      return retList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<List<Specialist>?> getSpecialistsVerified() async {
+    List<Specialist> retList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query =
+          await _fireStore.collection('specialists').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      for (var element in data) {
+        if (element.data().containsKey('verified') &&
+            element.data().containsKey('at')) {
+          Specialist spl = Specialist(
+            speciality: element['speciality'],
+            location: [...element['location']],
+            profile: element['profile'],
+            regNo: element['regNo'],
+            cert: element['cert'],
+            name: element['name'],
+            id: element['id'],
+            verified: element['verified'],
+            at: DateTime.fromMillisecondsSinceEpoch(
+                element['at'].seconds * 1000),
+          );
+          retList.add(spl);
+        }
       }
       return retList;
     } catch (e) {
@@ -67,7 +98,7 @@ class FireStoreController extends GetxController {
           name: map['name'],
           telephone: map['telephone'],
           email: map['email'],
-          //at: data.data()!['at'],
+          at: DateTime.fromMillisecondsSinceEpoch(map['at'].seconds * 1000),
           specialist: map['specialist'],
         );
         return user;
@@ -84,17 +115,34 @@ class FireStoreController extends GetxController {
       DocumentSnapshot<Map<String, dynamic>> data =
           await _fireStore.collection('specialists').doc(id).get();
       if (data.exists) {
-        final map = data.data()!;
-        Specialist spl = Specialist(
-          speciality: map['speciality'],
-          location: map['location'],
-          profile: map['profile'],
-          regNo: map['regNo'],
-          cert: map['cert'],
-          name: map['name'],
-          id: map['id'],
-        );
-        return spl;
+        if (data.data()!.containsKey('verified') &&
+            data.data()!.containsKey('at')) {
+          final map = data.data()!;
+          Specialist spl = Specialist(
+            speciality: map['speciality'],
+            location: [...map['location']],
+            profile: map['profile'],
+            regNo: map['regNo'],
+            cert: map['cert'],
+            name: map['name'],
+            id: map['id'],
+            verified: map['verified'],
+            at: DateTime.fromMillisecondsSinceEpoch(map['at'].seconds * 1000),
+          );
+          return spl;
+        } else {
+          final map = data.data()!;
+          Specialist spl = Specialist(
+            speciality: map['speciality'],
+            location: [...map['location']],
+            profile: map['profile'],
+            regNo: map['regNo'],
+            cert: map['cert'],
+            name: map['name'],
+            id: map['id'],
+          );
+          return spl;
+        }
       }
       return null;
     } catch (e) {
@@ -184,6 +232,90 @@ class FireStoreController extends GetxController {
     }
   }
 
+  Future<List<Request>?> getAllRequestsOf(String id) async {
+    List<Request> retList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query =
+          await _fireStore.collection('requests').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      // DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch)
+
+      for (QueryDocumentSnapshot<Map<String, dynamic>> element in data) {
+        Request spl;
+        if (element.data().containsKey('adjusted')) {
+          spl = Request(
+            specialist: element['specialist'],
+            patient: element['patient'],
+            online: element['online'],
+            time: DateTime.fromMillisecondsSinceEpoch(
+                element['at'].seconds * 1000),
+            adjusted: DateTime.fromMillisecondsSinceEpoch(
+                element['adjusted'].seconds * 1000),
+            id: element.id,
+          );
+        } else {
+          spl = Request(
+            specialist: element['specialist'],
+            patient: element['patient'],
+            online: element['online'],
+            time: DateTime.fromMillisecondsSinceEpoch(
+                element['at'].seconds * 1000),
+            id: element.id,
+          );
+        }
+        if (spl.patient == id || spl.specialist == id) {
+          retList.add(spl);
+        }
+      }
+      return retList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<List<Request>?> getAllRequestsMadeBy(String id) async {
+    List<Request> retList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query =
+          await _fireStore.collection('requests').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      // DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch)
+
+      for (QueryDocumentSnapshot<Map<String, dynamic>> element in data) {
+        Request spl;
+        if (element.data().containsKey('adjusted')) {
+          spl = Request(
+            specialist: element['specialist'],
+            patient: element['patient'],
+            online: element['online'],
+            time: DateTime.fromMillisecondsSinceEpoch(
+                element['at'].seconds * 1000),
+            adjusted: DateTime.fromMillisecondsSinceEpoch(
+                element['adjusted'].seconds * 1000),
+            id: element.id,
+          );
+        } else {
+          spl = Request(
+            specialist: element['specialist'],
+            patient: element['patient'],
+            online: element['online'],
+            time: DateTime.fromMillisecondsSinceEpoch(
+                element['at'].seconds * 1000),
+            id: element.id,
+          );
+        }
+        if (spl.patient == id) {
+          retList.add(spl);
+        }
+      }
+      return retList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
   Future<bool> approveRequest(String id, Schedule sch) async {
     try {
       await _fireStore.collection('requests').doc(id).update({
@@ -213,6 +345,19 @@ class FireStoreController extends GetxController {
     try {
       await _fireStore.collection('users').doc(id).update({
         'specialist': true,
+      });
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<bool> verifySpecialist(String id, DateTime at) async {
+    try {
+      await _fireStore.collection('specialists').doc(id).update({
+        'verified': true,
+        'at': at,
       });
       return true;
     } catch (e) {

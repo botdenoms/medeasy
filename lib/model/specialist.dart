@@ -1,12 +1,13 @@
 class Specialist {
   final String speciality;
-  final String location;
+  final List<String> location;
   final String profile;
   final String regNo;
   final String cert;
   final String name;
   final String id;
   bool verified = false;
+  DateTime? at;
 
   Specialist({
     required this.speciality,
@@ -16,6 +17,8 @@ class Specialist {
     required this.cert,
     required this.name,
     required this.id,
+    this.verified = false,
+    this.at,
   });
 
   Map<String, dynamic> toMap() {

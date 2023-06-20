@@ -72,7 +72,7 @@ class _SpecialistCardState extends State<SpecialistCard> {
                   children: [
                     const Icon(Icons.location_on_rounded),
                     Text(
-                      widget.specialist.location,
+                      '${widget.specialist.location[1]}, ${widget.specialist.location[0]}',
                       style: const TextStyle(fontSize: 15),
                     ),
                   ],

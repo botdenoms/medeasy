@@ -69,8 +69,10 @@ class _SpecialistViewState extends State<SpecialistView> {
                   children: [
                     Text(widget.specialist.speciality,
                         style: const TextStyle(fontSize: 16)),
-                    Text(widget.specialist.location,
-                        style: const TextStyle(fontSize: 16)),
+                    Text(
+                      '${widget.specialist.location[1]}, ${widget.specialist.location[0]}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),

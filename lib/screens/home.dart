@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medeasy/screens/screens.dart';
 import 'package:medeasy/widgets/widgets.dart';
 
+import '../configs/constants.dart';
 import '../model/models.dart';
 import 'package:get/get.dart';
 import 'package:medeasy/controllers/controllers.dart';
@@ -24,37 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool loading = true;
 
   TextEditingController searchCon = TextEditingController();
-  final List<String> suggestions = [
-    'Pediatrician',
-    'Allergist',
-    'Dermatologist',
-    'Ophthalmologist',
-    'Obstetrician/gynecologist',
-    'Cardiologist',
-    'Endocrinologist',
-    'Gastroenterologist',
-    'Nephrologist',
-    'Urologist',
-    'Pulmonologist',
-    'Otolaryngologist',
-    'Neurologist',
-    'Psychiatrist',
-    'Oncologist',
-    'Radiologist',
-    'Rheumatologist',
-    'General surgeon',
-    'Orthopedic surgeon',
-    'Cardiac surgeon',
-    'Anesthesiologist',
-    'Emergency Medicine Specialist',
-    'Hematologist',
-    'Medical Geneticist',
-    'Osteopath',
-    'Pathologist',
-    'Physiatrist',
-    'Plastic Surgeon',
-    'Podiatrist'
-  ];
 
   featuredSpecialist() async {
     final resp = await fireCon.getSpecialists();
@@ -152,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       width: screen.width * .7,
                       child: SearchField<String>(
-                        suggestions: suggestions.map((e) {
+                        suggestions: suggestionSpecialists.map((e) {
                           return SearchFieldListItem<String>(e,
                               item: e,
                               child: Padding(
@@ -183,16 +153,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         suggestionsDecoration: SuggestionDecoration(
-                            padding: const EdgeInsets.all(5),
-                            color: Colors.white,
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x22000000),
-                                spreadRadius: 2,
-                                blurRadius: 1,
-                                offset: Offset(2, 2),
-                              )
-                            ]),
+                          padding: const EdgeInsets.all(5),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x22000000),
+                              spreadRadius: 2,
+                              blurRadius: 1,
+                              offset: Offset(2, 2),
+                            )
+                          ],
+                        ),
                         onSubmit: (text) {
                           FocusScope.of(context).unfocus();
                           search(text);

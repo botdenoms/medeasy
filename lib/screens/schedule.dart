@@ -21,6 +21,7 @@ class _SchedulerState extends State<Scheduler> {
   TimeOfDay time = TimeOfDay.now();
   bool online = true;
   bool sending = false;
+  bool sent = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,13 +48,13 @@ class _SchedulerState extends State<Scheduler> {
               ),
               const SizedBox(height: 10),
               Text(
-                formatDate(widget.date),
+                'On ${formatDate(widget.date)}',
                 style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 20),
               const Text(
-                'type',
-                style: TextStyle(fontSize: 11),
+                'Type',
+                style: TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 10),
               GestureDetector(
@@ -66,7 +67,7 @@ class _SchedulerState extends State<Scheduler> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   height: 40,
                   width: double.infinity,
-                  color: Colors.greenAccent,
+                  color: Colors.black26,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -198,7 +199,7 @@ class _SchedulerState extends State<Scheduler> {
       default:
         break;
     }
-    return 'On $day $month,${dt.year}';
+    return '$day $month, ${dt.year}';
   }
 
   String timeFormat(TimeOfDay time) {
@@ -230,18 +231,27 @@ class _SchedulerState extends State<Scheduler> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Schedule setup'),
+          title: const Center(child: Text('Schedule setup')),
+          titlePadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 20,
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Text('Date: ${formatDate(widget.date)}'),
+                const SizedBox(height: 5),
                 Text('Time: ${timeFormat(time)}'),
               ],
             ),
           ),
+          actionsAlignment: MainAxisAlignment.spaceBetween,
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancle'),
+              child: const Text(
+                'Close',
+                style: TextStyle(color: Colors.redAccent),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -251,24 +261,15 @@ class _SchedulerState extends State<Scheduler> {
                   ? const CircularProgressIndicator(
                       color: Colors.greenAccent,
                     )
-                  : const Text('Send'),
-              onPressed: () async {
-                setState(() {
-                  sending = !sending;
-                });
-                final success = await requestSend();
-                setState(() {
-                  sending = !sending;
-                });
-                if (success) {
-                  // success response
-                  Get.snackbar('Success', 'Request send',
-                      backgroundColor: Colors.greenAccent);
+                  : const Text(
+                      'Send',
+                      style: TextStyle(color: Colors.greenAccent),
+                    ),
+              onPressed: () {
+                if (sent) {
                   Navigator.of(context).pop();
                 }
-                Get.snackbar('Failed', 'Request failed to send',
-                    backgroundColor: Colors.redAccent);
-                // failure response
+                requestSend();
               },
             ),
           ],
@@ -278,11 +279,22 @@ class _SchedulerState extends State<Scheduler> {
   }
 
   Future<bool> requestSend() async {
+    if (sent) {
+      return false;
+    }
     // send request on the given date and time
     // attach user records to doctor in view
     final UserController userCon = Get.find();
     final FireStoreController fireCon = Get.find();
     String? id = userCon.user()!.uid;
+    if (widget.specialist.id == id) {
+      Get.snackbar(
+        'Error',
+        'Your can\'t make request to yourself',
+        backgroundColor: Colors.blueAccent,
+      );
+      return false;
+    }
     Request req = Request(
       specialist: widget.specialist.id,
       online: online,
@@ -296,6 +308,29 @@ class _SchedulerState extends State<Scheduler> {
       patient: id,
     );
     final resp = await fireCon.createRequest(req);
+    if (resp) {
+      // success response
+      Get.snackbar(
+        'Success',
+        'Request send',
+        backgroundColor: Colors.greenAccent,
+      );
+      setState(() {
+        sent = true;
+      });
+    } else {
+      Get.snackbar(
+        'Failed',
+        'Request failed to send',
+        backgroundColor: Colors.redAccent,
+      );
+      setState(() {
+        sending = !sending;
+      });
+    }
+    setState(() {
+      sending = !sending;
+    });
     return resp;
   }
 }

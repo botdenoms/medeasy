@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../controllers/controllers.dart';
 
 class StatsCard extends StatefulWidget {
   const StatsCard({super.key, required this.specialist});
@@ -14,6 +17,13 @@ class _StatsCardState extends State<StatsCard> {
   double ratingsAvg = 2.5;
   double ratedAvg = 2.5;
   DateTime? joined;
+  DateTime? verifiedOn;
+
+  @override
+  void initState() {
+    buildUserprofile();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +40,11 @@ class _StatsCardState extends State<StatsCard> {
             ),
             const SizedBox(width: 5),
             Text(
-              joined == null ? "null" : joined!.toString(),
+              joined == null
+                  ? "null"
+                  : joined!
+                      .toString()
+                      .substring(0, joined.toString().length - 7),
               style: const TextStyle(fontSize: 17, color: Colors.greenAccent),
             ),
           ],
@@ -53,7 +67,7 @@ class _StatsCardState extends State<StatsCard> {
         Row(
           children: [
             const Text(
-              'Schedules Appoinments: ',
+              'Schedules made: ',
               style: TextStyle(fontSize: 17),
             ),
             const SizedBox(width: 5),
@@ -78,6 +92,10 @@ class _StatsCardState extends State<StatsCard> {
           ],
         ),
         const SizedBox(height: 5),
+        const Divider(
+          color: Color(0xFF1E1E1E),
+        ),
+        const SizedBox(height: 5),
         widget.specialist == true
             ? Row(
                 children: [
@@ -87,16 +105,18 @@ class _StatsCardState extends State<StatsCard> {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    joined == null ? 'null' : joined!.toString(),
-                    style: const TextStyle(
+                    verifiedOn == null ? 'Not Verified' : joined!.toString(),
+                    style: TextStyle(
                       fontSize: 17,
-                      color: Colors.greenAccent,
+                      color: joined == null
+                          ? Colors.redAccent
+                          : Colors.greenAccent,
                     ),
                   ),
                 ],
               )
             : const SizedBox(),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         widget.specialist == true
             ? Row(
                 children: [
@@ -118,7 +138,59 @@ class _StatsCardState extends State<StatsCard> {
                 ],
               )
             : const SizedBox(),
+        const SizedBox(height: 5),
+        widget.specialist == true
+            ? verifiedOn != null
+                ? Row(
+                    children: const [
+                      Icon(Icons.add_location_outlined),
+                      SizedBox(width: 5),
+                      Text(
+                        'Add ddress on map',
+                        style: TextStyle(fontSize: 17),
+                      ),
+                    ],
+                  )
+                : const SizedBox()
+            : const SizedBox(),
       ],
     );
+  }
+
+  buildUserprofile() async {
+    // return infor on user
+    final FireStoreController fireCon = Get.find();
+    final UserController usr = Get.find();
+    String userId = usr.user()!.uid;
+    final resp = await fireCon.userData(userId);
+    // resp.at == date
+    final reqs = await fireCon.getAllRequestsMadeBy(userId);
+    // reqs.length = made request
+    final sch = await fireCon.getSchedulesOf(userId);
+    // sch.length = schedules made
+    if (widget.specialist) {
+      final spe = await fireCon.specialistData(userId);
+      if (spe!.verified) {
+        // spe.at = date of verification
+        setState(() {
+          joined = resp!.at;
+          requests = reqs!.length;
+          schedules = sch!.length;
+          verifiedOn = spe.at;
+        });
+      } else {
+        setState(() {
+          joined = resp!.at;
+          requests = reqs!.length;
+          schedules = sch!.length;
+        });
+      }
+    } else {
+      setState(() {
+        joined = resp!.at;
+        requests = reqs!.length;
+        schedules = sch!.length;
+      });
+    }
   }
 }
