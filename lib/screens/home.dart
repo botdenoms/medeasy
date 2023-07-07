@@ -7,6 +7,7 @@ import '../model/models.dart';
 import 'package:get/get.dart';
 import 'package:medeasy/controllers/controllers.dart';
 import 'package:searchfield/searchfield.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -93,11 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 20),
                     IconButton(
                       onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (BuildContext context) => const MapView(),
-                          ),
-                        );
+                        locationPerm();
                       },
                       icon: const Icon(Icons.location_on_rounded),
                     ),
@@ -243,5 +240,32 @@ class _HomeScreenState extends State<HomeScreen> {
       filtered = tmp;
       loading = false;
     });
+  }
+
+  void locationPerm() async {
+    bool granted = await Permission.location.isGranted;
+    if (granted) {
+      toMap();
+    } else {
+      PermissionStatus status = await Permission.location.request();
+      if (status.isGranted) {
+        toMap();
+      }
+      Get.snackbar(
+        'Error',
+        'User location is required first',
+        backgroundColor: Colors.blueAccent,
+      );
+    }
+  }
+
+  toMap() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => MapView(
+          specialists: specialists,
+        ),
+      ),
+    );
   }
 }

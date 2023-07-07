@@ -1,3 +1,5 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class Specialist {
   final String speciality;
   final List<String> location;
@@ -8,6 +10,7 @@ class Specialist {
   final String id;
   bool verified = false;
   DateTime? at;
+  LatLng? geo;
 
   Specialist({
     required this.speciality,
@@ -19,6 +22,7 @@ class Specialist {
     required this.id,
     this.verified = false,
     this.at,
+    this.geo,
   });
 
   Map<String, dynamic> toMap() {

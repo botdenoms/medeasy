@@ -44,6 +44,11 @@ dependencies:
   firebase_storage: ^11.0.16
   table_calendar: ^3.0.8
   searchfield: ^0.8.3
+  # mapbox_maps_flutter: ^0.4.4
+  google_maps_flutter: ^2.3.0
+  permission_handler: ^10.4.0
+  geolocator: ^9.0.2
+  
 
 dev_dependencies:
   flutter_test:

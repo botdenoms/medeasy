@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../model/models.dart';
 
@@ -29,16 +30,70 @@ class FireStoreController extends GetxController {
           await _fireStore.collection('specialists').get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
       for (var element in data) {
-        Specialist spl = Specialist(
-          speciality: element['speciality'],
-          location: [...element['location']],
-          profile: element['profile'],
-          regNo: element['regNo'],
-          cert: element['cert'],
-          name: element['name'],
-          id: element['id'],
-        );
-        retList.add(spl);
+        if (element.data().containsKey('verified') &&
+            element.data().containsKey('at')) {
+          if (element.data().containsKey('geo')) {
+            Specialist spl = Specialist(
+              speciality: element['speciality'],
+              location: [...element['location']],
+              profile: element['profile'],
+              regNo: element['regNo'],
+              cert: element['cert'],
+              name: element['name'],
+              id: element['id'],
+              geo: LatLng(
+                element['geo'].latitude,
+                element['geo'].longitude,
+              ),
+              verified: element['verified'],
+              at: DateTime.fromMillisecondsSinceEpoch(
+                  element['at'].seconds * 1000),
+            );
+            retList.add(spl);
+          } else {
+            Specialist spl = Specialist(
+              speciality: element['speciality'],
+              location: [...element['location']],
+              profile: element['profile'],
+              regNo: element['regNo'],
+              cert: element['cert'],
+              name: element['name'],
+              id: element['id'],
+              verified: element['verified'],
+              at: DateTime.fromMillisecondsSinceEpoch(
+                  element['at'].seconds * 1000),
+            );
+            retList.add(spl);
+          }
+        } else {
+          if (element.data().containsKey('geo')) {
+            Specialist spl = Specialist(
+              speciality: element['speciality'],
+              location: [...element['location']],
+              profile: element['profile'],
+              regNo: element['regNo'],
+              cert: element['cert'],
+              name: element['name'],
+              id: element['id'],
+              geo: LatLng(
+                element['geo'].latitude,
+                element['geo'].longitude,
+              ),
+            );
+            retList.add(spl);
+          } else {
+            Specialist spl = Specialist(
+              speciality: element['speciality'],
+              location: [...element['location']],
+              profile: element['profile'],
+              regNo: element['regNo'],
+              cert: element['cert'],
+              name: element['name'],
+              id: element['id'],
+            );
+            retList.add(spl);
+          }
+        }
       }
       return retList;
     } catch (e) {
@@ -56,19 +111,36 @@ class FireStoreController extends GetxController {
       for (var element in data) {
         if (element.data().containsKey('verified') &&
             element.data().containsKey('at')) {
-          Specialist spl = Specialist(
-            speciality: element['speciality'],
-            location: [...element['location']],
-            profile: element['profile'],
-            regNo: element['regNo'],
-            cert: element['cert'],
-            name: element['name'],
-            id: element['id'],
-            verified: element['verified'],
-            at: DateTime.fromMillisecondsSinceEpoch(
-                element['at'].seconds * 1000),
-          );
-          retList.add(spl);
+          if (element.data().containsKey('geo')) {
+            Specialist spl = Specialist(
+              speciality: element['speciality'],
+              location: [...element['location']],
+              profile: element['profile'],
+              regNo: element['regNo'],
+              cert: element['cert'],
+              name: element['name'],
+              id: element['id'],
+              geo: element['geo'],
+              verified: element['verified'],
+              at: DateTime.fromMillisecondsSinceEpoch(
+                  element['at'].seconds * 1000),
+            );
+            retList.add(spl);
+          } else {
+            Specialist spl = Specialist(
+              speciality: element['speciality'],
+              location: [...element['location']],
+              profile: element['profile'],
+              regNo: element['regNo'],
+              cert: element['cert'],
+              name: element['name'],
+              id: element['id'],
+              verified: element['verified'],
+              at: DateTime.fromMillisecondsSinceEpoch(
+                  element['at'].seconds * 1000),
+            );
+            retList.add(spl);
+          }
         }
       }
       return retList;
@@ -358,6 +430,18 @@ class FireStoreController extends GetxController {
       await _fireStore.collection('specialists').doc(id).update({
         'verified': true,
         'at': at,
+      });
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<bool> addGeoData(String id, LatLng latLng) async {
+    try {
+      await _fireStore.collection('specialists').doc(id).update({
+        'geo': GeoPoint(latLng.latitude, latLng.longitude),
       });
       return true;
     } catch (e) {
