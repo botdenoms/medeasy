@@ -67,15 +67,18 @@ class _SpecialistViewState extends State<SpecialistView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(widget.specialist.speciality,
-                        style: const TextStyle(fontSize: 16)),
+                    Text(
+                      widget.specialist.speciality,
+                      style: const TextStyle(
+                          fontSize: 18, color: Color(0xFF10443d)),
+                    ),
                     Text(
                       '${widget.specialist.location[1]}, ${widget.specialist.location[0]}',
                       style: const TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 const Text('Calendar', style: TextStyle(fontSize: 14)),
                 const SizedBox(height: 5),
                 TableCalendar(

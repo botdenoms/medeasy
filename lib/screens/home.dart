@@ -28,7 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchCon = TextEditingController();
 
   featuredSpecialist() async {
-    final resp = await fireCon.getSpecialists();
+    setState(() {
+      loading = true;
+    });
+    final resp = await fireCon.getSpecialistsVerified();
     setState(() {
       specialists = resp!;
       filtered = specialists;
@@ -70,8 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
                 },
-                icon: const Icon(Icons.account_circle_rounded,
-                    color: Colors.black, size: 36),
+                icon: const Icon(
+                  Icons.account_circle_rounded,
+                  color: Color(0xFF10443d),
+                  size: 36,
+                ),
               ),
             ],
             title: const Text(
@@ -79,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: Color(0xFF10443d),
               ),
             ),
             bottom: PreferredSize(
@@ -122,12 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         suggestions: suggestionSpecialists.map((e) {
                           return SearchFieldListItem<String>(e,
                               item: e,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(
-                                  e,
-                                  style: const TextStyle(fontSize: 15.0),
-                                ),
+                              child: Text(
+                                e,
+                                style: const TextStyle(fontSize: 17.0),
                               ));
                         }).toList(),
                         controller: searchCon,
@@ -161,6 +164,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             )
                           ],
                         ),
+                        suggestionItemDecoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: Color(0xAA10443d)),
+                          ),
+                        ),
                         onSubmit: (text) {
                           FocusScope.of(context).unfocus();
                           search(text);
@@ -176,12 +184,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text('Featured specialist'),
-            ),
-          ),
+          searchCon.text == ''
+              ? const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text('Featured specialist'),
+                  ),
+                )
+              : SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text('Search for ${searchCon.text}'),
+                  ),
+                ),
           loading
               ? const SliverToBoxAdapter(
                   child: SizedBox(
@@ -195,13 +210,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 )
               : filtered.isEmpty
-                  ? const SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 400,
-                        width: double.infinity,
-                        child: Center(
-                          child: Text('No specialist found'),
-                        ),
+                  ? SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 80),
+                          const Text(
+                            'No specialist found',
+                          ),
+                          const SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: () {
+                              featuredSpecialist();
+                            },
+                            child: const Icon(
+                              Icons.refresh_rounded,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'refresh',
+                          ),
+                          const SizedBox(height: 40),
+                        ],
                       ),
                     )
                   : SliverList(

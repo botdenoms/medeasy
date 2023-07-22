@@ -53,7 +53,10 @@ class _AuthenticationsState extends State<Authentications> {
                     : user
                         ? logInText
                         : signUpText,
-                style: const TextStyle(fontSize: 17),
+                style: const TextStyle(
+                  fontSize: 17,
+                  color: Color(0xFF10443d),
+                ),
               ),
               const SizedBox(height: 20),
               reset
@@ -82,10 +85,11 @@ class _AuthenticationsState extends State<Authentications> {
                     });
                   },
                   child: Text(
-                    user
-                        ? 'Don\'t have an account, SignUp'
-                        : 'Have an account, log in',
-                    style: const TextStyle(fontSize: 17),
+                    user ? 'Sign Up' : 'Log In',
+                    style: const TextStyle(
+                      fontSize: 17,
+                      color: Color(0xFF10443d),
+                    ),
                   ),
                 ),
               ),
@@ -101,7 +105,7 @@ class _AuthenticationsState extends State<Authentications> {
                               });
                             },
                             child: const Text(
-                              'Forgot the password!',
+                              'Reset password!',
                               style: TextStyle(fontSize: 14),
                             ),
                           ),
@@ -132,10 +136,6 @@ class _AuthenticationsState extends State<Authentications> {
                               resolving = !resolving;
                             });
                             if (!success) {
-                              // display error
-                              Get.snackbar(
-                                  'Failed', 'Failed to process your request',
-                                  backgroundColor: Colors.redAccent);
                               return;
                             }
                             // ignore: use_build_context_synchronously
@@ -192,6 +192,11 @@ class _AuthenticationsState extends State<Authentications> {
     if (reset) {
       if (name.text == '' || email.text == '') {
         // empty fields
+        Get.snackbar(
+          'Error',
+          'empty fields',
+          backgroundColor: Colors.redAccent,
+        );
         return false;
       } else {
         // reset action
@@ -202,6 +207,11 @@ class _AuthenticationsState extends State<Authentications> {
       // log in
       if (password.text == '' || email.text == '') {
         // empty fields
+        Get.snackbar(
+          'Error',
+          'empty fields',
+          backgroundColor: Colors.redAccent,
+        );
         return false;
       } else {
         final UserController userCon = Get.find();
@@ -215,6 +225,11 @@ class _AuthenticationsState extends State<Authentications> {
           name.text == '' ||
           telephone.text == '') {
         // empty fields
+        Get.snackbar(
+          'Error',
+          'empty fields',
+          backgroundColor: Colors.redAccent,
+        );
         return false;
       } else {
         final UserController userCon = Get.find();

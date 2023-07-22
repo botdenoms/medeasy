@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/widgets.dart';
-import '../screens/screens.dart';
 import '../model/models.dart';
 
 import 'package:get/get.dart';
@@ -44,11 +43,7 @@ class _AccountState extends State<Account> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) => const HomeScreen(),
-              ),
-            );
+            Navigator.of(context).pop();
           },
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
@@ -64,8 +59,8 @@ class _AccountState extends State<Account> {
               Navigator.of(context).pop();
             },
             icon: const Icon(
-              Icons.account_circle_rounded,
-              size: 36,
+              Icons.logout_rounded,
+              size: 28,
               color: Color(0xFF1E1E1E),
             ),
           ),

@@ -70,10 +70,14 @@ class _SpecialistCardState extends State<SpecialistCard> {
                 ),
                 Row(
                   children: [
-                    const Icon(Icons.location_on_rounded),
+                    const Icon(
+                      Icons.location_on_rounded,
+                      size: 14,
+                    ),
                     Text(
                       '${widget.specialist.location[1]}, ${widget.specialist.location[0]}',
                       style: const TextStyle(fontSize: 15),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

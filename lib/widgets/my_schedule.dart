@@ -51,7 +51,12 @@ class _MyScehduleState extends State<MyScehdule> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const CircleAvatar(
-                        radius: 28, backgroundColor: Colors.amber),
+                      radius: 28,
+                      // backgroundColor: Colors.amber,
+                      child: Icon(
+                        Icons.account_circle_outlined,
+                      ),
+                    ),
                     Text(
                       widget.user.name,
                       style: const TextStyle(fontSize: 16),

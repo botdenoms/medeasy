@@ -50,7 +50,11 @@ class _MyNotificationsState extends State<MyNotifications> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const CircleAvatar(
-                        radius: 28, backgroundColor: Colors.amber),
+                      radius: 28,
+                      child: Icon(
+                        Icons.account_circle_outlined,
+                      ),
+                    ),
                     Text(
                       widget.user.name,
                       style: const TextStyle(fontSize: 16),

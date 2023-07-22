@@ -27,7 +27,9 @@ class _MySpecialistState extends State<MySpecialist> {
                   children: [
                     const CircleAvatar(
                       radius: 28,
-                      backgroundColor: Colors.amber,
+                      child: Icon(
+                        Icons.account_circle_outlined,
+                      ),
                     ),
                     Text(
                       widget.user.name,
