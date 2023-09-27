@@ -76,21 +76,32 @@ class _AuthenticationsState extends State<Authentications> {
                           password: password,
                         ),
               const SizedBox(height: 40),
-              Center(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      reset = false;
-                      user = !user;
-                    });
-                  },
-                  child: Text(
-                    user ? 'Sign Up' : 'Log In',
-                    style: const TextStyle(
-                      fontSize: 17,
-                      color: Color(0xFF10443d),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Divider(
+                        color: Color(0xFF10443d),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 5),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          reset = false;
+                          user = !user;
+                        });
+                      },
+                      child: Text(
+                        user ? 'Sign Up' : 'Log In',
+                        style: const TextStyle(
+                          fontSize: 17,
+                          color: Color(0xFF10443d),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 30),

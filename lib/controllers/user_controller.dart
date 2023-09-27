@@ -10,6 +10,13 @@ class UserController extends GetxController {
     return auth.currentUser;
   }
 
+  bool isNull() {
+    if (user() == null) {
+      return true;
+    }
+    return false;
+  }
+
   Future<bool> logIn(String email, String password) async {
     try {
       await auth.signInWithEmailAndPassword(

@@ -68,20 +68,27 @@ class _RequestCardState extends State<RequestCard> {
                         },
                         child: Text(
                           '${widget.request.time.day.toString().padLeft(2, '0')}/${widget.request.time.month.toString().padLeft(2, '0')}/${widget.request.time.year.toString().padLeft(2, '0')}',
-                          style: const TextStyle(fontSize: 17),
+                          style: TextStyle(
+                            fontSize: 17,
+                            decoration: modDate
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                          ),
                         ),
                       ),
                       modDate
                           ? Text(
-                              "-> ${dt!.day.toString().padLeft(2, '0')}/${dt!.month.toString().padLeft(2, '0')}/${dt!.year.toString().padLeft(2, '0')}",
+                              " --> ${dt!.day.toString().padLeft(2, '0')}/${dt!.month.toString().padLeft(2, '0')}/${dt!.year.toString().padLeft(2, '0')}",
                               style: const TextStyle(
-                                  color: Colors.greenAccent,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.greenAccent,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
                             )
                           : const SizedBox(),
                     ],
                   ),
+                  const SizedBox(height: 5),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -91,15 +98,20 @@ class _RequestCardState extends State<RequestCard> {
                         },
                         child: Text(
                           '${widget.request.time.hour.toString().padLeft(2, '0')}:${widget.request.time.minute.toString().padLeft(2, '0')}',
-                          style: const TextStyle(fontSize: 17),
+                          style: TextStyle(
+                            fontSize: 17,
+                            decoration: modTime
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                          ),
                         ),
                       ),
                       modTime
                           ? Text(
-                              '-> ${time!.hour.toString().padLeft(2, '0')}:${time!.minute.toString().padLeft(2, '0')}',
+                              ' --> ${time!.hour.toString().padLeft(2, '0')}:${time!.minute.toString().padLeft(2, '0')}',
                               style: const TextStyle(
                                 color: Colors.greenAccent,
-                                fontSize: 15,
+                                fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
                             )
@@ -153,20 +165,20 @@ class _RequestCardState extends State<RequestCard> {
                           setState(() {
                             spinUsr = false;
                           });
-                          return;
-                        }
-                        Specialist? usr =
-                            await getSpecialist(widget.request.specialist);
-                        if (usr != null) {
+                        } else {
+                          Specialist? usr =
+                              await getSpecialist(widget.request.specialist);
+                          if (usr != null) {
+                            setState(() {
+                              specialist = usr;
+                              user = !user;
+                              spinUsr = false;
+                            });
+                          }
                           setState(() {
-                            specialist = usr;
-                            user = !user;
                             spinUsr = false;
                           });
                         }
-                        setState(() {
-                          spinUsr = false;
-                        });
                       },
                       style: ButtonStyle(
                         backgroundColor:
@@ -175,7 +187,9 @@ class _RequestCardState extends State<RequestCard> {
                             MaterialStateProperty.all(Colors.white),
                       ),
                       child: Text(
-                        widget.specialist ? "Patient" : "Specialist",
+                        widget.request.specialist == widget.userId
+                            ? "Patient"
+                            : "Specialist",
                         style: const TextStyle(fontSize: 17),
                       ),
                     ),
@@ -186,43 +200,45 @@ class _RequestCardState extends State<RequestCard> {
                       child:
                           CircularProgressIndicator(color: Colors.greenAccent),
                     )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            // call request rejection or edit cancle
-                            cancelReq();
-                          },
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.redAccent),
-                            foregroundColor:
-                                MaterialStateProperty.all(Colors.white),
-                          ),
-                          child: Text(
-                            modTime || modDate ? "Cancel" : "Reject",
-                            style: const TextStyle(fontSize: 17),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // call for request acceptance
-                            processReq();
-                          },
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.greenAccent),
-                            foregroundColor:
-                                MaterialStateProperty.all(Colors.white),
-                          ),
-                          child: Text(
-                            modTime || modDate ? "Modify" : "Accept",
-                            style: const TextStyle(fontSize: 17),
-                          ),
+                  : closed
+                      ? const SizedBox()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                // call request rejection or edit cancle
+                                cancelReq();
+                              },
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.redAccent),
+                                foregroundColor:
+                                    MaterialStateProperty.all(Colors.white),
+                              ),
+                              child: Text(
+                                modTime || modDate ? "Cancel" : "Reject",
+                                style: const TextStyle(fontSize: 17),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // call for request acceptance
+                                processReq();
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.greenAccent),
+                                foregroundColor:
+                                    MaterialStateProperty.all(Colors.white),
+                              ),
+                              child: Text(
+                                modTime || modDate ? "Modify" : "Accept",
+                                style: const TextStyle(fontSize: 17),
+                              ),
+                            )
+                          ],
                         )
-                      ],
-                    )
               : const Text(
                   'Status: pending',
                   style: TextStyle(
@@ -371,6 +387,9 @@ class _RequestCardState extends State<RequestCard> {
   }
 
   timePick() async {
+    if (widget.request.specialist != widget.userId) {
+      return;
+    }
     if (closed) {
       Get.snackbar("Notice", "Request closed", backgroundColor: Colors.blue);
       return;
@@ -388,6 +407,9 @@ class _RequestCardState extends State<RequestCard> {
   }
 
   datePick() async {
+    if (widget.request.specialist != widget.userId) {
+      return;
+    }
     if (closed) {
       Get.snackbar("Notice", "Request closed", backgroundColor: Colors.blue);
       return;

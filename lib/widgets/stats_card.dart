@@ -14,8 +14,8 @@ class StatsCard extends StatefulWidget {
 class _StatsCardState extends State<StatsCard> {
   int requests = 0;
   int schedules = 0;
-  double ratingsAvg = 2.5;
-  double ratedAvg = 2.5;
+  double ratingsAvg = 0;
+  double ratedAvg = 0;
   DateTime? joined;
   DateTime? verifiedOn;
 
@@ -105,10 +105,14 @@ class _StatsCardState extends State<StatsCard> {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    verifiedOn == null ? 'Not Verified' : joined!.toString(),
+                    verifiedOn == null
+                        ? 'Not Verified'
+                        : verifiedOn!
+                            .toString()
+                            .substring(0, joined.toString().length - 7),
                     style: TextStyle(
                       fontSize: 17,
-                      color: joined == null
+                      color: verifiedOn == null
                           ? Colors.redAccent
                           : Colors.greenAccent,
                     ),
@@ -138,7 +142,7 @@ class _StatsCardState extends State<StatsCard> {
                 ],
               )
             : const SizedBox(),
-        const SizedBox(height: 5),
+        const SizedBox(height: 15),
         widget.specialist == true
             ? verifiedOn != null
                 ? Row(
@@ -146,7 +150,7 @@ class _StatsCardState extends State<StatsCard> {
                       Icon(Icons.add_location_outlined),
                       SizedBox(width: 5),
                       Text(
-                        'Add ddress on map',
+                        'Add map address',
                         style: TextStyle(fontSize: 17),
                       ),
                     ],
@@ -171,7 +175,6 @@ class _StatsCardState extends State<StatsCard> {
     if (widget.specialist) {
       final spe = await fireCon.specialistData(userId);
       if (spe!.verified) {
-        // spe.at = date of verification
         setState(() {
           joined = resp!.at;
           requests = reqs!.length;
