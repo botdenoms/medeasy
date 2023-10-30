@@ -91,7 +91,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
             children: const [
               SizedBox(width: 5),
               Icon(Icons.call, color: Colors.blueAccent, size: 24),
-              Icon(Icons.facebook_rounded),
+              Icon(Icons.email_rounded, color: Colors.blueAccent, size: 24),
               Icon(Icons.message_rounded, color: Colors.blueAccent, size: 24),
               SizedBox(width: 5),
             ],

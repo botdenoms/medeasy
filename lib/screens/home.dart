@@ -28,6 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchCon = TextEditingController();
 
   featuredSpecialist() async {
+    if (searchCon.text != '') {
+      return;
+    }
     setState(() {
       loading = true;
     });
@@ -281,6 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
       PermissionStatus status = await Permission.location.request();
       if (status.isGranted) {
         toMap();
+        return;
       }
       Get.snackbar(
         'Error',
