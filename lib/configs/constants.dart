@@ -27,7 +27,8 @@ final List<String> suggestionSpecialists = [
   'Pathologist',
   'Physiatrist',
   'Plastic Surgeon',
-  'Podiatrist'
+  'Podiatrist',
+  'Neonatologist'
 ];
 
 final List<String> suggestionsCounties = [

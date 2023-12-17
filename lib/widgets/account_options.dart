@@ -17,7 +17,7 @@ class _AccountOptsState extends State<AccountOpts> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
+      // mainAxisSize: MainAxisSize.max,
       children: [
         Text(
           widget.user.specialist == true

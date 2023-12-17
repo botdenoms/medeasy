@@ -120,7 +120,7 @@ class FireStoreController extends GetxController {
               cert: element['cert'],
               name: element['name'],
               id: element['id'],
-              geo: element['geo'],
+              geo: LatLng(element['geo'].latitude, element['geo'].longitude),
               verified: element['verified'],
               at: DateTime.fromMillisecondsSinceEpoch(
                   element['at'].seconds * 1000),

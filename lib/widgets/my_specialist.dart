@@ -14,34 +14,29 @@ class _MySpecialistState extends State<MySpecialist> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const CircleAvatar(
-                      radius: 28,
-                      child: Icon(
-                        Icons.account_circle_outlined,
-                      ),
-                    ),
-                    Text(
-                      widget.user.name,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
+                const CircleAvatar(
+                  radius: 28,
+                  child: Icon(
+                    Icons.account_circle_outlined,
+                  ),
+                ),
+                Text(
+                  widget.user.name,
+                  style: const TextStyle(fontSize: 16),
                 ),
               ],
             ),
-          ),
-          UserStatus(user: widget.user),
-        ],
+            UserStatus(user: widget.user),
+          ],
+        ),
       ),
     );
   }
