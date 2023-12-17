@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:medeasy/widgets/widgets.dart';
 
 import '../model/models.dart';
+import '../widgets/widgets.dart';
 
-class MySpecialist extends StatefulWidget {
-  const MySpecialist({super.key, required this.user});
+class Facilities extends StatefulWidget {
+  const Facilities({super.key, required this.user});
+
   final User user;
+
   @override
-  State<MySpecialist> createState() => _MySpecialistState();
+  State<Facilities> createState() => _FacilitiesState();
 }
 
-class _MySpecialistState extends State<MySpecialist> {
+class _FacilitiesState extends State<Facilities> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +36,7 @@ class _MySpecialistState extends State<MySpecialist> {
                 ),
               ],
             ),
-            UserStatus(user: widget.user, type: 0),
+            UserStatus(user: widget.user, type: 1),
           ],
         ),
       ),

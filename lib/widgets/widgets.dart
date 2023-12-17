@@ -10,3 +10,8 @@ export './request_card.dart';
 export './user_status.dart';
 export './stats_card.dart';
 export './account_options.dart';
+export './alerts.dart';
+export './facilities.dart';
+export './specialists.dart';
+export './tests.dart';
+export './facility_options.dart';

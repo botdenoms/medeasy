@@ -71,7 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   } else {
                     Navigator.of(context).push(
                       MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const Account(),
+                        builder: (BuildContext context) =>
+                            const ProfileScreen(),
                       ),
                     );
                   }

@@ -153,7 +153,7 @@ class _AuthenticationsState extends State<Authentications> {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute<void>(
                                 builder: (BuildContext context) =>
-                                    const Account(),
+                                    const ProfileScreen(),
                               ),
                             );
                           },

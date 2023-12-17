@@ -6,3 +6,4 @@ export './schedule.dart';
 export './registration.dart';
 export './mapview.dart';
 export './geopick.dart';
+export './profile.dart';
