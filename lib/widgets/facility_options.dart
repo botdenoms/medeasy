@@ -70,7 +70,7 @@ class _FacilityOptsState extends State<FacilityOpts> {
   actionHandler() async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (BuildContext context) => Registration(
+        builder: (BuildContext context) => RegistrationFacility(
           name: widget.user.name,
         ),
       ),

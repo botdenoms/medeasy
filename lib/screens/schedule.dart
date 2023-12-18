@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medeasy/controllers/controllers.dart';
 import '../model/models.dart';
+import '../widgets/widgets.dart';
 
 class Scheduler extends StatefulWidget {
   const Scheduler({
@@ -43,7 +44,7 @@ class _SchedulerState extends State<Scheduler> {
               ),
               const SizedBox(height: 20),
               const Text(
-                'Schedule Setup',
+                'Date',
                 style: TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 10),
@@ -88,20 +89,21 @@ class _SchedulerState extends State<Scheduler> {
                 style: TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  timePick();
-                },
-                child: Row(
-                  children: [
-                    const Icon(Icons.timer_outlined),
-                    Text(
-                      timeFormat(time),
-                      style: const TextStyle(fontSize: 17),
-                    ),
-                  ],
-                ),
-              ),
+              const TimeCard(),
+              // GestureDetector(
+              //   onTap: () {
+              //     timePick();
+              //   },
+              //   child: Row(
+              //     children: [
+              //       const Icon(Icons.timer_outlined),
+              //       Text(
+              //         timeFormat(time),
+              //         style: const TextStyle(fontSize: 17),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

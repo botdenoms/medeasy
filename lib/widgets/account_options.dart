@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medeasy/widgets/widgets.dart';
 
 import '../model/models.dart';
 import '../screens/screens.dart';
@@ -66,6 +67,8 @@ class _AccountOptsState extends State<AccountOpts> {
       ],
     );
   }
+
+  getSpecialistData() {}
 
   actionHandler() async {
     if (widget.user.specialist == true) {

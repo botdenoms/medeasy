@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../model/models.dart';
+import '../screens/screens.dart';
 
 class Tests extends StatefulWidget {
   const Tests({super.key, required this.user});
@@ -48,7 +49,14 @@ class _TestsState extends State<Tests> {
                     const Text("Take a Test \n find facilities within the app"),
                     const SizedBox(width: 10),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) =>
+                                const Facilities(),
+                          ),
+                        );
+                      },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 10.0,

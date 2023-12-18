@@ -4,8 +4,9 @@ import '../model/models.dart';
 import 'widgets.dart';
 
 class UserStatus extends StatefulWidget {
-  const UserStatus({super.key, required this.user});
+  const UserStatus({super.key, required this.user, required this.type});
   final User user;
+  final int type;
 
   @override
   State<UserStatus> createState() => _UserStatusState();
@@ -22,10 +23,14 @@ class _UserStatusState extends State<UserStatus> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: StatsCard(specialist: widget.user.specialist!),
+            child: widget.type == 0
+                ? StatsCard(specialist: widget.user.specialist!)
+                : FacilityStatus(specialist: widget.user.specialist!),
           ),
           const SizedBox(height: 20),
-          Expanded(child: AccountOpts(user: widget.user)),
+          widget.type == 0
+              ? Expanded(child: AccountOpts(user: widget.user))
+              : Expanded(child: FacilityOpts(user: widget.user)),
         ],
       ),
     );

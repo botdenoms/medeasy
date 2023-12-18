@@ -42,8 +42,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           IconButton(
             onPressed: () {
               // log out
-              // final UserController userCon = Get.find();
-              // userCon.logOut();
+              final UserController userCon = Get.find();
+              userCon.logOut();
               Navigator.of(context).pop();
             },
             icon: const Icon(

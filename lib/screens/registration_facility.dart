@@ -11,28 +11,26 @@ import '../configs/constants.dart';
 import '../controllers/controllers.dart';
 import '../model/models.dart';
 
-class Registration extends StatefulWidget {
-  const Registration({super.key, required this.name});
+class RegistrationFacility extends StatefulWidget {
+  const RegistrationFacility({super.key, required this.name});
   final String name;
 
   @override
-  State<Registration> createState() => _RegistrationState();
+  State<RegistrationFacility> createState() => _RegistrationFacilityState();
 }
 
-class _RegistrationState extends State<Registration> {
-  bool cert = false;
-  bool profile = false;
-  String certPath = '';
-  String certNm = '';
-  String profilePath = '';
-  String profileNm = '';
-  TextEditingController speciality = TextEditingController();
+class _RegistrationFacilityState extends State<RegistrationFacility> {
+  bool lincence = false;
+  String lincencePath = '';
+  String lincenceNm = '';
+  TextEditingController pobox = TextEditingController();
+  TextEditingController orgmail = TextEditingController();
+  TextEditingController facilityName = TextEditingController();
   TextEditingController county = TextEditingController();
   TextEditingController location = TextEditingController();
-  TextEditingController regno = TextEditingController();
+  TextEditingController lincenceno = TextEditingController();
 
   bool running = false;
-  bool done = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +46,7 @@ class _RegistrationState extends State<Registration> {
               const SizedBox(height: 30),
               IconButton(
                 onPressed: () {
-                  Navigator.of(context).pop(done);
+                  Navigator.of(context).pop();
                 },
                 icon: const Icon(Icons.arrow_back_ios_new_rounded),
               ),
@@ -57,31 +55,11 @@ class _RegistrationState extends State<Registration> {
                 'Details',
                 style: TextStyle(fontSize: 16),
               ),
-              SearchField<String>(
-                suggestions: suggestionSpecialists.map((e) {
-                  return SearchFieldListItem<String>(e,
-                      item: e,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          e,
-                          style: const TextStyle(fontSize: 15.0),
-                        ),
-                      ));
-                }).toList(),
-                controller: speciality,
-                searchInputDecoration: const InputDecoration(
-                  hintText: 'Speciality',
-                ),
-                onSubmit: (submText) {
-                  if (!suggestionSpecialists.contains(submText)) {
-                    // add to specialities collection
-                  }
-                  FocusScope.of(context).unfocus();
-                },
-                onSuggestionTap: (listItem) {
-                  FocusScope.of(context).unfocus();
-                },
+              TextField(
+                decoration: const InputDecoration(hintText: 'Name'),
+                controller: facilityName,
+                onSubmitted: (value) => FocusScope.of(context).unfocus(),
+                onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),
               SearchField<String>(
                 suggestions: suggestionsCounties.map((e) {
@@ -109,8 +87,21 @@ class _RegistrationState extends State<Registration> {
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),
               TextField(
-                decoration: const InputDecoration(hintText: 'Registration No'),
-                controller: regno,
+                decoration:
+                    const InputDecoration(hintText: 'Facility Lincence No'),
+                controller: lincenceno,
+                onSubmitted: (value) => FocusScope.of(context).unfocus(),
+                onTapOutside: (event) => FocusScope.of(context).unfocus(),
+              ),
+              TextField(
+                decoration: const InputDecoration(hintText: 'P.O box'),
+                controller: pobox,
+                onSubmitted: (value) => FocusScope.of(context).unfocus(),
+                onTapOutside: (event) => FocusScope.of(context).unfocus(),
+              ),
+              TextField(
+                decoration: const InputDecoration(hintText: 'Facility mail'),
+                controller: orgmail,
                 onSubmitted: (value) => FocusScope.of(context).unfocus(),
                 onTapOutside: (event) => FocusScope.of(context).unfocus(),
               ),
@@ -127,10 +118,10 @@ class _RegistrationState extends State<Registration> {
                   SizedBox(
                     height: 150,
                     width: double.infinity,
-                    child: cert
-                        ? Image.file(File(certPath))
+                    child: lincence
+                        ? Image.file(File(lincenceNm))
                         : const Center(
-                            child: Text('No certification added'),
+                            child: Text('No certification picked'),
                           ),
                   ),
                   const SizedBox(height: 5),
@@ -160,61 +151,7 @@ class _RegistrationState extends State<Registration> {
                           ),
                           child: Center(
                             child: Text(
-                              cert ? "Edit" : 'Up load',
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                    ],
-                  ),
-                ],
-              ),
-              const Text(
-                'Profile',
-                style: TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 150,
-                    width: double.infinity,
-                    child: profile
-                        ? Image.file(File(profilePath))
-                        : const Center(child: Text('No Profile added')),
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(width: 20),
-                      GestureDetector(
-                        onTap: () {
-                          pickProfile();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(
-                            10.0,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x22000000),
-                                spreadRadius: 2,
-                                blurRadius: 1,
-                                offset: Offset(2, 2),
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              profile ? "Edit" : 'Up load',
+                              lincence ? "Edit" : 'Up load',
                               style: const TextStyle(fontSize: 16),
                             ),
                           ),
@@ -278,21 +215,19 @@ class _RegistrationState extends State<Registration> {
   }
 
   clearField() {
-    speciality.text = '';
+    facilityName.text = '';
     county.text = '';
     location.text = '';
-    regno.text = '';
-    cert = false;
-    profile = false;
-    certPath = '';
-    certNm = '';
-    profilePath = '';
-    profileNm = '';
+    lincenceno.text = '';
+    lincence = false;
+    lincencePath = '';
+    pobox.text = '';
+    orgmail.text = '';
     setState(() {});
   }
 
   register() async {
-    if (!cert || !profile || county.text == '') {
+    if (!lincence || pobox.text == '' || county.text == '') {
       Get.snackbar(
         'Error',
         'Please Fill all fields',
@@ -300,7 +235,7 @@ class _RegistrationState extends State<Registration> {
       );
       return false;
     }
-    if (speciality.text == '' || location.text == '' || regno.text == '') {
+    if (orgmail.text == '' || location.text == '' || lincenceno.text == '') {
       Get.snackbar(
         'Error',
         'Please Fill all fields',
@@ -308,62 +243,47 @@ class _RegistrationState extends State<Registration> {
       );
       return false;
     }
-    final StorageController storeCon = Get.find();
-    setState(() {
-      running = true;
-    });
-    final profileUrl =
-        await storeCon.upLoadProfile(File(profilePath), profileNm);
-    final certUrl = await storeCon.upLoadCert(File(certPath), certNm);
-    final UserController userCon = Get.find();
-    Specialist spl = Specialist(
-      speciality: speciality.text,
-      location: [
-        county.text,
-        location.text,
-      ],
-      profile: profileUrl!,
-      regNo: regno.text,
-      cert: certUrl!,
-      name: widget.name,
-      id: userCon.user()!.uid,
-    );
-    final FireStoreController fireCon = Get.find();
-    bool success = await fireCon.addSpecialist(spl);
-    if (success) {
-      String? id = userCon.user()!.uid;
-      final resp = await fireCon.updateUser(id);
-      if (resp) {
-        Get.snackbar(
-          'Success',
-          'Data successfully added',
-          backgroundColor: Colors.greenAccent,
-        );
-        setState(() {
-          running = false;
-          done = true;
-        });
-        clearField();
-      } else {
-        Get.snackbar(
-          'Error',
-          'Failded to update your records \n try again',
-          backgroundColor: Colors.redAccent,
-        );
-        setState(() {
-          running = false;
-        });
-      }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Failded to add your records \n try again',
-        backgroundColor: Colors.redAccent,
-      );
-      setState(() {
-        running = false;
-      });
-    }
+    // final StorageController storeCon = Get.find();
+    // setState(() {
+    //   running = true;
+    // });
+    // final certUrl = await storeCon.upLoadCert(File(lincencePath), lincenceNm);
+    // final UserController userCon = Get.find();
+    // final FireStoreController fireCon = Get.find();
+    // bool success = await fireCon.addSpecialist(spl);
+    // if (success) {
+    //   String? id = userCon.user()!.uid;
+    //   final resp = await fireCon.updateUser(id);
+    //   if (resp) {
+    //     Get.snackbar(
+    //       'Success',
+    //       'Data successfully added',
+    //       backgroundColor: Colors.greenAccent,
+    //     );
+    //     setState(() {
+    //       running = false;
+    //     });
+    //     clearField();
+    //   } else {
+    //     Get.snackbar(
+    //       'Error',
+    //       'Failded to update your records \n try again',
+    //       backgroundColor: Colors.redAccent,
+    //     );
+    //     setState(() {
+    //       running = false;
+    //     });
+    //   }
+    // } else {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Failded to add your records \n try again',
+    //     backgroundColor: Colors.redAccent,
+    //   );
+    //   setState(() {
+    //     running = false;
+    //   });
+    // }
   }
 
   pickCert() async {
@@ -371,23 +291,9 @@ class _RegistrationState extends State<Registration> {
     XFile? img = await imgPicker.pickImage(source: ImageSource.gallery);
     if (img != null) {
       setState(() {
-        certNm = img.name;
-        certPath = img.path;
-        cert = true;
-      });
-      return;
-    }
-    Get.snackbar('error', 'image is null');
-  }
-
-  pickProfile() async {
-    final imgPicker = ImagePicker();
-    XFile? img = await imgPicker.pickImage(source: ImageSource.gallery);
-    if (img != null) {
-      setState(() {
-        profileNm = img.name;
-        profilePath = img.path;
-        profile = true;
+        lincenceNm = img.name;
+        lincencePath = img.path;
+        lincence = true;
       });
       return;
     }

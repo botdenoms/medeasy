@@ -6,15 +6,15 @@ import '../controllers/controllers.dart';
 import '../model/models.dart';
 import '../screens/screens.dart';
 
-class StatsCard extends StatefulWidget {
-  const StatsCard({super.key, required this.specialist});
+class FacilityStatus extends StatefulWidget {
+  const FacilityStatus({super.key, required this.specialist});
   final bool specialist;
 
   @override
-  State<StatsCard> createState() => _StatsCardState();
+  State<FacilityStatus> createState() => _FacilityStatusState();
 }
 
-class _StatsCardState extends State<StatsCard> {
+class _FacilityStatusState extends State<FacilityStatus> {
   DateTime? joined;
   DateTime? verifiedOn;
   LatLng? location;
@@ -75,7 +75,7 @@ class _StatsCardState extends State<StatsCard> {
                         const SizedBox(width: 5),
                         Text(
                           verifiedOn == null
-                              ? 'Not Verified'
+                              ? 'Verification pending..'
                               : verifiedOn!
                                   .toString()
                                   .substring(0, joined.toString().length - 7),
@@ -213,66 +213,11 @@ class _StatsCardState extends State<StatsCard> {
                   ? verifiedOn != null
                       ? Column(
                           children: [
-                            Row(
-                              children: const [
-                                Icon(Icons.date_range_rounded),
-                                SizedBox(width: 5),
-                                Text(
-                                  'Update schedule',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    final result =
-                                        await Navigator.of(context).push(
-                                      MaterialPageRoute<LatLng?>(
-                                        builder: (BuildContext context) =>
-                                            const GeoPicker(),
-                                      ),
-                                    );
-                                    if (result != null) {
-                                      setState(() {
-                                        location = result;
-                                      });
-                                      Get.snackbar(
-                                        'Infor',
-                                        '$location',
-                                        backgroundColor: Colors.yellowAccent,
-                                      );
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0,
-                                      horizontal: 20.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Color(0x22000000),
-                                          spreadRadius: 2,
-                                          blurRadius: 1,
-                                          offset: Offset(2, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Text('Schedule'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 5.0),
+                            const SizedBox(height: 18),
                             Row(
                               children: const [
                                 Text(
-                                  'Pending schedules: ',
+                                  'Pending Tests: ',
                                   style: TextStyle(fontSize: 17),
                                 ),
                               ],
