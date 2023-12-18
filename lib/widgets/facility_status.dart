@@ -64,7 +64,7 @@ class _FacilityStatusState extends State<FacilityStatus> {
                 color: Color(0xFF1E1E1E),
               ),
               const SizedBox(height: 5),
-              _user.specialist == true
+              _user.facility == true
                   ? Row(
                       children: [
                         const Text(
@@ -90,7 +90,7 @@ class _FacilityStatusState extends State<FacilityStatus> {
                     )
                   : const SizedBox(),
               const SizedBox(height: 5),
-              _user.specialist == true
+              _user.facility == true
                   ? verifiedOn != null
                       ? Column(
                           children: [
@@ -209,7 +209,7 @@ class _FacilityStatusState extends State<FacilityStatus> {
                         )
                       : const SizedBox()
                   : const SizedBox(),
-              _user.specialist == true
+              _user.facility == true
                   ? verifiedOn != null
                       ? Column(
                           children: [

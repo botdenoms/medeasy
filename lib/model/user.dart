@@ -3,6 +3,7 @@ class User {
   final String telephone;
   final String email;
   bool? specialist = false;
+  bool? facility = false;
   DateTime? at;
 
   User({
@@ -11,6 +12,7 @@ class User {
     required this.email,
     this.at,
     this.specialist,
+    this.facility,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class User {
       'email': email,
       'specialist': specialist,
       'at': at,
+      'facility': facility,
     };
   }
 }

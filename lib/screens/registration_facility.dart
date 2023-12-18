@@ -107,7 +107,7 @@ class _RegistrationFacilityState extends State<RegistrationFacility> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Certification',
+                'Lincence',
                 style: TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 20),
@@ -119,7 +119,7 @@ class _RegistrationFacilityState extends State<RegistrationFacility> {
                     height: 150,
                     width: double.infinity,
                     child: lincence
-                        ? Image.file(File(lincenceNm))
+                        ? Image.file(File(lincencePath))
                         : const Center(
                             child: Text('No certification picked'),
                           ),
@@ -243,47 +243,60 @@ class _RegistrationFacilityState extends State<RegistrationFacility> {
       );
       return false;
     }
-    // final StorageController storeCon = Get.find();
-    // setState(() {
-    //   running = true;
-    // });
-    // final certUrl = await storeCon.upLoadCert(File(lincencePath), lincenceNm);
-    // final UserController userCon = Get.find();
-    // final FireStoreController fireCon = Get.find();
-    // bool success = await fireCon.addSpecialist(spl);
-    // if (success) {
-    //   String? id = userCon.user()!.uid;
-    //   final resp = await fireCon.updateUser(id);
-    //   if (resp) {
-    //     Get.snackbar(
-    //       'Success',
-    //       'Data successfully added',
-    //       backgroundColor: Colors.greenAccent,
-    //     );
-    //     setState(() {
-    //       running = false;
-    //     });
-    //     clearField();
-    //   } else {
-    //     Get.snackbar(
-    //       'Error',
-    //       'Failded to update your records \n try again',
-    //       backgroundColor: Colors.redAccent,
-    //     );
-    //     setState(() {
-    //       running = false;
-    //     });
-    //   }
-    // } else {
-    //   Get.snackbar(
-    //     'Error',
-    //     'Failded to add your records \n try again',
-    //     backgroundColor: Colors.redAccent,
-    //   );
-    //   setState(() {
-    //     running = false;
-    //   });
-    // }
+    final StorageController storeCon = Get.find();
+    setState(() {
+      running = true;
+    });
+    final linUrl =
+        await storeCon.upLoadLincence(File(lincencePath), lincenceNm);
+    final UserController userCon = Get.find();
+    final FireStoreController fireCon = Get.find();
+    Facility fc = Facility(
+      name: facilityName.text,
+      location: [
+        county.text,
+        location.text,
+      ],
+      email: orgmail.text,
+      pobox: pobox.text,
+      lincence: lincenceno.text,
+      lincenceImg: linUrl!,
+      id: userCon.user()!.uid,
+    );
+    bool success = await fireCon.createFacility(fc);
+    if (success) {
+      String? id = userCon.user()!.uid;
+      final resp = await fireCon.updateUserFacility(id);
+      if (resp) {
+        Get.snackbar(
+          'Success',
+          'Data successfully added',
+          backgroundColor: Colors.greenAccent,
+        );
+        setState(() {
+          running = false;
+        });
+        clearField();
+      } else {
+        Get.snackbar(
+          'Error',
+          'Failded to update your records \n try again',
+          backgroundColor: Colors.redAccent,
+        );
+        setState(() {
+          running = false;
+        });
+      }
+    } else {
+      Get.snackbar(
+        'Error',
+        'Failded to add your records \n try again',
+        backgroundColor: Colors.redAccent,
+      );
+      setState(() {
+        running = false;
+      });
+    }
   }
 
   pickCert() async {

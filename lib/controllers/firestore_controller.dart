@@ -172,6 +172,7 @@ class FireStoreController extends GetxController {
           email: map['email'],
           at: DateTime.fromMillisecondsSinceEpoch(map['at'].seconds * 1000),
           specialist: map['specialist'],
+          facility: map['facility'],
         );
         return user;
       }
@@ -425,6 +426,18 @@ class FireStoreController extends GetxController {
     }
   }
 
+  Future<bool> updateUserFacility(String id) async {
+    try {
+      await _fireStore.collection('users').doc(id).update({
+        'facility': true,
+      });
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
   Future<bool> verifySpecialist(String id, DateTime at) async {
     try {
       await _fireStore.collection('specialists').doc(id).update({
@@ -443,6 +456,16 @@ class FireStoreController extends GetxController {
       await _fireStore.collection('specialists').doc(id).update({
         'geo': GeoPoint(latLng.latitude, latLng.longitude),
       });
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<bool> createFacility(Facility fc) async {
+    try {
+      await _fireStore.collection('facilities').doc().set(fc.toMap());
       return true;
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
