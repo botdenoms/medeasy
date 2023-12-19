@@ -81,3 +81,14 @@ final List<String> suggestionsCounties = [
   'Nyamira',
   'Nairobi'
 ];
+
+final List<String> tests = [
+  'Xray',
+  'CT',
+  'MRI',
+  'Ultrasound',
+  'PET',
+  'Blood',
+  'DNA',
+  'Electrocardiogram'
+];

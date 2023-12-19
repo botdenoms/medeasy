@@ -102,6 +102,154 @@ class FireStoreController extends GetxController {
     }
   }
 
+  Future<List<Facility>?> getFacilities() async {
+    List<Facility> fcList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query =
+          await _fireStore.collection('faciliies').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      for (var element in data) {
+        if (element.data().containsKey('verified') &&
+            element.data().containsKey('at')) {
+          if (element.data().containsKey('geo')) {
+            Facility fc = Facility(
+              name: element['name'],
+              location: [...element['location']],
+              email: element['email'],
+              lincenceImg: element['img'],
+              lincence: element['lincence'],
+              id: element['id'],
+              pobox: element['pobox'],
+              // geo: LatLng(
+              //   element['geo'].latitude,
+              //   element['geo'].longitude,
+              // ),
+              // verified: element['verified'],
+              // at: DateTime.fromMillisecondsSinceEpoch(
+              //     // element['at'].seconds * 1000),
+            );
+            fcList.add(fc);
+          } else {
+            Facility fc = Facility(
+              name: element['name'],
+              location: [...element['location']],
+              email: element['email'],
+              lincenceImg: element['img'],
+              lincence: element['lincence'],
+              id: element['id'],
+              pobox: element['pobox'],
+              // geo: LatLng(
+              //   element['geo'].latitude,
+              //   element['geo'].longitude,
+              // ),
+              // verified: element['verified'],
+              // at: DateTime.fromMillisecondsSinceEpoch(
+              //     // element['at'].seconds * 1000),
+            );
+            fcList.add(fc);
+          }
+        } else {
+          if (element.data().containsKey('geo')) {
+            Facility fc = Facility(
+              name: element['name'],
+              location: [...element['location']],
+              email: element['email'],
+              lincenceImg: element['img'],
+              lincence: element['lincence'],
+              id: element['id'],
+              pobox: element['pobox'],
+              // geo: LatLng(
+              //   element['geo'].latitude,
+              //   element['geo'].longitude,
+              // ),
+              // verified: element['verified'],
+              // at: DateTime.fromMillisecondsSinceEpoch(
+              //     // element['at'].seconds * 1000),
+            );
+            fcList.add(fc);
+          } else {
+            Facility fc = Facility(
+              name: element['name'],
+              location: [...element['location']],
+              email: element['email'],
+              lincenceImg: element['img'],
+              lincence: element['lincence'],
+              id: element['id'],
+              pobox: element['pobox'],
+              // geo: LatLng(
+              //   element['geo'].latitude,
+              //   element['geo'].longitude,
+              // ),
+              // verified: element['verified'],
+              // at: DateTime.fromMillisecondsSinceEpoch(
+              //     // element['at'].seconds * 1000),
+            );
+            fcList.add(fc);
+          }
+        }
+      }
+      return fcList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<List<Facility>?> getVerifiedFacilities() async {
+    List<Facility> fcList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query =
+          await _fireStore.collection('faciliies').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      for (var element in data) {
+        if (element.data().containsKey('verified') &&
+            element.data().containsKey('at')) {
+          if (element.data().containsKey('geo')) {
+            Facility fc = Facility(
+              name: element['name'],
+              location: [...element['location']],
+              email: element['email'],
+              lincenceImg: element['img'],
+              lincence: element['lincence'],
+              id: element['id'],
+              pobox: element['pobox'],
+              // geo: LatLng(
+              //   element['geo'].latitude,
+              //   element['geo'].longitude,
+              // ),
+              // verified: element['verified'],
+              // at: DateTime.fromMillisecondsSinceEpoch(
+              //     // element['at'].seconds * 1000),
+            );
+            fcList.add(fc);
+          } else {
+            Facility fc = Facility(
+              name: element['name'],
+              location: [...element['location']],
+              email: element['email'],
+              lincenceImg: element['img'],
+              lincence: element['lincence'],
+              id: element['id'],
+              pobox: element['pobox'],
+              // geo: LatLng(
+              //   element['geo'].latitude,
+              //   element['geo'].longitude,
+              // ),
+              // verified: element['verified'],
+              // at: DateTime.fromMillisecondsSinceEpoch(
+              //     // element['at'].seconds * 1000),
+            );
+            fcList.add(fc);
+          }
+        }
+      }
+      return fcList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
   Future<List<Specialist>?> getSpecialistsVerified() async {
     List<Specialist> retList = [];
     try {
@@ -147,6 +295,47 @@ class FireStoreController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
       return null;
+    }
+  }
+
+  Future<bool> createTimeTable(TimeTable tmtb) async {
+    try {
+      await _fireStore.collection('timetables').doc().set(tmtb.toMap());
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<List<TimeTable>?> getTimeTable(String user, DateTime on) async {
+    List<TimeTable> retList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _fireStore
+          .collection('timetables')
+          .where('user', isEqualTo: user)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      for (QueryDocumentSnapshot<Map<String, dynamic>> element in data) {
+        final st = DateTime.fromMillisecondsSinceEpoch(
+            element['start'].seconds * 1000);
+        final fn = DateTime.fromMillisecondsSinceEpoch(
+            element['finish'].seconds * 1000);
+        TimeTable tt = TimeTable(
+          start: TimeOfDay.fromDateTime(st),
+          finish: TimeOfDay.fromDateTime(fn),
+          day: DateTime.fromMillisecondsSinceEpoch(
+              element['day'].seconds * 1000),
+          user: user,
+        );
+        if (tt.day.compareTo(on) == 0) {
+          retList.add(tt);
+        }
+      }
+      return retList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return retList;
     }
   }
 
@@ -470,6 +659,61 @@ class FireStoreController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
       return false;
+    }
+  }
+
+  Future<Facility?> getFacility(String id) async {
+    try {
+      final query = await _fireStore
+          .collection('facilities')
+          .where('id', isEqualTo: id)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      if (data.isNotEmpty) {
+        final element = data.first;
+        if (element.data().containsKey('verified') &&
+            element.data().containsKey('at')) {
+          Facility fc = Facility(
+            name: element.data()['name'],
+            location: [...element.data()['location']],
+            email: element.data()['email'],
+            lincenceImg: element.data()['img'],
+            lincence: element.data()['lincence'],
+            id: element.data()['id'],
+            pobox: element.data()['pobox'],
+            // geo: LatLng(
+            //   element['geo'].latitude,
+            //   element['geo'].longitude,
+            // ),
+            verified: element['verified'],
+            at: DateTime.fromMillisecondsSinceEpoch(
+                element['at'].seconds * 1000),
+          );
+          return fc;
+        } else {
+          Facility fc = Facility(
+            name: element.data()['name'],
+            location: [...element.data()['location']],
+            email: element.data()['email'],
+            lincenceImg: element.data()['img'],
+            lincence: element.data()['lincence'],
+            id: element.data()['id'],
+            pobox: element.data()['pobox'],
+            // geo: LatLng(
+            //   element['geo'].latitude,
+            //   element['geo'].longitude,
+            // ),
+            // verified: element['verified'],
+            // at: DateTime.fromMillisecondsSinceEpoch(
+            //     // element['at'].seconds * 1000),
+          );
+          return fc;
+        }
+      }
+      return null;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
     }
   }
 

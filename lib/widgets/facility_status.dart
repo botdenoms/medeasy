@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../configs/constants.dart';
 import '../controllers/controllers.dart';
 import '../model/models.dart';
 import '../screens/screens.dart';
@@ -226,6 +227,59 @@ class _FacilityStatusState extends State<FacilityStatus> {
                         )
                       : const SizedBox()
                   : const SizedBox(),
+              const SizedBox(height: 5),
+              _user.facility == true
+                  ? verifiedOn != null
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 18),
+                            Row(
+                              children: const [
+                                Text(
+                                  'Offering Tests',
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 40,
+                              width: double.infinity,
+                              child: ListView.builder(
+                                itemBuilder: itemBuilder,
+                                itemCount: tests.length,
+                                scrollDirection: Axis.horizontal,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 20.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Color(0x22000000),
+                                          spreadRadius: 2,
+                                          blurRadius: 1,
+                                          offset: Offset(2, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Text('Update'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : const SizedBox()
+                  : const SizedBox(),
             ],
           );
   }
@@ -252,28 +306,30 @@ class _FacilityStatusState extends State<FacilityStatus> {
     });
     final resp = await fireCon.userData(userId);
     if (resp != null) {
-      final spe = await fireCon.specialistData(userId);
-      if (spe != null) {
-        if (spe.verified) {
-          setState(() {
-            fetching = false;
-            _user = resp;
-            joined = _user.at;
-            verifiedOn = spe.at;
-          });
-          return;
-        }
+      final fc = await fireCon.getFacility(userId);
+      if (fc == null) {
         setState(() {
           fetching = false;
           _user = resp;
           joined = _user.at;
         });
+        return;
+      }
+      if (fc.verified) {
+        setState(() {
+          fetching = false;
+          _user = resp;
+          joined = _user.at;
+          verifiedOn = fc.at;
+        });
+        return;
       } else {
         setState(() {
           fetching = false;
           _user = resp;
           joined = _user.at;
         });
+        return;
       }
     } else {
       Get.snackbar("Error", "Null user");
@@ -282,5 +338,14 @@ class _FacilityStatusState extends State<FacilityStatus> {
       });
     }
     // final spe = await fireCon.specialistData(userId);
+  }
+
+  Widget? itemBuilder(BuildContext context, int index) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: Center(
+        child: Text(tests[index]),
+      ),
+    );
   }
 }
