@@ -213,6 +213,7 @@ class FireStoreController extends GetxController {
               lincence: element['lincence'],
               id: element['id'],
               pobox: element['pobox'],
+              tests: [...element['tests']],
               // geo: LatLng(
               //   element['geo'].latitude,
               //   element['geo'].longitude,
@@ -231,6 +232,7 @@ class FireStoreController extends GetxController {
               lincence: element['lincence'],
               id: element['id'],
               pobox: element['pobox'],
+              tests: [...element['tests']],
               // geo: LatLng(
               //   element['geo'].latitude,
               //   element['geo'].longitude,
@@ -244,6 +246,80 @@ class FireStoreController extends GetxController {
         }
       }
       return fcList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<bool> scheduleTest(Test test) async {
+    try {
+      await _fireStore.collection('tests').doc().set(test.toMap());
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<bool> updateTest(String client, String testId, String ref) async {
+    try {
+      await _fireStore.collection('tests').doc(testId).update({
+        'ref': ref,
+      });
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<List<Test>?> getTestsOf(String id) async {
+    List<Test> retList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _fireStore
+          .collection('tests')
+          .where('client', isEqualTo: id)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      for (QueryDocumentSnapshot<Map<String, dynamic>> element in data) {
+        Test t = Test(
+          client: element['client'],
+          facility: element['facility'],
+          date: DateTime.fromMillisecondsSinceEpoch(
+              element['date'].seconds * 1000),
+          type: element['type'],
+          ref: element['ref'],
+        );
+        retList.add(t);
+      }
+      return retList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<List<Test>?> getTestsOn(String id) async {
+    List<Test> retList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _fireStore
+          .collection('tests')
+          .where('facility', isEqualTo: id)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      for (QueryDocumentSnapshot<Map<String, dynamic>> element in data) {
+        Test t = Test(
+          client: element['client'],
+          facility: element['facility'],
+          date: DateTime.fromMillisecondsSinceEpoch(
+              element['date'].seconds * 1000),
+          type: element['type'],
+          ref: element['ref'],
+        );
+        retList.add(t);
+      }
+      return retList;
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
       return null;
@@ -681,6 +757,7 @@ class FireStoreController extends GetxController {
             lincence: element.data()['lincence'],
             id: element.data()['id'],
             pobox: element.data()['pobox'],
+            tests: [...element['tests']],
             // geo: LatLng(
             //   element['geo'].latitude,
             //   element['geo'].longitude,
@@ -699,6 +776,7 @@ class FireStoreController extends GetxController {
             lincence: element.data()['lincence'],
             id: element.data()['id'],
             pobox: element.data()['pobox'],
+            tests: [...element['tests']],
             // geo: LatLng(
             //   element['geo'].latitude,
             //   element['geo'].longitude,

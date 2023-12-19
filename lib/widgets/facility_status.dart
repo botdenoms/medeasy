@@ -20,11 +20,15 @@ class _FacilityStatusState extends State<FacilityStatus> {
   DateTime? verifiedOn;
   LatLng? location;
   late User _user;
+  List<String> offers = [];
   bool fetching = true;
+  bool testSpin = true;
+  List<Test>? testsList = [];
 
   @override
   void initState() {
     buildUserprofile();
+    getTests();
     super.initState();
   }
 
@@ -216,10 +220,40 @@ class _FacilityStatusState extends State<FacilityStatus> {
                           children: [
                             const SizedBox(height: 18),
                             Row(
-                              children: const [
-                                Text(
+                              children: [
+                                const Text(
                                   'Pending Tests: ',
-                                  style: TextStyle(fontSize: 17),
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                Text(
+                                  testsList!.length.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const Spacer(),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 20.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Color(0x22000000),
+                                          spreadRadius: 2,
+                                          blurRadius: 1,
+                                          offset: Offset(2, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Text('Submit'),
+                                  ),
                                 ),
                               ],
                             ),
@@ -241,15 +275,17 @@ class _FacilityStatusState extends State<FacilityStatus> {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: 40,
-                              width: double.infinity,
-                              child: ListView.builder(
-                                itemBuilder: itemBuilder,
-                                itemCount: tests.length,
-                                scrollDirection: Axis.horizontal,
-                              ),
-                            ),
+                            fetching
+                                ? const CircularProgressIndicator()
+                                : SizedBox(
+                                    height: 40,
+                                    width: double.infinity,
+                                    child: ListView.builder(
+                                      itemBuilder: itemBuilder,
+                                      itemCount: offers.length,
+                                      scrollDirection: Axis.horizontal,
+                                    ),
+                                  ),
                             Row(
                               children: [
                                 GestureDetector(
@@ -317,6 +353,7 @@ class _FacilityStatusState extends State<FacilityStatus> {
       }
       if (fc.verified) {
         setState(() {
+          offers = [...fc.tests!];
           fetching = false;
           _user = resp;
           joined = _user.at;
@@ -337,14 +374,26 @@ class _FacilityStatusState extends State<FacilityStatus> {
         fetching = false;
       });
     }
-    // final spe = await fireCon.specialistData(userId);
+  }
+
+  getTests() async {
+    setState(() {
+      testSpin = true;
+    });
+    final FireStoreController fireCon = Get.find();
+    final UserController usr = Get.find();
+    final res = await fireCon.getTestsOn(usr.user()!.uid);
+    setState(() {
+      testsList = res;
+      testSpin = false;
+    });
   }
 
   Widget? itemBuilder(BuildContext context, int index) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
       child: Center(
-        child: Text(tests[index]),
+        child: Text(offers[index]),
       ),
     );
   }

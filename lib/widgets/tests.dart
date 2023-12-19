@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:medeasy/widgets/test_card.dart';
 
+import '../controllers/controllers.dart';
 import '../model/models.dart';
 import '../screens/screens.dart';
 
@@ -14,7 +17,13 @@ class Tests extends StatefulWidget {
 
 class _TestsState extends State<Tests> {
   bool loading = true;
-  List<String> schedules = [];
+  List<Test> tests = [];
+
+  @override
+  void initState() {
+    fetchTest();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,12 +105,22 @@ class _TestsState extends State<Tests> {
                     ),
                   )
                 : ListView.builder(
-                    itemBuilder: (c, i) => const Placeholder(),
-                    itemCount: schedules.length,
+                    itemBuilder: (c, i) => TestCard(test: tests[i]),
+                    itemCount: tests.length,
                   ),
           ),
         ],
       ),
     );
+  }
+
+  fetchTest() async {
+    final UserController userCon = Get.find();
+    final FireStoreController fireCon = Get.find();
+    final res = await fireCon.getTestsOf(userCon.user()!.uid);
+    setState(() {
+      tests = res!;
+      loading = false;
+    });
   }
 }

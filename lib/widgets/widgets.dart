@@ -12,7 +12,7 @@ export './stats_card.dart';
 export './account_options.dart';
 export './alerts.dart';
 export './facilities.dart';
-export './specialists.dart';
+export './test_card.dart';
 export './tests.dart';
 export './facility_options.dart';
 export './time_card.dart';

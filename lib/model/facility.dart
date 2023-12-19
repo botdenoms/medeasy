@@ -8,7 +8,7 @@ class Facility {
   final String lincence;
   final String lincenceImg;
   final String id;
-  List<String>? test = [];
+  List<String>? tests = [];
   bool verified = false;
   DateTime? at;
   LatLng? geo;
@@ -21,7 +21,7 @@ class Facility {
     required this.lincence,
     required this.lincenceImg,
     required this.id,
-    this.test,
+    this.tests,
     this.verified = false,
     this.at,
     this.geo,
@@ -36,7 +36,7 @@ class Facility {
       'pobox': pobox,
       'email': email,
       'id': id,
-      'tests': test,
+      'tests': tests,
     };
   }
 }
