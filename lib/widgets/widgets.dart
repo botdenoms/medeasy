@@ -18,3 +18,4 @@ export './facility_options.dart';
 export './time_card.dart';
 export './specialist_account.dart';
 export './facility_status.dart';
+export './facility_card.dart';

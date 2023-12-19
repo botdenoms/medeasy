@@ -106,7 +106,7 @@ class FireStoreController extends GetxController {
     List<Facility> fcList = [];
     try {
       QuerySnapshot<Map<String, dynamic>> query =
-          await _fireStore.collection('faciliies').get();
+          await _fireStore.collection('facilities').get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
       for (var element in data) {
         if (element.data().containsKey('verified') &&
@@ -199,7 +199,7 @@ class FireStoreController extends GetxController {
     List<Facility> fcList = [];
     try {
       QuerySnapshot<Map<String, dynamic>> query =
-          await _fireStore.collection('faciliies').get();
+          await _fireStore.collection('facilities').get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
       for (var element in data) {
         if (element.data().containsKey('verified') &&
@@ -235,9 +235,9 @@ class FireStoreController extends GetxController {
               //   element['geo'].latitude,
               //   element['geo'].longitude,
               // ),
-              // verified: element['verified'],
-              // at: DateTime.fromMillisecondsSinceEpoch(
-              //     // element['at'].seconds * 1000),
+              verified: element['verified'],
+              at: DateTime.fromMillisecondsSinceEpoch(
+                  element['at'].seconds * 1000),
             );
             fcList.add(fc);
           }

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../controllers/controllers.dart';
+import '../model/models.dart';
+import '../widgets/widgets.dart';
 
 class Facilities extends StatefulWidget {
   const Facilities({super.key});
@@ -9,7 +14,13 @@ class Facilities extends StatefulWidget {
 
 class _FacilitiesState extends State<Facilities> {
   bool loading = true;
-  List<String> schedules = [];
+  List<Facility> facilities = [];
+
+  @override
+  void initState() {
+    fetchFacilities();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +35,12 @@ class _FacilitiesState extends State<Facilities> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                const SizedBox(height: 10.0),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: const [
                     CircleAvatar(
-                      radius: 28,
+                      // radius: 28,
                       child: Icon(
                         Icons.search_rounded,
                       ),
@@ -56,12 +68,26 @@ class _FacilitiesState extends State<Facilities> {
                     ),
                   )
                 : ListView.builder(
-                    itemBuilder: (c, i) => const Placeholder(),
-                    itemCount: schedules.length,
+                    itemBuilder: (c, i) => FacilityCard(
+                      facility: facilities[i],
+                    ),
+                    itemCount: facilities.length,
                   ),
           ),
         ],
       ),
     );
+  }
+
+  fetchFacilities() async {
+    setState(() {
+      loading = true;
+    });
+    final FireStoreController fireCon = Get.find();
+    final resp = await fireCon.getVerifiedFacilities();
+    setState(() {
+      facilities = resp!;
+      loading = false;
+    });
   }
 }

@@ -9,3 +9,4 @@ export './geopick.dart';
 export './profile.dart';
 export './registration_facility.dart';
 export './find_facilities.dart';
+export './facility_view.dart';

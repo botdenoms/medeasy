@@ -20,7 +20,7 @@ class _FacilityOptsState extends State<FacilityOpts> {
       // mainAxisSize: MainAxisSize.max,
       children: [
         Text(
-          widget.user.specialist == true
+          widget.user.facility == true
               ? 'Remove your facility'
               : 'Create a facility',
           style: const TextStyle(fontSize: 15),
@@ -55,7 +55,7 @@ class _FacilityOptsState extends State<FacilityOpts> {
                 ),
                 child: Center(
                   child: Text(
-                    widget.user.specialist == true ? 'UnRegister' : 'Register',
+                    widget.user.facility == true ? 'UnRegister' : 'Register',
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
@@ -68,6 +68,10 @@ class _FacilityOptsState extends State<FacilityOpts> {
   }
 
   actionHandler() async {
+    if (widget.user.facility == true) {
+      // Un registering action
+      return;
+    }
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (BuildContext context) => RegistrationFacility(
