@@ -105,7 +105,10 @@ class _TestsState extends State<Tests> {
                     ),
                   )
                 : ListView.builder(
-                    itemBuilder: (c, i) => TestCard(test: tests[i]),
+                    itemBuilder: (c, i) => TestCard(
+                      test: tests[i],
+                      view: true,
+                    ),
                     itemCount: tests.length,
                   ),
           ),

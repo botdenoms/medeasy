@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../configs/constants.dart';
 import '../controllers/controllers.dart';
 import '../model/models.dart';
 import '../screens/screens.dart';
@@ -234,7 +233,19 @@ class _FacilityStatusState extends State<FacilityStatus> {
                                 ),
                                 const Spacer(),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    if (testsList!.isEmpty || testsList == null) {
+                                      return;
+                                    }
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute<void>(
+                                        builder: (BuildContext context) =>
+                                            PendingTests(
+                                          tests: testsList!,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 10.0,
