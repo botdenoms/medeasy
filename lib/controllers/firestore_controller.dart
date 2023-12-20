@@ -13,6 +13,80 @@ class FireStoreController extends GetxController {
     return _fireStore;
   }
 
+  Future<String?> createImgTest(ImagingTest imgt) async {
+    try {
+      DocumentReference rf = _fireStore.collection('imaging').doc();
+      await rf.set(imgt.toMap());
+      return rf.id;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<ImagingTest?> imagingData(String id) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> data =
+          await _fireStore.collection('imaging').doc(id).get();
+      if (data.exists) {
+        final map = data.data()!;
+        ImagingTest imt = ImagingTest(
+          date: DateTime.fromMillisecondsSinceEpoch(map['date'].seconds * 1000),
+          name: map['name'],
+          dob: DateTime.fromMillisecondsSinceEpoch(map['dob'].seconds * 1000),
+          gender: map['gender'],
+          images: [...map['images']],
+        );
+        return imt;
+      }
+      return null;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  // 14 6 200 6 150 70 84 90
+  Future<String?> createBloodTest(BloodTest blt) async {
+    try {
+      DocumentReference rf = _fireStore.collection('bloodTest').doc();
+      await rf.set(blt.toMap());
+      return rf.id;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<BloodTest?> bloodData(String id) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> data =
+          await _fireStore.collection('bloodTest').doc(id).get();
+      if (data.exists) {
+        final map = data.data()!;
+        BloodTest imt = BloodTest(
+          date: DateTime.fromMillisecondsSinceEpoch(map['date'].seconds * 1000),
+          name: map['name'],
+          dob: DateTime.fromMillisecondsSinceEpoch(map['dob'].seconds * 1000),
+          gender: map['gender'],
+          hermoglobin: map['hermoglobin'],
+          wbc: map['wbc'],
+          rbc: map['rbc'],
+          platelets: map['platelets'],
+          cholesterol: map['cholesterol'],
+          triglycerides: map['triglycerides'],
+          glucoseF: map['glucoseF'],
+          glucoseP: map['glucoseP'],
+        );
+        return imt;
+      }
+      return null;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
   Future<bool> addSpecialist(Specialist user) async {
     try {
       await _fireStore.collection('specialists').doc(user.id).set(user.toMap());
@@ -262,7 +336,7 @@ class FireStoreController extends GetxController {
     }
   }
 
-  Future<bool> updateTest(String client, String testId, String ref) async {
+  Future<bool> updateTest(String testId, String ref) async {
     try {
       await _fireStore.collection('tests').doc(testId).update({
         'ref': ref,
@@ -290,6 +364,7 @@ class FireStoreController extends GetxController {
               element['date'].seconds * 1000),
           type: element['type'],
           ref: element['ref'],
+          id: element.id,
         );
         retList.add(t);
       }
@@ -316,8 +391,11 @@ class FireStoreController extends GetxController {
               element['date'].seconds * 1000),
           type: element['type'],
           ref: element['ref'],
+          id: element.id,
         );
-        retList.add(t);
+        if (t.ref == 'ref') {
+          retList.add(t);
+        }
       }
       return retList;
     } catch (e) {

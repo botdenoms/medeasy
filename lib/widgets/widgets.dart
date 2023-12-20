@@ -22,3 +22,6 @@ export './facility_card.dart';
 export './blood_form.dart';
 export './patient_infor.dart';
 export './images_form.dart';
+export './patient_data.dart';
+export './blood_view.dart';
+export './imaging_view.dart';

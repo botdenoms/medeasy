@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
-// import 'package:get/get.dart';
-
-// import '../controllers/controllers.dart';
+import '../controllers/controllers.dart';
 import '../model/models.dart';
 import '../widgets/widgets.dart';
 
@@ -28,8 +30,8 @@ class _TestFormState extends State<TestForm> {
   TextEditingController glucoseF = TextEditingController();
   TextEditingController glucoseP = TextEditingController();
 
-  List<String> images = [];
-  List<String> l = [];
+  List<XFile> images = [];
+  List<XFile> l = [];
 
   bool running = false;
   bool done = false;
@@ -64,44 +66,42 @@ class _TestFormState extends State<TestForm> {
                       glucoseF: glucoseF,
                       glucoseP: glucoseP,
                     )
-                  : const SizedBox(),
-              SizedBox(
-                height: 160,
-                width: double.infinity,
-                child: ListView.builder(
-                  itemBuilder: imageBuilder,
-                  itemCount: images.length,
-                  scrollDirection: Axis.horizontal,
-                ),
-              ),
-              const SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  l.add("0");
-                  setState(() {
-                    images = l;
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10.0,
-                    horizontal: 20.0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x22000000),
-                        spreadRadius: 2,
-                        blurRadius: 1,
-                        offset: Offset(2, 2),
+                  : SizedBox(
+                      height: 160,
+                      width: double.infinity,
+                      child: ListView.builder(
+                        itemBuilder: imageBuilder,
+                        itemCount: images.length,
+                        scrollDirection: Axis.horizontal,
                       ),
-                    ],
-                  ),
-                  child: const Text('add image'),
-                ),
-              ),
+                    ),
+              const SizedBox(height: 10),
+              widget.test.type == 5
+                  ? const SizedBox(height: 10)
+                  : GestureDetector(
+                      onTap: () {
+                        pickImg();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 20.0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x22000000),
+                              spreadRadius: 2,
+                              blurRadius: 1,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Text('add image'),
+                      ),
+                    ),
               const SizedBox(height: 10),
               running
                   ? const Center(
@@ -157,11 +157,89 @@ class _TestFormState extends State<TestForm> {
   }
 
   submit() async {
+    if (widget.test.type == 5) {
+      setState(() {
+        running = true;
+      });
+      final FireStoreController fireCon = Get.find();
+      User? usr = await fireCon.userData(widget.test.client);
+      BloodTest blt = BloodTest(
+        date: DateTime.now(),
+        name: usr!.name,
+        dob: DateTime.now(),
+        gender: 0,
+        hermoglobin: double.parse(hermoglobin.text),
+        wbc: double.parse(wbc.text),
+        rbc: int.tryParse(rbc.text)!,
+        platelets: double.parse(platelets.text),
+        cholesterol: int.parse(cholesterol.text),
+        triglycerides: int.parse(triglycerides.text),
+        glucoseF: double.parse(glucoseF.text),
+        glucoseP: double.parse(glucoseP.text),
+      );
+      String? ids = await fireCon.createBloodTest(blt);
+      final rsp = await fireCon.updateTest(widget.test.id!, ids!);
+      if (rsp) {
+        Get.snackbar('Success', 'test update ');
+        setState(() {
+          running = false;
+        });
+      } else {
+        Get.snackbar('error', 'faild test update try again');
+        setState(() {
+          running = false;
+        });
+      }
+    } else {
+      final StorageController storeCon = Get.find();
+      setState(() {
+        running = true;
+      });
+      List<String> imt = [];
+      for (XFile im in images) {
+        final testUrl = await storeCon.upLoadTestImg(File(im.path), im.name);
+        imt.add(testUrl!);
+      }
+      final FireStoreController fireCon = Get.find();
+      User? usr = await fireCon.userData(widget.test.client);
+      ImagingTest it = ImagingTest(
+        date: DateTime.now(),
+        name: usr!.name,
+        dob: DateTime.now(),
+        gender: 0,
+        images: imt,
+      );
+      String? ids = await fireCon.createImgTest(it);
+      final rsp = await fireCon.updateTest(widget.test.id!, ids!);
+      if (rsp) {
+        Get.snackbar('Success', 'test update ');
+        setState(() {
+          running = false;
+        });
+      } else {
+        Get.snackbar('error', 'faild test update try again');
+        setState(() {
+          running = false;
+        });
+      }
+    }
     // final UserController userCon = Get.find();
-    // final FireStoreController fireCon = Get.find();
+  }
+
+  pickImg() async {
+    final imgPicker = ImagePicker();
+    XFile? img = await imgPicker.pickImage(source: ImageSource.gallery);
+    if (img != null) {
+      l.add(img);
+      setState(() {
+        images = l;
+      });
+      return;
+    }
+    Get.snackbar('error', 'image is null');
   }
 
   Widget? imageBuilder(BuildContext context, int index) {
-    return ImageForm(img: false, pathUrl: images[index]);
+    return ImageForm(img: true, pathUrl: images[index].path);
   }
 }

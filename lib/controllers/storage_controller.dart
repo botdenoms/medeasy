@@ -21,6 +21,17 @@ class StorageController extends GetxController {
     }
   }
 
+  Future<String?> upLoadTestImg(File file, String name) async {
+    try {
+      await _storageRef.child('tests/$name').putFile(file);
+      String url = await _storageRef.child('tests/$name').getDownloadURL();
+      return url;
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+      return null;
+    }
+  }
+
   Future<String?> upLoadLincence(File file, String name) async {
     try {
       await _storageRef.child('lincences/$name').putFile(file);

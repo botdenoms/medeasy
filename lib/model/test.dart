@@ -4,14 +4,15 @@ class Test {
   final DateTime date;
   final int type;
   String ref = '';
+  String? id;
 
-  Test({
-    required this.client,
-    required this.facility,
-    required this.date,
-    required this.type,
-    required this.ref,
-  });
+  Test(
+      {required this.client,
+      required this.facility,
+      required this.date,
+      required this.type,
+      required this.ref,
+      this.id});
 
   Map<String, dynamic> toMap() {
     return {
