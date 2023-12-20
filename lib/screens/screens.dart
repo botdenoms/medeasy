@@ -11,3 +11,5 @@ export './registration_facility.dart';
 export './find_facilities.dart';
 export './facility_view.dart';
 export './tests_processing.dart';
+export './test_form.dart';
+export './test_view.dart';

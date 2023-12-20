@@ -1,0 +1,167 @@
+import 'package:flutter/material.dart';
+
+// import 'package:get/get.dart';
+
+// import '../controllers/controllers.dart';
+import '../model/models.dart';
+import '../widgets/widgets.dart';
+
+class TestForm extends StatefulWidget {
+  const TestForm({super.key, required this.test});
+  final Test test;
+
+  @override
+  State<TestForm> createState() => _TestFormState();
+}
+
+class _TestFormState extends State<TestForm> {
+  TextEditingController name = TextEditingController();
+  TextEditingController gender = TextEditingController();
+  TextEditingController dob = TextEditingController();
+
+  TextEditingController hermoglobin = TextEditingController();
+  TextEditingController wbc = TextEditingController();
+  TextEditingController rbc = TextEditingController();
+  TextEditingController platelets = TextEditingController();
+  TextEditingController cholesterol = TextEditingController();
+  TextEditingController triglycerides = TextEditingController();
+  TextEditingController glucoseF = TextEditingController();
+  TextEditingController glucoseP = TextEditingController();
+
+  List<String> images = [];
+  List<String> l = [];
+
+  bool running = false;
+  bool done = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10.0,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 30),
+              const Text(
+                'Details',
+                style: TextStyle(fontSize: 16),
+              ),
+              PatientInforForm(name: name, gender: gender, dob: dob),
+              const Divider(),
+              widget.test.type == 5
+                  ? BloodForm(
+                      hermoglobin: hermoglobin,
+                      wbc: wbc,
+                      rbc: rbc,
+                      platelets: platelets,
+                      cholesterol: cholesterol,
+                      triglycerides: triglycerides,
+                      glucoseF: glucoseF,
+                      glucoseP: glucoseP,
+                    )
+                  : const SizedBox(),
+              SizedBox(
+                height: 160,
+                width: double.infinity,
+                child: ListView.builder(
+                  itemBuilder: imageBuilder,
+                  itemCount: images.length,
+                  scrollDirection: Axis.horizontal,
+                ),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  l.add("0");
+                  setState(() {
+                    images = l;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 20.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x22000000),
+                        spreadRadius: 2,
+                        blurRadius: 1,
+                        offset: Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Text('add image'),
+                ),
+              ),
+              const SizedBox(height: 10),
+              running
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.greenAccent,
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(width: 20),
+                        GestureDetector(
+                          onTap: () {
+                            submit();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(
+                              10.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x22000000),
+                                  spreadRadius: 2,
+                                  blurRadius: 1,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'Submit',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                      ],
+                    ),
+              const SizedBox(height: 40),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  clearField() {
+    setState(() {});
+  }
+
+  submit() async {
+    // final UserController userCon = Get.find();
+    // final FireStoreController fireCon = Get.find();
+  }
+
+  Widget? imageBuilder(BuildContext context, int index) {
+    return ImageForm(img: false, pathUrl: images[index]);
+  }
+}

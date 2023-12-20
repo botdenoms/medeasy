@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../configs/constants.dart';
 import '../model/models.dart';
+import '../screens/screens.dart';
 
 class TestCard extends StatefulWidget {
   const TestCard({
@@ -20,7 +21,21 @@ class _TestCardState extends State<TestCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (widget.view) {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => TestView(test: widget.test),
+            ),
+          );
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => TestForm(test: widget.test),
+            ),
+          );
+        }
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),

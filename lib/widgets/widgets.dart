@@ -19,3 +19,6 @@ export './time_card.dart';
 export './specialist_account.dart';
 export './facility_status.dart';
 export './facility_card.dart';
+export './blood_form.dart';
+export './patient_infor.dart';
+export './images_form.dart';

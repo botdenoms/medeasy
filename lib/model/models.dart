@@ -5,3 +5,5 @@ export './schedule.dart';
 export './facility.dart';
 export './timetable.dart';
 export './test.dart';
+export './blood_test.dart';
+export './image_test.dart';
