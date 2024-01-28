@@ -13,3 +13,4 @@ export './facility_view.dart';
 export './tests_processing.dart';
 export './test_form.dart';
 export './test_view.dart';
+export './schedule_create.dart';

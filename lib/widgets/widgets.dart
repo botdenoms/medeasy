@@ -25,3 +25,5 @@ export './images_form.dart';
 export './patient_data.dart';
 export './blood_view.dart';
 export './imaging_view.dart';
+export './schedule_updater.dart';
+export './schedule_viewer.dart';

@@ -232,7 +232,7 @@ class _StatsCardState extends State<StatsCard> {
                                         await Navigator.of(context).push(
                                       MaterialPageRoute<LatLng?>(
                                         builder: (BuildContext context) =>
-                                            const GeoPicker(),
+                                            const ScheduleMgnt(),
                                       ),
                                     );
                                     if (result != null) {
