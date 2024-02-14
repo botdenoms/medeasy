@@ -38,9 +38,9 @@ class _ScheduleCardState extends State<ScheduleCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.schedule.time
+            widget.schedule.to
                 .toString()
-                .substring(0, widget.schedule.time.toString().length - 7),
+                .substring(0, widget.schedule.to.toString().length - 7),
             style: const TextStyle(fontSize: 17),
           ),
           const SizedBox(height: 5),

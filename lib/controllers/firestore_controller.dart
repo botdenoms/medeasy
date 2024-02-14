@@ -476,12 +476,13 @@ class FireStoreController extends GetxController {
         final fn = DateTime.fromMillisecondsSinceEpoch(
             element['finish'].seconds * 1000);
         TimeTable tt = TimeTable(
-          start: TimeOfDay.fromDateTime(st),
-          finish: TimeOfDay.fromDateTime(fn),
-          day: DateTime.fromMillisecondsSinceEpoch(
-              element['day'].seconds * 1000),
-          user: user,
-        );
+            start: TimeOfDay.fromDateTime(st),
+            finish: TimeOfDay.fromDateTime(fn),
+            day: DateTime.fromMillisecondsSinceEpoch(
+                element['day'].seconds * 1000),
+            user: user,
+            available: element['available'],
+            id: element.id);
         if (tt.day.compareTo(on) == 0) {
           retList.add(tt);
         }
@@ -894,8 +895,10 @@ class FireStoreController extends GetxController {
           patient: element['patient'],
           specialist: element['specialist'],
           online: element['online'],
-          time:
-              DateTime.fromMillisecondsSinceEpoch(element['at'].seconds * 1000),
+          from: DateTime.fromMillisecondsSinceEpoch(
+              element['from'].seconds * 1000),
+          to: DateTime.fromMillisecondsSinceEpoch(element['to'].seconds * 1000),
+          tests: element['tests'],
         );
         if (sch.patient == id || sch.specialist == id) {
           retList.add(sch);

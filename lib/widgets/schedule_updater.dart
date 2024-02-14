@@ -20,6 +20,7 @@ class _ScheduleUpdaterState extends State<ScheduleUpdater> {
   DateTime focusedDate = DateTime.now();
   TimeOfDay? from;
   TimeOfDay? to;
+  bool available = false;
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +191,34 @@ class _ScheduleUpdaterState extends State<ScheduleUpdater> {
               )
             : const SizedBox(),
         const SizedBox(height: 10),
+        manual
+            ? GestureDetector(
+                onTap: () {
+                  setState(() {
+                    available = !available;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  height: 40,
+                  width: double.infinity,
+                  color: Colors.black26,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          available ? 'Available' : 'Occupied',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const Icon(
+                          Icons.change_circle_rounded,
+                          color: Color(0xFF1E1E1E),
+                        ),
+                      ]),
+                ),
+              )
+            : const SizedBox(),
+        const SizedBox(height: 30),
         running
             ? const CircularProgressIndicator()
             : TextButton(
@@ -213,6 +242,7 @@ class _ScheduleUpdaterState extends State<ScheduleUpdater> {
       finish: to,
       day: onday,
       user: userCon.user()!.uid,
+      available: available,
     );
     final FireStoreController fireCon = Get.find();
     final resp = await fireCon.createTimeTable(tmtb);

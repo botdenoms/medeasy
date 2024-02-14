@@ -289,7 +289,8 @@ class _RequestCardState extends State<RequestCard> {
             patient: widget.request.patient,
             specialist: widget.request.specialist,
             online: widget.request.online,
-            time: adjusted,
+            to: widget.request.time,
+            from: widget.request.time,
           ),
         );
         if (res) {
@@ -320,7 +321,8 @@ class _RequestCardState extends State<RequestCard> {
             patient: widget.request.patient,
             specialist: widget.request.specialist,
             online: widget.request.online,
-            time: adjusted,
+            to: widget.request.time,
+            from: widget.request.time,
           ),
         );
         if (res) {
@@ -351,7 +353,8 @@ class _RequestCardState extends State<RequestCard> {
             patient: widget.request.patient,
             specialist: widget.request.specialist,
             online: widget.request.online,
-            time: adjusted,
+            to: widget.request.time,
+            from: widget.request.time,
           ),
         );
         if (res) {
@@ -372,7 +375,8 @@ class _RequestCardState extends State<RequestCard> {
         patient: widget.request.patient,
         specialist: widget.request.specialist,
         online: widget.request.online,
-        time: widget.request.time,
+        to: widget.request.time,
+        from: widget.request.time,
       ),
     );
     if (suc) {
