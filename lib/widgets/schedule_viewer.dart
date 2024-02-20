@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medeasy/widgets/widgets.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../controllers/controllers.dart';
@@ -43,8 +44,14 @@ class _ScheduleViewerState extends State<ScheduleViewer> {
         const SizedBox(height: 10),
         fetching
             ? const CircularProgressIndicator()
-            : Text(
-                'Activity items: ${schedule.length}',
+            : Column(
+                children: [
+                  Text(
+                    'Activity items: ${schedule.length}',
+                  ),
+                  const SizedBox(height: 10),
+                  ...timeSlots(),
+                ],
               )
       ],
     );
@@ -63,5 +70,20 @@ class _ScheduleViewerState extends State<ScheduleViewer> {
       schedule = results!;
       fetching = false;
     });
+  }
+
+  List<Widget> timeSlots() {
+    List<Widget> wdgts = [];
+    if (schedule.isEmpty) {
+      return wdgts;
+    }
+    for (TimeTable tt in schedule) {
+      final tc = TimeCard(
+        timeTable: tt,
+        callBack: null,
+      );
+      wdgts.add(tc);
+    }
+    return wdgts;
   }
 }

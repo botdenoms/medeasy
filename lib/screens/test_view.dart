@@ -67,7 +67,7 @@ class _TestViewState extends State<TestView> {
     });
     final FireStoreController fireCon = Get.find();
     if (widget.test.type == 5) {
-      final res = await fireCon.bloodData(widget.test.id!);
+      final res = await fireCon.bloodData(widget.test.ref);
       if (res == null) {
         setState(() {
           pending = true;

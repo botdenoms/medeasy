@@ -404,6 +404,29 @@ class FireStoreController extends GetxController {
     }
   }
 
+  Future<Test?> getTest(String id) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> tst =
+          await _fireStore.collection('tests').doc(id).get();
+      if (tst.exists) {
+        final dt = tst.data()!;
+        Test t = Test(
+          client: dt['client'],
+          facility: dt['facility'],
+          date: DateTime.fromMillisecondsSinceEpoch(dt['date'].seconds * 1000),
+          type: dt['type'],
+          ref: dt['ref'],
+          id: tst.id,
+        );
+        return t;
+      }
+      return null;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
   Future<List<Specialist>?> getSpecialistsVerified() async {
     List<Specialist> retList = [];
     try {
@@ -898,7 +921,7 @@ class FireStoreController extends GetxController {
           from: DateTime.fromMillisecondsSinceEpoch(
               element['from'].seconds * 1000),
           to: DateTime.fromMillisecondsSinceEpoch(element['to'].seconds * 1000),
-          tests: element['tests'],
+          tests: [...element['tests']],
         );
         if (sch.patient == id || sch.specialist == id) {
           retList.add(sch);

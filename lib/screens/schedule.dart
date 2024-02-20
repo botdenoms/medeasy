@@ -231,6 +231,7 @@ class _SchedulerState extends State<Scheduler> {
       final tc = TimeCard(
         timeTable: tt,
         callBack: (TimeOfDay s, TimeOfDay f) {
+          getTests();
           setState(() {
             timeStart = s;
             timeEnd = f;
@@ -264,6 +265,17 @@ class _SchedulerState extends State<Scheduler> {
     // await Future.delayed(const Duration(seconds: 3));
     final FireStoreController fireCon = Get.find();
     final UserController userCon = Get.find();
+    if (userCon.user() == null) {
+      setState(() {
+        fetchingTests = false;
+      });
+      Get.snackbar(
+        'Notice',
+        'Log in or sign up first',
+        backgroundColor: Colors.blueAccent,
+      );
+      return;
+    }
     final results = await fireCon.getTestsOf(userCon.user()!.uid);
     setState(() {
       userTests = results!;
@@ -440,11 +452,11 @@ class _SchedulerState extends State<Scheduler> {
       });
       // fro every item in selecteTest extract id
       List<String> tmp = [];
-      // if (tests.isNotEmpty) {
-      //   for (int idx in selectedTests) {
-      //     tmp.add(tests[idx].ref);
-      //   }
-      // }
+      if (selectedTests.isNotEmpty) {
+        for (int idx in selectedTests) {
+          tmp.add(userTests[idx].id!);
+        }
+      }
       Schedule sch = Schedule(
         specialist: widget.specialist.id,
         patient: id,

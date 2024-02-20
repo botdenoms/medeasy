@@ -20,6 +20,8 @@ class _StatsCardState extends State<StatsCard> {
   LatLng? location;
   late User _user;
   bool fetching = true;
+  // bool fetching = true;
+  List<Schedule> schedules = [];
 
   @override
   void initState() {
@@ -270,10 +272,45 @@ class _StatsCardState extends State<StatsCard> {
                             ),
                             const SizedBox(height: 5.0),
                             Row(
-                              children: const [
+                              children: [
                                 Text(
-                                  'Pending schedules: ',
-                                  style: TextStyle(fontSize: 17),
+                                  'Pending schedules: ${schedules.length} ',
+                                  style: const TextStyle(fontSize: 17),
+                                ),
+                                const SizedBox(width: 20),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (schedules.isEmpty) {
+                                      return;
+                                    }
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute<void>(
+                                        builder: (BuildContext context) =>
+                                            ScheduleMng(
+                                          schedule: schedules,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 20.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Color(0x22000000),
+                                          spreadRadius: 2,
+                                          blurRadius: 1,
+                                          offset: Offset(2, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Text('View'),
+                                  ),
                                 ),
                               ],
                             ),
@@ -297,7 +334,18 @@ class _StatsCardState extends State<StatsCard> {
     }
   }
 
+  getSchedules() async {
+    setState(() {});
+    final FireStoreController fireCon = Get.find();
+    final UserController usr = Get.find();
+    final res = await fireCon.getSchedulesOf(usr.user()!.uid);
+    setState(() {
+      schedules = res!;
+    });
+  }
+
   buildUserprofile() async {
+    getSchedules();
     // return infor on user
     final FireStoreController fireCon = Get.find();
     final UserController usr = Get.find();
