@@ -16,3 +16,4 @@ export './test_view.dart';
 export './schedule_create.dart';
 export './schedule_processing.dart';
 export './schedule_view.dart';
+export './diagnose.dart';

@@ -80,13 +80,13 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
               const SizedBox(height: 15),
               TextButton(
                 onPressed: () {
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(
-                  //     builder: (BuildContext context) => ScheduleViewDetails(
-                  //       schedule: widget.schedule,
-                  //     ),
-                  //   ),
-                  // );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => DiagnosisScreen(
+                        schedule: widget.schedule,
+                      ),
+                    ),
+                  );
                 },
                 child: const Text(
                   "Diagnose",
@@ -103,7 +103,7 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
 
   timeFormat(DateTime dt) {
     String hrs = dt.hour.toString().padRight(2, '0');
-    String mins = dt.hour.toString().padRight(2, '0');
+    String mins = dt.minute.toString().padRight(2, '0');
     return '$hrs : $mins';
   }
 
