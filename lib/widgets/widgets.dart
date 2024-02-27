@@ -1,5 +1,4 @@
 export './specialist_card.dart';
-export './my_notifications.dart';
 export './my_schedule.dart';
 export './my_specialist.dart';
 export './schedule_card.dart';
@@ -27,3 +26,4 @@ export './blood_view.dart';
 export './imaging_view.dart';
 export './schedule_updater.dart';
 export './schedule_viewer.dart';
+export './notification_card.dart';

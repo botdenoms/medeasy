@@ -36,9 +36,9 @@ class FireStoreController extends GetxController {
         Diagnosis t = Diagnosis(
           findings: element['findings'],
           recommends: element['recommends'],
-          prescripts: element['prescripts'],
-          patient: element['client'],
-          specialist: element['facility'],
+          prescripts: [...element['prescripts']],
+          patient: element['patient'],
+          specialist: element['specialist'],
           schedule: element['schedule'],
           date: DateTime.fromMillisecondsSinceEpoch(
               element['date'].seconds * 1000),
@@ -47,6 +47,37 @@ class FireStoreController extends GetxController {
         retList.add(t);
       }
       return retList;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return null;
+    }
+  }
+
+  Future<Diagnosis?> getDiagnosisByScheduleId(String id) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> query = await _fireStore
+          .collection('diagnosis')
+          .where('schedule', isEqualTo: id)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      if (data.isEmpty) {
+        return null;
+      }
+      for (QueryDocumentSnapshot<Map<String, dynamic>> element in data) {
+        Diagnosis t = Diagnosis(
+          findings: element['findings'],
+          recommends: element['recommends'],
+          prescripts: [...element['prescripts']],
+          patient: element['patient'],
+          specialist: element['specialist'],
+          schedule: element['schedule'],
+          date: DateTime.fromMillisecondsSinceEpoch(
+              element['date'].seconds * 1000),
+          // id: element.id,
+        );
+        return t;
+      }
+      return null;
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
       return null;

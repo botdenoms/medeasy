@@ -1,5 +1,4 @@
 export './home.dart';
-export './account.dart';
 export './specialist.dart';
 export './authentications.dart';
 export './schedule.dart';
@@ -17,3 +16,4 @@ export './schedule_create.dart';
 export './schedule_processing.dart';
 export './schedule_view.dart';
 export './diagnose.dart';
+export './diagnosis.dart';
