@@ -80,13 +80,7 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
               const SizedBox(height: 15),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => DiagnosisScreen(
-                        schedule: widget.schedule,
-                      ),
-                    ),
-                  );
+                  diagnose();
                 },
                 child: const Text(
                   "Diagnose",
@@ -105,6 +99,22 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
     String hrs = dt.hour.toString().padRight(2, '0');
     String mins = dt.minute.toString().padRight(2, '0');
     return '$hrs : $mins';
+  }
+
+  diagnose() {
+    final UserController userCon = Get.find();
+    final usrId = userCon.user()!.uid;
+    if (widget.schedule.patient == usrId) {
+      Get.snackbar('Notice', 'Your can\'t Diagnose your self');
+      return;
+    }
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => DiagnosisScreen(
+          schedule: widget.schedule,
+        ),
+      ),
+    );
   }
 
   Widget? testItemBuilder(BuildContext context, int index) {
