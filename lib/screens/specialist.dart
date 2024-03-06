@@ -60,7 +60,7 @@ class _SpecialistViewState extends State<SpecialistView> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -129,7 +129,7 @@ class _SpecialistViewState extends State<SpecialistView> {
                     focusedDate = focusedDay;
                   },
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 25),
               ],
             ),
           ),

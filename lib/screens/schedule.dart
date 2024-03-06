@@ -29,7 +29,6 @@ class _SchedulerState extends State<Scheduler> {
   bool fetching = false;
   bool fetchingTests = false;
   List<TimeTable> timeTablels = [];
-  // List<String> tests = ['1', '1', '1', '1', '1', '1', '1'];
   List<Test> userTests = [];
   List<int> selectedTests = [];
 
@@ -69,37 +68,6 @@ class _SchedulerState extends State<Scheduler> {
               ),
               const SizedBox(height: 20),
               const Text(
-                'Type',
-                style: TextStyle(fontSize: 13),
-              ),
-              const SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    online = !online;
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  height: 40,
-                  width: double.infinity,
-                  color: Colors.black26,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          online ? 'Online' : 'Physical',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const Icon(
-                          Icons.change_circle_rounded,
-                          color: Color(0xFF1E1E1E),
-                        ),
-                      ]),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
                 'Schedule',
                 style: TextStyle(fontSize: 13),
               ),
@@ -107,12 +75,19 @@ class _SchedulerState extends State<Scheduler> {
               fetching
                   ? const CircularProgressIndicator()
                   : Column(
-                      children: timeSlots(),
+                      children: [
+                        ...timeSlots(),
+                        timeTablels.isEmpty
+                            ? const Center(child: Text('No Schedule Data'))
+                            : const SizedBox(),
+                      ],
                     ),
+              const SizedBox(height: 20),
               const Text(
                 'Time',
                 style: TextStyle(fontSize: 13),
               ),
+              const SizedBox(height: 5),
               picked
                   ? Text(
                       'From : ${timeFormat(timeStart)} --> ${timeFormat(timeEnd)}',
@@ -121,7 +96,7 @@ class _SchedulerState extends State<Scheduler> {
                         color: Colors.greenAccent,
                       ),
                     )
-                  : const SizedBox(),
+                  : const Center(child: Text('Time not pickekd')),
               const SizedBox(height: 10),
               const Text(
                 'Tests',
@@ -140,7 +115,7 @@ class _SchedulerState extends State<Scheduler> {
                       ),
                     )
                   : const Center(child: Text('No Tests \n Available')),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

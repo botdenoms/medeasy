@@ -20,7 +20,6 @@ class _StatsCardState extends State<StatsCard> {
   LatLng? location;
   late User _user;
   bool fetching = true;
-  // bool fetching = true;
   List<Schedule> schedules = [];
 
   @override
@@ -159,7 +158,7 @@ class _StatsCardState extends State<StatsCard> {
                                     location != null
                                         ? Text(location!.latitude
                                             .toStringAsFixed(3))
-                                        : const Text('---'),
+                                        : const Text(' NA '),
                                     const SizedBox(width: 5.0),
                                     const Text(
                                       'Long: ',
@@ -167,7 +166,7 @@ class _StatsCardState extends State<StatsCard> {
                                     location != null
                                         ? Text(location!.longitude
                                             .toStringAsFixed(3))
-                                        : const Text('---'),
+                                        : const Text(' NA '),
                                   ],
                                 ),
                               ],
@@ -338,7 +337,7 @@ class _StatsCardState extends State<StatsCard> {
     setState(() {});
     final FireStoreController fireCon = Get.find();
     final UserController usr = Get.find();
-    final res = await fireCon.getSchedulesOf(usr.user()!.uid);
+    final res = await fireCon.getPendingSchedulesOf(usr.user()!.uid);
     setState(() {
       schedules = res!;
     });
@@ -363,6 +362,7 @@ class _StatsCardState extends State<StatsCard> {
             _user = resp;
             joined = _user.at;
             verifiedOn = spe.at;
+            location = spe.geo;
           });
           return;
         }
