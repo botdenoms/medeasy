@@ -27,7 +27,6 @@ class _ScheduleUpdaterState extends State<ScheduleUpdater> {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
               onTap: () {
@@ -52,6 +51,7 @@ class _ScheduleUpdaterState extends State<ScheduleUpdater> {
                 ),
               ),
             ),
+            const SizedBox(width: 20),
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -101,9 +101,7 @@ class _ScheduleUpdaterState extends State<ScheduleUpdater> {
                     ],
                   )
                 : TableCalendar(
-                    firstDay: DateTime.now().subtract(
-                      const Duration(days: 1),
-                    ),
+                    firstDay: DateTime.now(),
                     lastDay: DateTime(2030),
                     focusedDay: focusedDate,
                     currentDay: selectedDate,
@@ -127,6 +125,7 @@ class _ScheduleUpdaterState extends State<ScheduleUpdater> {
                   Text('Google Calendar')
                 ],
               ),
+        const SizedBox(height: 10),
         manual
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,7 +201,7 @@ class _ScheduleUpdaterState extends State<ScheduleUpdater> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   height: 40,
                   width: double.infinity,
-                  color: Colors.black26,
+                  color: available ? Colors.greenAccent : Colors.redAccent,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -283,7 +282,7 @@ class _ScheduleUpdaterState extends State<ScheduleUpdater> {
       return;
     }
     if (selectedDate == null || to == null || from == null) {
-      Get.snackbar("Error", 'message');
+      Get.snackbar("Error", 'Time not picked');
     } else {
       scheduleCreate(
         selectedDate,

@@ -51,6 +51,7 @@ class _ScheduleViewerState extends State<ScheduleViewer> {
                   ),
                   const SizedBox(height: 10),
                   ...timeSlots(),
+                  const SizedBox(height: 25),
                 ],
               )
       ],

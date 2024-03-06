@@ -16,7 +16,7 @@ class _TimeCardState extends State<TimeCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black38,
+      color: widget.timeTable.available ? Colors.greenAccent : Colors.redAccent,
       margin: const EdgeInsets.symmetric(vertical: 5.0),
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
@@ -64,17 +64,10 @@ class _TimeCardState extends State<TimeCard> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Container(
-              color: widget.timeTable.available
-                  ? Colors.greenAccent
-                  : Colors.redAccent,
-              child: Center(
-                child: Text(
-                  widget.timeTable.available ? 'Available' : 'Occupied',
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ),
-            )
+            Text(
+              widget.timeTable.available ? 'Available' : 'Occupied',
+              style: const TextStyle(fontSize: 18),
+            ),
           ],
         ),
       ),
