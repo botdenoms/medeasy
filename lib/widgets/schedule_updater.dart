@@ -116,13 +116,18 @@ class _ScheduleUpdaterState extends State<ScheduleUpdater> {
                       // focusedDate = focusedDay;
                     },
                   )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  Text("PDF"),
-                  Text("XML"),
-                  Text("CSV"),
-                  Text('Google Calendar')
+            : Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      Text("PDF"),
+                      Text("XML"),
+                      Text("CSV"),
+                      Text('Google Calendar')
+                    ],
+                  ),
                 ],
               ),
         const SizedBox(height: 10),

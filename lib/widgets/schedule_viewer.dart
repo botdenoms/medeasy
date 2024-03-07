@@ -24,9 +24,7 @@ class _ScheduleViewerState extends State<ScheduleViewer> {
     return Column(
       children: [
         TableCalendar(
-          firstDay: DateTime.now().subtract(
-            const Duration(days: 1),
-          ),
+          firstDay: DateTime.now(),
           lastDay: DateTime(2030),
           focusedDay: focusedDate,
           currentDay: selectedDate,

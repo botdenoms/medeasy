@@ -17,7 +17,19 @@ class _DiagnosisViewState extends State<DiagnosisView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Color(0xFF1E1E1E),
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 10.0,
@@ -28,26 +40,30 @@ class _DiagnosisViewState extends State<DiagnosisView> {
             children: [
               const SizedBox(height: 5),
               Text(
-                widget.diagnosis.findings,
+                formatDate(widget.diagnosis.date),
                 style: const TextStyle(fontSize: 17),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
+              Text(
+                widget.diagnosis.findings,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Divider(),
               Text(
                 widget.diagnosis.recommends,
                 style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 5),
-              Text(
-                formatDate(widget.diagnosis.date),
-                style: const TextStyle(fontSize: 17),
-              ),
-              const SizedBox(height: 10),
               const Text(
                 'Prescriptions',
                 style: TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 5),
               ...prescTxts(widget.diagnosis.prescripts),
+              const SizedBox(height: 5),
               const Divider(),
               TextButton(
                 onPressed: () {
@@ -55,15 +71,6 @@ class _DiagnosisViewState extends State<DiagnosisView> {
                 },
                 child: const Text(
                   "Specialist",
-                  style: TextStyle(fontSize: 17),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // submitDiagnosis();
-                },
-                child: const Text(
-                  "Schedule",
                   style: TextStyle(fontSize: 17),
                 ),
               ),

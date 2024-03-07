@@ -29,7 +29,19 @@ class _TestViewState extends State<TestView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Color(0xFF1E1E1E),
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 10.0,
@@ -44,9 +56,15 @@ class _TestViewState extends State<TestView> {
               ),
               const SizedBox(height: 10),
               const Divider(),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               pending
-                  ? const Text('Pending...')
+                  ? const SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: Center(
+                        child: Text('Pending Results \n\t submission...'),
+                      ),
+                    )
                   : running
                       ? const CircularProgressIndicator()
                       : widget.test.type == 5
@@ -54,6 +72,7 @@ class _TestViewState extends State<TestView> {
                           : ImagingData(
                               imagingData: imgt,
                             ),
+              const SizedBox(height: 25),
             ],
           ),
         ),
@@ -95,5 +114,64 @@ class _TestViewState extends State<TestView> {
         running = false;
       });
     }
+  }
+
+  String formatDate(DateTime dt) {
+    String day = '';
+    String month = '';
+    switch (dt.day) {
+      case 1:
+        day = '1st';
+        break;
+      case 2:
+        day = '2nd';
+        break;
+      case 3:
+        day = '3rd';
+        break;
+      default:
+        day = '${dt.day}th';
+    }
+    switch (dt.month) {
+      case 1:
+        month = 'January';
+        break;
+      case 2:
+        month = 'February';
+        break;
+      case 3:
+        month = 'March';
+        break;
+      case 4:
+        month = 'April';
+        break;
+      case 5:
+        month = 'May';
+        break;
+      case 6:
+        month = 'June';
+        break;
+      case 7:
+        month = 'July';
+        break;
+      case 8:
+        month = 'August';
+        break;
+      case 9:
+        month = 'September';
+        break;
+      case 10:
+        month = 'Octorber';
+        break;
+      case 11:
+        month = 'November';
+        break;
+      case 12:
+        month = 'December';
+        break;
+      default:
+        break;
+    }
+    return '$day $month, ${dt.year}';
   }
 }

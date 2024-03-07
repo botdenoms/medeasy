@@ -23,7 +23,19 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Color(0xFF1E1E1E),
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 10.0,
@@ -35,7 +47,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               const SizedBox(height: 10),
               const Text(
                 'Findings',
-                style: TextStyle(fontSize: 17),
+                style: TextStyle(fontSize: 14),
               ),
               TextField(
                 maxLines: 8,
@@ -48,7 +60,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               const SizedBox(height: 10),
               const Text(
                 'Recommendations',
-                style: TextStyle(fontSize: 17),
+                style: TextStyle(fontSize: 14),
               ),
               TextField(
                 maxLines: 8,
@@ -62,7 +74,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               const SizedBox(height: 10),
               const Text(
                 'Prescriptions',
-                style: TextStyle(fontSize: 17),
+                style: TextStyle(fontSize: 14),
               ),
               prescpts.isEmpty
                   ? Center(
@@ -129,8 +141,12 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     }
     int c = 1;
     for (String tt in prescpts) {
-      final tc = Text('$c. $tt');
+      final tc = Text(
+        '$c. $tt',
+        style: const TextStyle(fontSize: 16),
+      );
       wdgts.add(tc);
+      wdgts.add(const SizedBox(height: 5));
       c += 1;
     }
     return wdgts;

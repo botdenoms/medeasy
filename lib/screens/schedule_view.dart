@@ -28,7 +28,19 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Color(0xFF1E1E1E),
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 10.0,
@@ -39,12 +51,13 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
             children: [
               const SizedBox(height: 5),
               Text(
-                widget.schedule.from
-                    .toString()
-                    .substring(0, widget.schedule.from.toString().length - 7),
-                style: const TextStyle(fontSize: 17),
+                formatDate(widget.schedule.from),
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Text(
@@ -58,15 +71,21 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
               Text(
                 'Tests Attached: ${widget.schedule.tests!.length}',
-                style: const TextStyle(fontSize: 17),
+                style: const TextStyle(fontSize: 14),
               ),
               const SizedBox(height: 5),
               fetchingTests
                   ? const CircularProgressIndicator()
                   : testsList.isEmpty
-                      ? const Text('No tests shared')
+                      ? const SizedBox(
+                          height: 80,
+                          width: double.infinity,
+                          child: Center(
+                              child: Text('No tests data \n\t\t shared')),
+                        )
                       : SizedBox(
                           height: 80,
                           width: double.infinity,
