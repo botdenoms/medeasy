@@ -18,13 +18,16 @@ class _GeoPickerState extends State<GeoPicker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 2,
         leading: GestureDetector(
           onTap: () {
             Navigator.of(context).pop(pick);
           },
-          child: const Icon(Icons.chevron_left_rounded),
+          child: const Icon(
+            Icons.chevron_left_rounded,
+            color: Color(0xFF1E1E1E),
+          ),
         ),
       ),
       body: GoogleMap(

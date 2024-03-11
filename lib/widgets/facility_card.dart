@@ -61,7 +61,7 @@ class _FacilityCardState extends State<FacilityCard> {
               width: double.infinity,
               child: ListView.builder(
                 itemBuilder: itemBuilder,
-                itemCount: tests.length,
+                itemCount: widget.facility.tests!.length,
                 scrollDirection: Axis.horizontal,
               ),
             ),
@@ -114,7 +114,7 @@ class _FacilityCardState extends State<FacilityCard> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
       child: Center(
-        child: Text(tests[index]),
+        child: Text(widget.facility.tests![index]),
       ),
     );
   }

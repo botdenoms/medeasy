@@ -32,7 +32,19 @@ class _FaciltyScheduleState extends State<FaciltySchedule> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Color(0xFF1E1E1E),
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -65,49 +77,50 @@ class _FaciltyScheduleState extends State<FaciltySchedule> {
                 ),
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (selected.contains(true)) {
-                        setState(() {
-                          testsPicked = true;
-                        });
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        10.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x22000000),
-                            spreadRadius: 2,
-                            blurRadius: 1,
-                            offset: Offset(2, 2),
+              testsPicked
+                  ? const SizedBox()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (selected.contains(true)) {
+                              setState(() {
+                                testsPicked = true;
+                              });
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(
+                              10.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x22000000),
+                                  spreadRadius: 2,
+                                  blurRadius: 1,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'Procede',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Next',
-                          style: TextStyle(fontSize: 16),
                         ),
-                      ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
+              const SizedBox(height: 5),
               testsPicked ? const Text('Calendar') : const SizedBox(),
               testsPicked
                   ? TableCalendar(
-                      firstDay: DateTime.now().subtract(
-                        const Duration(days: 1),
-                      ),
+                      firstDay: DateTime.now(),
                       lastDay: DateTime(2030),
                       focusedDay: focusedDate,
                       onDaySelected: (selectedDay, focusedDay) {
@@ -125,39 +138,41 @@ class _FaciltyScheduleState extends State<FaciltySchedule> {
                     )
                   : const SizedBox(),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      scheduleTest();
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        10.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x22000000),
-                            spreadRadius: 2,
-                            blurRadius: 1,
-                            offset: Offset(2, 2),
+              testsPicked
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            scheduleTest();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(
+                              10.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x22000000),
+                                  spreadRadius: 2,
+                                  blurRadius: 1,
+                                  offset: Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'Schedule',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Schedule',
-                          style: TextStyle(fontSize: 16),
                         ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                      ],
+                    )
+                  : const SizedBox(),
               const SizedBox(height: 20),
             ],
           ),

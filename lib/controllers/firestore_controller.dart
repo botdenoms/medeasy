@@ -359,13 +359,10 @@ class FireStoreController extends GetxController {
               id: element['id'],
               pobox: element['pobox'],
               tests: [...element['tests']],
-              // geo: LatLng(
-              //   element['geo'].latitude,
-              //   element['geo'].longitude,
-              // ),
-              // verified: element['verified'],
-              // at: DateTime.fromMillisecondsSinceEpoch(
-              //     // element['at'].seconds * 1000),
+              geo: LatLng(element['geo'].latitude, element['geo'].longitude),
+              verified: element['verified'],
+              at: DateTime.fromMillisecondsSinceEpoch(
+                  element['at'].seconds * 1000),
             );
             fcList.add(fc);
           } else {
@@ -378,10 +375,6 @@ class FireStoreController extends GetxController {
               id: element['id'],
               pobox: element['pobox'],
               tests: [...element['tests']],
-              // geo: LatLng(
-              //   element['geo'].latitude,
-              //   element['geo'].longitude,
-              // ),
               verified: element['verified'],
               at: DateTime.fromMillisecondsSinceEpoch(
                   element['at'].seconds * 1000),
@@ -717,9 +710,38 @@ class FireStoreController extends GetxController {
 
   Future<bool> addGeoData(String id, LatLng latLng) async {
     try {
-      await _fireStore.collection('specialists').doc(id).update({
-        'geo': GeoPoint(latLng.latitude, latLng.longitude),
-      });
+      final query = await _fireStore
+          .collection('facilities')
+          .where('id', isEqualTo: id)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      if (data.isNotEmpty) {
+        final element = data.first;
+        await _fireStore.collection('facilities').doc(element.id).update({
+          'geo': GeoPoint(latLng.latitude, latLng.longitude),
+        });
+        return true;
+      }
+      return false;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<bool> testsOfferedUpdate(String id, List<String> tests) async {
+    try {
+      final query = await _fireStore
+          .collection('facilities')
+          .where('id', isEqualTo: id)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      if (data.isNotEmpty) {
+        final element = data.first;
+        await _fireStore.collection('facilities').doc(element.id).update({
+          'tests': tests,
+        });
+      }
       return true;
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
@@ -748,24 +770,38 @@ class FireStoreController extends GetxController {
         final element = data.first;
         if (element.data().containsKey('verified') &&
             element.data().containsKey('at')) {
-          Facility fc = Facility(
-            name: element.data()['name'],
-            location: [...element.data()['location']],
-            email: element.data()['email'],
-            lincenceImg: element.data()['img'],
-            lincence: element.data()['lincence'],
-            id: element.data()['id'],
-            pobox: element.data()['pobox'],
-            tests: [...element['tests']],
-            // geo: LatLng(
-            //   element['geo'].latitude,
-            //   element['geo'].longitude,
-            // ),
-            verified: element['verified'],
-            at: DateTime.fromMillisecondsSinceEpoch(
-                element['at'].seconds * 1000),
-          );
-          return fc;
+          if (element.data().containsKey('geo')) {
+            Facility fc = Facility(
+              name: element.data()['name'],
+              location: [...element.data()['location']],
+              email: element.data()['email'],
+              lincenceImg: element.data()['img'],
+              lincence: element.data()['lincence'],
+              id: element.data()['id'],
+              pobox: element.data()['pobox'],
+              tests: [...element['tests']],
+              geo: LatLng(element['geo'].latitude, element['geo'].longitude),
+              verified: element['verified'],
+              at: DateTime.fromMillisecondsSinceEpoch(
+                  element['at'].seconds * 1000),
+            );
+            return fc;
+          } else {
+            Facility fc = Facility(
+              name: element.data()['name'],
+              location: [...element.data()['location']],
+              email: element.data()['email'],
+              lincenceImg: element.data()['img'],
+              lincence: element.data()['lincence'],
+              id: element.data()['id'],
+              pobox: element.data()['pobox'],
+              tests: [...element['tests']],
+              verified: element['verified'],
+              at: DateTime.fromMillisecondsSinceEpoch(
+                  element['at'].seconds * 1000),
+            );
+            return fc;
+          }
         } else {
           Facility fc = Facility(
             name: element.data()['name'],
@@ -776,13 +812,6 @@ class FireStoreController extends GetxController {
             id: element.data()['id'],
             pobox: element.data()['pobox'],
             tests: [...element['tests']],
-            // geo: LatLng(
-            //   element['geo'].latitude,
-            //   element['geo'].longitude,
-            // ),
-            // verified: element['verified'],
-            // at: DateTime.fromMillisecondsSinceEpoch(
-            //     // element['at'].seconds * 1000),
           );
           return fc;
         }

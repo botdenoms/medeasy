@@ -98,8 +98,15 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
                         ),
               const SizedBox(height: 15),
               TextButton(
-                onPressed: () {
-                  diagnose();
+                onPressed: () async {
+                  final UserController userCon = Get.find();
+                  final usrId = userCon.user()!.uid;
+                  final dg = await getDiagnosis(widget.schedule.id!);
+                  if (dg != null) {
+                    diagnoseView(dg);
+                  }else{
+                    diagnose(usrId);
+                  }
                 },
                 child: const Text(
                   "Diagnose",
@@ -120,10 +127,18 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
     return '$hrs : $mins';
   }
 
-  diagnose() {
-    final UserController userCon = Get.find();
-    final usrId = userCon.user()!.uid;
-    if (widget.schedule.patient == usrId) {
+  diagnoseView(Diagnosis dg) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => DiagnosisView(
+          diagnosis: dg,
+        ),
+      ),
+    );
+  }
+
+  diagnose(String usr) async {
+    if (widget.schedule.patient == usr) {
       Get.snackbar('Notice', 'Your can\'t Diagnose your self');
       return;
     }
@@ -134,6 +149,11 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
         ),
       ),
     );
+  }
+
+  Future<Diagnosis?> getDiagnosis(String id) async {
+    final FireStoreController firecon = Get.find<FireStoreController>();
+    return await firecon.getDiagnosisByScheduleId(id);
   }
 
   Widget? testItemBuilder(BuildContext context, int index) {

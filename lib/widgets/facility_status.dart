@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../configs/constants.dart';
 import '../controllers/controllers.dart';
 import '../model/models.dart';
 import '../screens/screens.dart';
@@ -20,9 +21,13 @@ class _FacilityStatusState extends State<FacilityStatus> {
   LatLng? location;
   late User _user;
   List<String> offers = [];
+  List<String> selected = [];
   bool fetching = true;
   bool testSpin = true;
+  bool testUpdate = false;
   List<Test>? testsList = [];
+  List<int> selectedTests = [];
+  String? fcId;
 
   @override
   void initState() {
@@ -161,7 +166,7 @@ class _FacilityStatusState extends State<FacilityStatus> {
                                     location != null
                                         ? Text(location!.latitude
                                             .toStringAsFixed(3))
-                                        : const Text('---'),
+                                        : const Text(' NA '),
                                     const SizedBox(width: 5.0),
                                     const Text(
                                       'Long: ',
@@ -169,7 +174,7 @@ class _FacilityStatusState extends State<FacilityStatus> {
                                     location != null
                                         ? Text(location!.longitude
                                             .toStringAsFixed(3))
-                                        : const Text('---'),
+                                        : const Text(' NA '),
                                   ],
                                 ),
                               ],
@@ -234,7 +239,8 @@ class _FacilityStatusState extends State<FacilityStatus> {
                                 const Spacer(),
                                 GestureDetector(
                                   onTap: () {
-                                    if (testsList!.isEmpty || testsList == null) {
+                                    if (testsList!.isEmpty ||
+                                        testsList == null) {
                                       return;
                                     }
                                     Navigator.of(context).push(
@@ -263,7 +269,7 @@ class _FacilityStatusState extends State<FacilityStatus> {
                                         ),
                                       ],
                                     ),
-                                    child: const Text('Submit'),
+                                    child: const Text('View'),
                                   ),
                                 ),
                               ],
@@ -286,10 +292,11 @@ class _FacilityStatusState extends State<FacilityStatus> {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 10),
                             fetching
                                 ? const CircularProgressIndicator()
                                 : SizedBox(
-                                    height: 40,
+                                    height: 30,
                                     width: double.infinity,
                                     child: ListView.builder(
                                       itemBuilder: itemBuilder,
@@ -297,10 +304,36 @@ class _FacilityStatusState extends State<FacilityStatus> {
                                       scrollDirection: Axis.horizontal,
                                     ),
                                   ),
+                            const SizedBox(height: 10),
+                            // tests list
+                            testUpdate
+                                ? SizedBox(
+                                    height: 40,
+                                    width: double.infinity,
+                                    child: ListView.builder(
+                                      itemBuilder: itemBuilderTests,
+                                      itemCount: tests.length,
+                                      scrollDirection: Axis.horizontal,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 5.0,
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox(),
+                            const SizedBox(height: 10),
                             Row(
                               children: [
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    if (testUpdate == false) {
+                                      initTestsOffered();
+                                      setState(() {
+                                        testUpdate = true;
+                                      });
+                                      return;
+                                    }
+                                    updateTests();
+                                  },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 10.0,
@@ -318,7 +351,9 @@ class _FacilityStatusState extends State<FacilityStatus> {
                                         ),
                                       ],
                                     ),
-                                    child: const Text('Update'),
+                                    child: Text(
+                                      testUpdate ? 'Update' : "Edit Offers",
+                                    ),
                                   ),
                                 ),
                               ],
@@ -329,6 +364,23 @@ class _FacilityStatusState extends State<FacilityStatus> {
                   : const SizedBox(),
             ],
           );
+  }
+
+  updateTests() async {
+    final FireStoreController fireCon = Get.find();
+    List<String> tmp = [];
+    for (int idx in selectedTests) {
+      tmp.add(tests[idx]);
+    }
+    final resp = await fireCon.testsOfferedUpdate(fcId!, tmp);
+    if (resp) {
+      Get.snackbar('Success', 'Updated tests offered');
+      setState(() {
+        testUpdate = false;
+      });
+      return;
+    }
+    Get.snackbar('Error', 'Failed to Updated tests offered');
   }
 
   updateGeo(geoloc) async {
@@ -369,6 +421,8 @@ class _FacilityStatusState extends State<FacilityStatus> {
           _user = resp;
           joined = _user.at;
           verifiedOn = fc.at;
+          location = fc.geo;
+          fcId = fc.id;
         });
         return;
       } else {
@@ -403,9 +457,81 @@ class _FacilityStatusState extends State<FacilityStatus> {
   Widget? itemBuilder(BuildContext context, int index) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(left: BorderSide()),
+      ),
       child: Center(
-        child: Text(offers[index]),
+        child: Text(
+          offers[index],
+          style: const TextStyle(
+            color: Colors.black54,
+            fontSize: 15,
+          ),
+        ),
       ),
     );
+  }
+
+  Widget? itemBuilderTests(BuildContext context, int index) {
+    return GestureDetector(
+      onTap: () {
+        testOfferUpdator(index);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: 5.0,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x22000000),
+              spreadRadius: 2,
+              blurRadius: 1,
+              offset: Offset(2, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Text(tests[index]),
+            const SizedBox(width: 10),
+            selectedTests.contains(index)
+                ? const Icon(
+                    Icons.dangerous_outlined,
+                    color: Colors.redAccent,
+                  )
+                : const Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.greenAccent,
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  initTestsOffered() {
+    for (String tst in offers) {
+      int idx = tests.indexOf(tst);
+      if (idx != -1) {
+        selectedTests.add(idx);
+      }
+    }
+    setState(() {});
+  }
+
+  testOfferUpdator(int index) {
+    if (selectedTests.contains(index)) {
+      selectedTests.remove(index);
+      setState(() {});
+      return;
+    }
+    selectedTests.add(index);
+    setState(() {});
   }
 }
