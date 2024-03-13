@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../configs/constants.dart';
 import '../model/models.dart';
 import '../screens/screens.dart';
 

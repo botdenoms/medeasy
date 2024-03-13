@@ -53,11 +53,92 @@ class _TestCardState extends State<TestCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.test.date.toString().substring(0, 11)),
-            Text(tests[widget.test.type]),
+            Text(
+              formatDate(widget.test.date),
+              style: const TextStyle(
+                fontSize: 17,
+                color: Colors.greenAccent,
+              ),
+            ),
+            Row(
+              children: [
+                const Text(
+                  'Type: ',
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+                Text(
+                  tests[widget.test.type],
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
+  }
+
+  String formatDate(DateTime dt) {
+    String day = '';
+    String month = '';
+    switch (dt.day) {
+      case 1:
+        day = '1st';
+        break;
+      case 2:
+        day = '2nd';
+        break;
+      case 3:
+        day = '3rd';
+        break;
+      default:
+        day = '${dt.day}th';
+    }
+    switch (dt.month) {
+      case 1:
+        month = 'January';
+        break;
+      case 2:
+        month = 'February';
+        break;
+      case 3:
+        month = 'March';
+        break;
+      case 4:
+        month = 'April';
+        break;
+      case 5:
+        month = 'May';
+        break;
+      case 6:
+        month = 'June';
+        break;
+      case 7:
+        month = 'July';
+        break;
+      case 8:
+        month = 'August';
+        break;
+      case 9:
+        month = 'September';
+        break;
+      case 10:
+        month = 'Octorber';
+        break;
+      case 11:
+        month = 'November';
+        break;
+      case 12:
+        month = 'December';
+        break;
+      default:
+        break;
+    }
+    return '$day $month, ${dt.year}';
   }
 }

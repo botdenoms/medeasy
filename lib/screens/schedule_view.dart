@@ -50,6 +50,11 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 5),
+              const Text(
+                'Schedule Date',
+                style: TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 5),
               Text(
                 formatDate(widget.schedule.from),
                 style: const TextStyle(
@@ -87,7 +92,7 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
                               child: Text('No tests data \n\t\t shared')),
                         )
                       : SizedBox(
-                          height: 80,
+                          height: 50,
                           width: double.infinity,
                           child: ListView.builder(
                             padding: const EdgeInsets.all(2),
@@ -104,7 +109,7 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
                   final dg = await getDiagnosis(widget.schedule.id!);
                   if (dg != null) {
                     diagnoseView(dg);
-                  }else{
+                  } else {
                     diagnose(usrId);
                   }
                 },
@@ -169,7 +174,7 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 5),
-        padding: const EdgeInsets.symmetric(horizontal: 2),
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
@@ -184,10 +189,22 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(testName(testsList[index].type)),
-            Text(formatDate(testsList[index].date)),
+            Text(
+              '${testName(testsList[index].type)} test',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.blueGrey,
+              ),
+            ),
+            Text(
+              formatDate(testsList[index].date),
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ),
           ],
         ),
       ),

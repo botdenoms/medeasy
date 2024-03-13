@@ -39,7 +39,19 @@ class _TestFormState extends State<TestForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Color(0xFF1E1E1E),
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 10.0,
@@ -156,7 +168,21 @@ class _TestFormState extends State<TestForm> {
     setState(() {});
   }
 
+  bool emptyField() {
+    if (name.text == '' || gender.text == '' || dob.text == '') {
+      return true;
+    }
+    if (widget.test.type != 5 && images.isEmpty) {
+      return true;
+    }
+    return false;
+  }
+
   submit() async {
+    if (emptyField()) {
+      Get.snackbar('Error', 'Fill all required fields');
+      return;
+    }
     if (widget.test.type == 5) {
       setState(() {
         running = true;
@@ -167,7 +193,7 @@ class _TestFormState extends State<TestForm> {
         date: DateTime.now(),
         name: usr!.name,
         dob: DateTime.now(),
-        gender: 0,
+        gender: int.tryParse(gender.text)!,
         hermoglobin: double.parse(hermoglobin.text),
         wbc: double.parse(wbc.text),
         rbc: int.tryParse(rbc.text)!,
@@ -180,7 +206,7 @@ class _TestFormState extends State<TestForm> {
       String? ids = await fireCon.createBloodTest(blt);
       final rsp = await fireCon.updateTest(widget.test.id!, ids!);
       if (rsp) {
-        Get.snackbar('Success', 'test update ');
+        Get.snackbar('Success', 'test updated ');
         setState(() {
           running = false;
         });
@@ -206,13 +232,13 @@ class _TestFormState extends State<TestForm> {
         date: DateTime.now(),
         name: usr!.name,
         dob: DateTime.now(),
-        gender: 0,
+        gender: int.tryParse(gender.text)!,
         images: imt,
       );
       String? ids = await fireCon.createImgTest(it);
       final rsp = await fireCon.updateTest(widget.test.id!, ids!);
       if (rsp) {
-        Get.snackbar('Success', 'test update ');
+        Get.snackbar('Success', 'test updated ');
         setState(() {
           running = false;
         });
@@ -223,7 +249,6 @@ class _TestFormState extends State<TestForm> {
         });
       }
     }
-    // final UserController userCon = Get.find();
   }
 
   pickImg() async {

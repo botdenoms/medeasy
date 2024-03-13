@@ -39,11 +39,21 @@ class _DiagnosisViewState extends State<DiagnosisView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 5),
+              const Text(
+                'Made on',
+                style: TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 5),
               Text(
                 formatDate(widget.diagnosis.date),
                 style: const TextStyle(fontSize: 17),
               ),
               const SizedBox(height: 10),
+              const Text(
+                'Findings',
+                style: TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 5),
               Text(
                 widget.diagnosis.findings,
                 style: const TextStyle(
@@ -52,6 +62,11 @@ class _DiagnosisViewState extends State<DiagnosisView> {
                 ),
               ),
               const Divider(),
+              const Text(
+                'Recommendations',
+                style: TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 5),
               Text(
                 widget.diagnosis.recommends,
                 style: const TextStyle(fontSize: 17),

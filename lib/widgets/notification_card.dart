@@ -52,9 +52,7 @@ class _NotificationCardState extends State<NotificationCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.schedule.from
-                .toString()
-                .substring(0, widget.schedule.from.toString().length - 7),
+            formatDate(widget.schedule.from),
             style: const TextStyle(fontSize: 17),
           ),
           const SizedBox(height: 5),
@@ -62,7 +60,7 @@ class _NotificationCardState extends State<NotificationCard> {
             duration(widget.schedule.from, widget.schedule.to),
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 8),
           Text(
             'Tests Attached: ${widget.schedule.tests!.length}',
             style: const TextStyle(fontSize: 17),
@@ -124,50 +122,58 @@ class _NotificationCardState extends State<NotificationCard> {
           const SizedBox(height: 5),
           running
               ? const CircularProgressIndicator()
-              : TextButton(
-                  onPressed: () {
-                    if (widget.id == widget.schedule.patient) {
-                      if (ready) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => DiagnosisView(
-                              diagnosis: diagnosis!,
-                            ),
-                          ),
-                        );
-                      } else {
-                        Get.snackbar(
-                          'Notice',
-                          'Diagnosis Pending \n awaiting specialist feedback',
-                          backgroundColor: Colors.red,
-                        );
-                      }
-                    } else {
-                      if (ready) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => DiagnosisView(
-                              diagnosis: diagnosis!,
-                            ),
-                          ),
-                        );
-                      } else {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => DiagnosisScreen(
-                              schedule: widget.schedule,
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                  },
-                  child: Text(
-                    widget.id == widget.schedule.patient
-                        ? "Diagnosis"
-                        : "Diagnose",
-                    style: const TextStyle(fontSize: 17),
-                  ),
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        if (widget.id == widget.schedule.patient) {
+                          if (ready) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    DiagnosisView(
+                                  diagnosis: diagnosis!,
+                                ),
+                              ),
+                            );
+                          } else {
+                            Get.snackbar(
+                              'Notice',
+                              'Diagnosis Pending \n awaiting specialist feedback',
+                              backgroundColor: Colors.red,
+                            );
+                          }
+                        } else {
+                          if (ready) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    DiagnosisView(
+                                  diagnosis: diagnosis!,
+                                ),
+                              ),
+                            );
+                          } else {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    DiagnosisScreen(
+                                  schedule: widget.schedule,
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Text(
+                        widget.id == widget.schedule.patient
+                            ? "Diagnosis"
+                            : "Diagnose",
+                        style: const TextStyle(fontSize: 17),
+                      ),
+                    ),
+                  ],
                 ),
         ],
       ),
@@ -212,5 +218,64 @@ class _NotificationCardState extends State<NotificationCard> {
   Future<Specialist?> getSpecialist(String id) async {
     final FireStoreController firecon = Get.find<FireStoreController>();
     return await firecon.specialistData(id);
+  }
+
+  String formatDate(DateTime dt) {
+    String day = '';
+    String month = '';
+    switch (dt.day) {
+      case 1:
+        day = '1st';
+        break;
+      case 2:
+        day = '2nd';
+        break;
+      case 3:
+        day = '3rd';
+        break;
+      default:
+        day = '${dt.day}th';
+    }
+    switch (dt.month) {
+      case 1:
+        month = 'January';
+        break;
+      case 2:
+        month = 'February';
+        break;
+      case 3:
+        month = 'March';
+        break;
+      case 4:
+        month = 'April';
+        break;
+      case 5:
+        month = 'May';
+        break;
+      case 6:
+        month = 'June';
+        break;
+      case 7:
+        month = 'July';
+        break;
+      case 8:
+        month = 'August';
+        break;
+      case 9:
+        month = 'September';
+        break;
+      case 10:
+        month = 'Octorber';
+        break;
+      case 11:
+        month = 'November';
+        break;
+      case 12:
+        month = 'December';
+        break;
+      default:
+        break;
+    }
+    return 'On: $day $month, ${dt.year}';
   }
 }

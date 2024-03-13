@@ -17,8 +17,8 @@ class TestView extends StatefulWidget {
 class _TestViewState extends State<TestView> {
   bool running = true;
   bool pending = false;
-  late BloodTest blt;
-  late ImagingTest imgt;
+  BloodTest? blt;
+  ImagingTest? imgt;
 
   @override
   void initState() {
@@ -51,9 +51,24 @@ class _TestViewState extends State<TestView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              const PatientData(
-                name: "Jane Doe",
-              ),
+              running
+                  ? const Center(child: CircularProgressIndicator())
+                  : PatientData(
+                      name: widget.test.type == 5
+                          ? blt == null
+                              ? 'N/A'
+                              : blt!.name
+                          : imgt == null
+                              ? 'N/A'
+                              : imgt!.name,
+                      dob: widget.test.type == 5
+                          ? blt == null
+                              ? DateTime.now()
+                              : blt!.dob
+                          : imgt == null
+                              ? DateTime.now()
+                              : imgt!.dob,
+                    ),
               const SizedBox(height: 10),
               const Divider(),
               const SizedBox(height: 10),
@@ -66,11 +81,11 @@ class _TestViewState extends State<TestView> {
                       ),
                     )
                   : running
-                      ? const CircularProgressIndicator()
+                      ? const Center(child: CircularProgressIndicator())
                       : widget.test.type == 5
-                          ? BloodData(bloodTest: blt)
+                          ? BloodData(bloodTest: blt!)
                           : ImagingData(
-                              imagingData: imgt,
+                              imagingData: imgt!,
                             ),
               const SizedBox(height: 25),
             ],
