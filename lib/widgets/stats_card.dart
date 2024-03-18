@@ -325,7 +325,7 @@ class _StatsCardState extends State<StatsCard> {
     final FireStoreController fireCon = Get.find();
     final UserController usr = Get.find();
     String userId = usr.user()!.uid;
-    final resp = await fireCon.addGeoData(userId, geoloc);
+    final resp = await fireCon.addGeoDataUser(userId, geoloc);
     if (resp) {
       Get.snackbar('Ok', "Sucess", backgroundColor: Colors.greenAccent);
     } else {

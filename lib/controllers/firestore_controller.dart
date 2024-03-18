@@ -729,6 +729,27 @@ class FireStoreController extends GetxController {
     }
   }
 
+  Future<bool> addGeoDataUser(String id, LatLng latLng) async {
+    try {
+      final query = await _fireStore
+          .collection('specialists')
+          .where('id', isEqualTo: id)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data = query.docs;
+      if (data.isNotEmpty) {
+        final element = data.first;
+        await _fireStore.collection('specialists').doc(element.id).update({
+          'geo': GeoPoint(latLng.latitude, latLng.longitude),
+        });
+        return true;
+      }
+      return false;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
   Future<bool> testsOfferedUpdate(String id, List<String> tests) async {
     try {
       final query = await _fireStore

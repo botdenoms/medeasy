@@ -39,9 +39,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.schedule.from
-                .toString()
-                .substring(0, widget.schedule.from.toString().length - 7),
+            formatDate(widget.schedule.from),
             style: const TextStyle(fontSize: 17),
           ),
           const SizedBox(height: 5),
@@ -49,47 +47,6 @@ class _ScheduleCardState extends State<ScheduleCard> {
             duration(widget.schedule.from, widget.schedule.to),
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
-          // Row(
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Text(
-          //       widget.schedule.online ? "Online" : " Physical",
-          //       style: const TextStyle(fontSize: 17),
-          //     ),
-          //     view
-          //         ? Text(
-          //             widget.id == widget.schedule.patient
-          //                 ? "${specialist!.name} \n ${specialist!.speciality}"
-          //                 : patient!.name,
-          //             style: const TextStyle(fontSize: 17),
-          //           )
-          //         : TextButton(
-          //             onPressed: () async {
-          //               if (widget.id == widget.schedule.patient) {
-          //                 final usr =
-          //                     await getSpecialist(widget.schedule.specialist);
-          //                 setState(() {
-          //                   specialist = usr;
-          //                   view = true;
-          //                 });
-          //               } else {
-          //                 final usr = await getPatient(widget.schedule.patient);
-          //                 setState(() {
-          //                   patient = usr;
-          //                   view = true;
-          //                 });
-          //               }
-          //             },
-          //             child: Text(
-          //               widget.id == widget.schedule.patient
-          //                   ? 'Specialist'
-          //                   : "Patient",
-          //               style: const TextStyle(fontSize: 17),
-          //             ),
-          //           ),
-          //   ],
-          // ),
           const SizedBox(height: 5),
           Text(
             'Tests Attached: ${widget.schedule.tests!.length}',
@@ -118,7 +75,64 @@ class _ScheduleCardState extends State<ScheduleCard> {
     );
   }
 
-  checkTests() {}
+  String formatDate(DateTime dt) {
+    String day = '';
+    String month = '';
+    switch (dt.day) {
+      case 1:
+        day = '1st';
+        break;
+      case 2:
+        day = '2nd';
+        break;
+      case 3:
+        day = '3rd';
+        break;
+      default:
+        day = '${dt.day}th';
+    }
+    switch (dt.month) {
+      case 1:
+        month = 'January';
+        break;
+      case 2:
+        month = 'February';
+        break;
+      case 3:
+        month = 'March';
+        break;
+      case 4:
+        month = 'April';
+        break;
+      case 5:
+        month = 'May';
+        break;
+      case 6:
+        month = 'June';
+        break;
+      case 7:
+        month = 'July';
+        break;
+      case 8:
+        month = 'August';
+        break;
+      case 9:
+        month = 'September';
+        break;
+      case 10:
+        month = 'Octorber';
+        break;
+      case 11:
+        month = 'November';
+        break;
+      case 12:
+        month = 'December';
+        break;
+      default:
+        break;
+    }
+    return 'on: $day $month, ${dt.year}';
+  }
 
   String duration(DateTime f, DateTime t) {
     Duration df = t.difference(f);

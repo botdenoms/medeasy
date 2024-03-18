@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GeoPicker extends StatefulWidget {
@@ -13,6 +12,7 @@ class _GeoPickerState extends State<GeoPicker> {
   final nai = const LatLng(-1.28, 36.81);
   late final GoogleMapController _controller;
   LatLng? pick;
+  Set<Marker> markers = {};
 
   @override
   Widget build(BuildContext context) {
@@ -38,23 +38,18 @@ class _GeoPickerState extends State<GeoPicker> {
         mapType: MapType.normal,
         onMapCreated: (controller) {
           _controller = controller;
-          Get.snackbar(
-            'Success',
-            'controller ${_controller.mapId} available',
-            backgroundColor: Colors.greenAccent,
-          );
         },
         onTap: (argument) {
           setState(() {
             pick = argument;
+            Marker mkr = Marker(
+              markerId: MarkerId(_controller.toString()),
+              position: argument,
+            );
+            markers.add(mkr);
           });
-          Get.snackbar(
-            'Infor',
-            '$argument',
-            backgroundColor: Colors.blueAccent,
-            duration: const Duration(seconds: 2),
-          );
         },
+        markers: markers,
       ),
     );
   }
