@@ -31,6 +31,7 @@ class _SchedulerState extends State<Scheduler> {
   List<TimeTable> timeTablels = [];
   List<Test> userTests = [];
   List<int> selectedTests = [];
+  String pickedId = '';
 
   @override
   void initState() {
@@ -211,6 +212,7 @@ class _SchedulerState extends State<Scheduler> {
             timeStart = s;
             timeEnd = f;
             picked = true;
+            pickedId = tt.id!;
           });
         },
       );
@@ -455,7 +457,8 @@ class _SchedulerState extends State<Scheduler> {
       final FireStoreController fireCon = Get.find();
       final resp = await fireCon.createSchedule(sch);
       if (resp) {
-        // success response
+        // update specialist db record 2 occupied
+        await fireCon.updateTimeTable(pickedId);
         Get.snackbar(
           'Success',
           'Request send',

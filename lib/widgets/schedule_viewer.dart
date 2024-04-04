@@ -35,9 +35,6 @@ class _ScheduleViewerState extends State<ScheduleViewer> {
             });
             fetchSchedule(selectedDate);
           },
-          onPageChanged: (focusedDay) {
-            // focusedDate = focusedDay;
-          },
         ),
         const SizedBox(height: 10),
         fetching

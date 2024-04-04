@@ -262,6 +262,7 @@ class _RegistrationFacilityState extends State<RegistrationFacility> {
       lincence: lincenceno.text,
       lincenceImg: linUrl!,
       id: userCon.user()!.uid,
+      tests: [],
     );
     bool success = await fireCon.createFacility(fc);
     if (success) {

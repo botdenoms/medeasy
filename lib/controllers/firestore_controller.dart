@@ -549,6 +549,18 @@ class FireStoreController extends GetxController {
     }
   }
 
+  Future<bool> updateTimeTable(String id) async {
+    try {
+      await _fireStore.collection('timetables').doc(id).update({
+        'available': false,
+      });
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
   Future<List<TimeTable>?> getTimeTable(String user, DateTime on) async {
     List<TimeTable> retList = [];
     try {

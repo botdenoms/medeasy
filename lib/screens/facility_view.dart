@@ -22,6 +22,7 @@ class _FaciltyScheduleState extends State<FaciltySchedule> {
   bool testsPicked = false;
   DateTime? selectedDate;
   DateTime focusedDate = DateTime.now();
+  bool running = false;
 
   @override
   void initState() {
@@ -108,7 +109,7 @@ class _FaciltyScheduleState extends State<FaciltySchedule> {
                             ),
                             child: const Center(
                               child: Text(
-                                'Procede',
+                                'Confirm',
                                 style: TextStyle(fontSize: 16),
                               ),
                             ),
@@ -123,17 +124,12 @@ class _FaciltyScheduleState extends State<FaciltySchedule> {
                       firstDay: DateTime.now(),
                       lastDay: DateTime(2030),
                       focusedDay: focusedDate,
+                      currentDay: selectedDate,
                       onDaySelected: (selectedDay, focusedDay) {
                         setState(() {
                           selectedDate = selectedDay;
                           focusedDate = selectedDay;
                         });
-                        Get.snackbar(
-                            'Selected', selectedDate!.toIso8601String());
-                      },
-                      onPageChanged: (focusedDay) {
-                        focusedDate = focusedDay;
-                        setState(() {});
                       },
                     )
                   : const SizedBox(),
@@ -142,34 +138,36 @@ class _FaciltyScheduleState extends State<FaciltySchedule> {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            scheduleTest();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(
-                              10.0,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x22000000),
-                                  spreadRadius: 2,
-                                  blurRadius: 1,
-                                  offset: Offset(2, 2),
+                        running
+                            ? const CircularProgressIndicator()
+                            : GestureDetector(
+                                onTap: () {
+                                  scheduleTest();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(
+                                    10.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color(0x22000000),
+                                        spreadRadius: 2,
+                                        blurRadius: 1,
+                                        offset: Offset(2, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      'Schedule',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: const Center(
-                              child: Text(
-                                'Schedule',
-                                style: TextStyle(fontSize: 16),
                               ),
-                            ),
-                          ),
-                        ),
                       ],
                     )
                   : const SizedBox(),
@@ -182,11 +180,26 @@ class _FaciltyScheduleState extends State<FaciltySchedule> {
   }
 
   scheduleTest() async {
+    final UserController userCon = Get.find();
+    final FireStoreController fireCon = Get.find();
+    setState(() {
+      running = true;
+    });
+    if (userCon.user()!.uid == widget.facility.id) {
+      Get.snackbar(
+        "Error",
+        "Self testing not allowed",
+        backgroundColor: Colors.redAccent,
+      );
+      setState(() {
+        running = false;
+      });
+      return;
+    }
+
     for (var i = 0; i < selected.length; i++) {
       if (selected[i]) {
         int idx = tests.indexOf(widget.facility.tests![i]);
-        final UserController userCon = Get.find();
-        final FireStoreController fireCon = Get.find();
         Test t = Test(
           client: userCon.user()!.uid,
           facility: widget.facility.id,
@@ -196,9 +209,23 @@ class _FaciltyScheduleState extends State<FaciltySchedule> {
         );
         final res = await fireCon.scheduleTest(t);
         if (res) {
-          Get.snackbar("Success", "Test Scheduled");
+          Get.snackbar(
+            "Success",
+            "Test Scheduled",
+            backgroundColor: Colors.greenAccent,
+          );
+          setState(() {
+            running = false;
+          });
         } else {
-          Get.snackbar("Error", "Test Scheduled failed");
+          Get.snackbar(
+            "Error",
+            "Test Scheduled failed",
+            backgroundColor: Colors.redAccent,
+          );
+          setState(() {
+            running = false;
+          });
         }
       }
     }
@@ -214,6 +241,7 @@ class _FaciltyScheduleState extends State<FaciltySchedule> {
       child: Container(
         color: selected[index] ? Colors.blueAccent : Colors.white,
         margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         child: Center(
           child: Text(widget.facility.tests![index]),
         ),
