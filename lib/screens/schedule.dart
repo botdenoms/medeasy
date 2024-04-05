@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:medeasy/controllers/controllers.dart';
+import '../configs/constants.dart';
 import '../model/models.dart';
+import '../widgets/widgets.dart';
 
 class Scheduler extends StatefulWidget {
   const Scheduler({
@@ -18,10 +20,24 @@ class Scheduler extends StatefulWidget {
 }
 
 class _SchedulerState extends State<Scheduler> {
-  TimeOfDay time = TimeOfDay.now();
+  TimeOfDay timeStart = TimeOfDay.now();
+  TimeOfDay timeEnd = TimeOfDay.now();
   bool online = true;
+  bool picked = false;
   bool sending = false;
   bool sent = false;
+  bool fetching = false;
+  bool fetchingTests = false;
+  List<TimeTable> timeTablels = [];
+  List<Test> userTests = [];
+  List<int> selectedTests = [];
+  String pickedId = '';
+
+  @override
+  void initState() {
+    getTimeTables();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +59,7 @@ class _SchedulerState extends State<Scheduler> {
               ),
               const SizedBox(height: 20),
               const Text(
-                'Schedule Setup',
+                'Date',
                 style: TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 10),
@@ -53,67 +69,62 @@ class _SchedulerState extends State<Scheduler> {
               ),
               const SizedBox(height: 20),
               const Text(
-                'Type',
+                'Schedule',
                 style: TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    online = !online;
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  height: 40,
-                  width: double.infinity,
-                  color: Colors.black26,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              fetching
+                  ? const CircularProgressIndicator()
+                  : Column(
                       children: [
-                        Text(
-                          online ? 'Online' : 'Physical',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const Icon(
-                          Icons.change_circle_rounded,
-                          color: Color(0xFF1E1E1E),
-                        ),
-                      ]),
-                ),
-              ),
+                        ...timeSlots(),
+                        timeTablels.isEmpty
+                            ? const Center(child: Text('No Schedule Data'))
+                            : const SizedBox(),
+                      ],
+                    ),
               const SizedBox(height: 20),
               const Text(
                 'Time',
                 style: TextStyle(fontSize: 13),
               ),
+              const SizedBox(height: 5),
+              picked
+                  ? Text(
+                      'From : ${timeFormat(timeStart)} --> ${timeFormat(timeEnd)}',
+                      style: const TextStyle(
+                        fontSize: 17,
+                        color: Colors.greenAccent,
+                      ),
+                    )
+                  : const Center(child: Text('Time not pickekd')),
               const SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  timePick();
-                },
-                child: Row(
-                  children: [
-                    const Icon(Icons.timer_outlined),
-                    Text(
-                      timeFormat(time),
-                      style: const TextStyle(fontSize: 17),
-                    ),
-                  ],
-                ),
+              const Text(
+                'Tests',
+                style: TextStyle(fontSize: 13),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 10),
+              userTests.isNotEmpty
+                  ? SizedBox(
+                      height: 80,
+                      width: double.infinity,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(2),
+                        itemBuilder: testItemBuilder,
+                        itemCount: userTests.length,
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    )
+                  : const Center(child: Text('No Tests \n Available')),
+              const SizedBox(height: 15),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(width: 20),
-                  sending
-                      ? const CircularProgressIndicator(
-                          color: Colors.greenAccent,
-                        )
+                  fetchingTests
+                      ? const CircularProgressIndicator()
                       : GestureDetector(
                           onTap: () {
-                            _showMyDialog();
+                            getTests();
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10),
@@ -131,20 +142,126 @@ class _SchedulerState extends State<Scheduler> {
                             ),
                             child: const Center(
                               child: Text(
-                                'Request',
+                                'My test',
                                 style: TextStyle(fontSize: 16),
                               ),
                             ),
                           ),
                         ),
-                  const SizedBox(width: 20),
                 ],
               ),
+              const SizedBox(height: 40),
+              picked
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(width: 20),
+                        sending
+                            ? const CircularProgressIndicator(
+                                color: Colors.greenAccent,
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  _showMyDialog();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color(0x22000000),
+                                        spreadRadius: 2,
+                                        blurRadius: 1,
+                                        offset: Offset(2, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      'Request',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                        const SizedBox(width: 20),
+                      ],
+                    )
+                  : const SizedBox(),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> timeSlots() {
+    List<Widget> wdgts = [];
+    if (timeTablels.isEmpty) {
+      return wdgts;
+    }
+    for (TimeTable tt in timeTablels) {
+      final tc = TimeCard(
+        timeTable: tt,
+        callBack: (TimeOfDay s, TimeOfDay f) {
+          getTests();
+          setState(() {
+            timeStart = s;
+            timeEnd = f;
+            picked = true;
+            pickedId = tt.id!;
+          });
+        },
+      );
+      wdgts.add(tc);
+    }
+    return wdgts;
+  }
+
+  getTimeTables() async {
+    setState(() {
+      fetching = true;
+    });
+    // await Future.delayed(const Duration(seconds: 3));
+    final FireStoreController fireCon = Get.find();
+    final results =
+        await fireCon.getTimeTable(widget.specialist.id, widget.date);
+    setState(() {
+      timeTablels = results!;
+      fetching = false;
+    });
+  }
+
+  getTests() async {
+    setState(() {
+      fetchingTests = true;
+    });
+    // await Future.delayed(const Duration(seconds: 3));
+    final FireStoreController fireCon = Get.find();
+    final UserController userCon = Get.find();
+    if (userCon.user() == null) {
+      setState(() {
+        fetchingTests = false;
+      });
+      Get.snackbar(
+        'Notice',
+        'Log in or sign up first',
+        backgroundColor: Colors.blueAccent,
+      );
+      return;
+    }
+    final results = await fireCon.getTestsOf(userCon.user()!.uid);
+    setState(() {
+      userTests = results!;
+      fetchingTests = false;
+    });
+  }
+
+  String testName(int index) {
+    return tests[index];
   }
 
   String formatDate(DateTime dt) {
@@ -219,7 +336,7 @@ class _SchedulerState extends State<Scheduler> {
     );
     if (tm != null) {
       setState(() {
-        time = tm;
+        // time = tm;
       });
     }
   }
@@ -240,7 +357,9 @@ class _SchedulerState extends State<Scheduler> {
               children: <Widget>[
                 Text('Date: ${formatDate(widget.date)}'),
                 const SizedBox(height: 5),
-                Text('Time: ${timeFormat(time)}'),
+                Text('From: ${timeFormat(timeStart)}'),
+                const SizedBox(height: 5),
+                Text('To: ${timeFormat(timeEnd)}'),
               ],
             ),
           ),
@@ -308,22 +427,38 @@ class _SchedulerState extends State<Scheduler> {
       setState(() {
         sending = true;
       });
-      Request req = Request(
+      // fro every item in selecteTest extract id
+      List<String> tmp = [];
+      if (selectedTests.isNotEmpty) {
+        for (int idx in selectedTests) {
+          tmp.add(userTests[idx].id!);
+        }
+      }
+      Schedule sch = Schedule(
         specialist: widget.specialist.id,
+        patient: id,
         online: online,
-        time: DateTime(
+        from: DateTime(
           widget.date.year,
           widget.date.month,
           widget.date.day,
-          time.hour,
-          time.minute,
+          timeStart.hour,
+          timeStart.minute,
         ),
-        patient: id,
+        to: DateTime(
+          widget.date.year,
+          widget.date.month,
+          widget.date.day,
+          timeEnd.hour,
+          timeEnd.minute,
+        ),
+        tests: tmp,
       );
       final FireStoreController fireCon = Get.find();
-      final resp = await fireCon.createRequest(req);
+      final resp = await fireCon.createSchedule(sch);
       if (resp) {
-        // success response
+        // update specialist db record 2 occupied
+        await fireCon.updateTimeTable(pickedId);
         Get.snackbar(
           'Success',
           'Request send',
@@ -344,5 +479,49 @@ class _SchedulerState extends State<Scheduler> {
         });
       }
     }
+  }
+
+  Widget? testItemBuilder(BuildContext context, int index) {
+    return GestureDetector(
+      onTap: () {
+        if (selectedTests.contains(index)) {
+          selectedTests.remove(index);
+          setState(() {});
+          return;
+        }
+        selectedTests.add(index);
+        setState(() {});
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 2),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x22000000),
+              spreadRadius: 2,
+              blurRadius: 1,
+              offset: Offset(2, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.check_circle_outline_outlined,
+              color: selectedTests.contains(index)
+                  ? Colors.greenAccent
+                  : Colors.grey,
+            ),
+            Text(testName(userTests[index].type)),
+            Text(formatDate(userTests[index].date)),
+          ],
+        ),
+      ),
+    );
   }
 }

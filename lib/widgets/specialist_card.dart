@@ -85,26 +85,6 @@ class _SpecialistCardState extends State<SpecialistCard> {
               ],
             ),
             const SizedBox(height: 5),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: const [
-                Icon(
-                  Icons.star_outlined,
-                  size: 18,
-                  color: Colors.greenAccent,
-                ),
-                SizedBox(width: 5),
-                Text(
-                  '0.0',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.greenAccent,
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),

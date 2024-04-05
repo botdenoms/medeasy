@@ -1,38 +1,26 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/widgets.dart';
-import '../model/models.dart';
-
 import 'package:get/get.dart';
-import 'package:medeasy/controllers/controllers.dart';
 
-class Account extends StatefulWidget {
-  const Account({super.key});
+import '../controllers/controllers.dart';
+import '../model/models.dart';
+import '../widgets/widgets.dart';
+
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<Account> createState() => _AccountState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _AccountState extends State<Account> {
+class _ProfileScreenState extends State<ProfileScreen> {
   int tab = 0;
-  bool loading = true;
   late User user;
+  bool loading = true;
 
   @override
   void initState() {
     userRecords();
     super.initState();
-  }
-
-  void userRecords() async {
-    final UserController userCon = Get.find();
-    final FireStoreController fireCon = Get.find();
-    String? id = userCon.user()!.uid;
-    User? usr = await fireCon.userData(id);
-    setState(() {
-      user = usr!;
-      loading = false;
-    });
   }
 
   @override
@@ -71,19 +59,16 @@ class _AccountState extends State<Account> {
               child: CircularProgressIndicator(color: Colors.black38),
             )
           : tab == 0
-              ? MyScehdule(
-                  user: user,
-                )
+              ? Alerts(user: user)
               : tab == 1
-                  ? MyNotifications(
-                      user: user,
-                    )
-                  : MySpecialist(
-                      user: user,
-                    ),
+                  ? Tests(user: user)
+                  : tab == 2
+                      ? MySpecialist(user: user)
+                      : Facilities(user: user),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: tab,
         selectedItemColor: Colors.greenAccent,
+        unselectedItemColor: Colors.black54,
         onTap: (index) {
           setState(() {
             tab = index;
@@ -91,19 +76,34 @@ class _AccountState extends State<Account> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.access_time),
-            label: 'Schedule',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
-            label: 'Notification',
+            label: 'Alerts',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.health_and_safety_rounded),
+            icon: Icon(Icons.checklist_rtl_rounded),
+            label: 'Tests',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_3_sharp),
             label: 'Specialist',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_hospital_rounded),
+            label: 'Facility',
           ),
         ],
       ),
     );
+  }
+
+  void userRecords() async {
+    final UserController userCon = Get.find();
+    final FireStoreController fireCon = Get.find();
+    String? id = userCon.user()!.uid;
+    User? usr = await fireCon.userData(id);
+    setState(() {
+      user = usr!;
+      loading = false;
+    });
   }
 }

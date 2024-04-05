@@ -55,11 +55,6 @@ class _MapViewState extends State<MapView> {
               mapType: MapType.normal,
               onMapCreated: (controller) {
                 _controller = controller;
-                Get.snackbar(
-                  'Success',
-                  'controller available',
-                  backgroundColor: Colors.blueAccent,
-                );
               },
               markers: mrks,
               onTap: (argument) {

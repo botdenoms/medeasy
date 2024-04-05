@@ -2,14 +2,18 @@ class Schedule {
   final String specialist;
   final String patient;
   final bool online;
-  final DateTime time;
+  final DateTime from;
+  final DateTime to;
   String? id;
+  List<String>? tests;
 
   Schedule({
     required this.specialist,
     required this.patient,
     required this.online,
-    required this.time,
+    required this.from,
+    required this.to,
+    this.tests,
     this.id,
   });
 
@@ -18,7 +22,9 @@ class Schedule {
       'specialist': specialist,
       'patient': patient,
       'online': online,
-      'at': time,
+      'from': from,
+      'to': to,
+      'tests': tests,
     };
   }
 }

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-// import 'package:medeasy/widgets/widgets.dart';
 
 import '../model/models.dart';
 import '../screens/screens.dart';
 
-class AccountOpts extends StatefulWidget {
-  const AccountOpts({super.key, required this.user});
+class FacilityOpts extends StatefulWidget {
+  const FacilityOpts({super.key, required this.user});
   final User user;
 
   @override
-  State<AccountOpts> createState() => _AccountOptsState();
+  State<FacilityOpts> createState() => _FacilityOptsState();
 }
 
-class _AccountOptsState extends State<AccountOpts> {
+class _FacilityOptsState extends State<FacilityOpts> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -21,9 +20,9 @@ class _AccountOptsState extends State<AccountOpts> {
       // mainAxisSize: MainAxisSize.max,
       children: [
         Text(
-          widget.user.specialist == true
-              ? 'Remove your specialist'
-              : 'Create a specialist',
+          widget.user.facility == true
+              ? 'Remove your facility'
+              : 'Create a facility',
           style: const TextStyle(fontSize: 15),
         ),
         const Text(
@@ -56,7 +55,7 @@ class _AccountOptsState extends State<AccountOpts> {
                 ),
                 child: Center(
                   child: Text(
-                    widget.user.specialist == true ? 'UnRegister' : 'Register',
+                    widget.user.facility == true ? 'UnRegister' : 'Register',
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
@@ -68,16 +67,14 @@ class _AccountOptsState extends State<AccountOpts> {
     );
   }
 
-  getSpecialistData() {}
-
   actionHandler() async {
-    if (widget.user.specialist == true) {
+    if (widget.user.facility == true) {
       // Un registering action
       return;
     }
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (BuildContext context) => Registration(
+        builder: (BuildContext context) => RegistrationFacility(
           name: widget.user.name,
         ),
       ),

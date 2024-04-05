@@ -60,7 +60,7 @@ class _SpecialistViewState extends State<SpecialistView> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -108,9 +108,7 @@ class _SpecialistViewState extends State<SpecialistView> {
                 const Text('Calendar', style: TextStyle(fontSize: 14)),
                 const SizedBox(height: 5),
                 TableCalendar(
-                  firstDay: DateTime.now().subtract(
-                    const Duration(days: 1),
-                  ),
+                  firstDay: DateTime.now(),
                   lastDay: DateTime(2030),
                   focusedDay: focusedDate,
                   onDaySelected: (selectedDay, focusedDay) {
@@ -129,7 +127,7 @@ class _SpecialistViewState extends State<SpecialistView> {
                     focusedDate = focusedDay;
                   },
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 25),
               ],
             ),
           ),

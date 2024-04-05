@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:medeasy/model/models.dart';
 
 import '../controllers/controllers.dart';
+import '../screens/screens.dart';
 
 class ScheduleCard extends StatefulWidget {
   const ScheduleCard({super.key, required this.schedule, required this.id});
@@ -38,68 +39,107 @@ class _ScheduleCardState extends State<ScheduleCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.schedule.time
-                .toString()
-                .substring(0, widget.schedule.time.toString().length - 7),
+            formatDate(widget.schedule.from),
             style: const TextStyle(fontSize: 17),
           ),
           const SizedBox(height: 5),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                widget.schedule.online ? "Online" : " Physical",
-                style: const TextStyle(fontSize: 17),
-              ),
-              view
-                  ? Text(
-                      widget.id == widget.schedule.patient
-                          ? "${specialist!.name} \n ${specialist!.speciality}"
-                          : patient!.name,
-                      style: const TextStyle(fontSize: 17),
-                    )
-                  : TextButton(
-                      onPressed: () async {
-                        if (widget.id == widget.schedule.patient) {
-                          final usr =
-                              await getSpecialist(widget.schedule.specialist);
-                          setState(() {
-                            specialist = usr;
-                            view = true;
-                          });
-                        } else {
-                          final usr = await getPatient(widget.schedule.patient);
-                          setState(() {
-                            patient = usr;
-                            view = true;
-                          });
-                        }
-                      },
-                      child: Text(
-                        widget.id == widget.schedule.patient
-                            ? 'Specialist'
-                            : "Patient",
-                        style: const TextStyle(fontSize: 17),
-                      ),
-                    ),
-            ],
+          Text(
+            duration(widget.schedule.from, widget.schedule.to),
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              SizedBox(width: 5),
-              Icon(Icons.call, color: Colors.blueAccent, size: 24),
-              Icon(Icons.email_rounded, color: Colors.blueAccent, size: 24),
-              Icon(Icons.message_rounded, color: Colors.blueAccent, size: 24),
-              SizedBox(width: 5),
-            ],
+          Text(
+            'Tests Attached: ${widget.schedule.tests!.length}',
+            style: const TextStyle(fontSize: 17),
           ),
-          // added ratings when schedule is due
+          const SizedBox(height: 5),
+          widget.id == widget.schedule.patient
+              ? const SizedBox()
+              : TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => ScheduleViewDetails(
+                          schedule: widget.schedule,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "View",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
         ],
       ),
     );
+  }
+
+  String formatDate(DateTime dt) {
+    String day = '';
+    String month = '';
+    switch (dt.day) {
+      case 1:
+        day = '1st';
+        break;
+      case 2:
+        day = '2nd';
+        break;
+      case 3:
+        day = '3rd';
+        break;
+      default:
+        day = '${dt.day}th';
+    }
+    switch (dt.month) {
+      case 1:
+        month = 'January';
+        break;
+      case 2:
+        month = 'February';
+        break;
+      case 3:
+        month = 'March';
+        break;
+      case 4:
+        month = 'April';
+        break;
+      case 5:
+        month = 'May';
+        break;
+      case 6:
+        month = 'June';
+        break;
+      case 7:
+        month = 'July';
+        break;
+      case 8:
+        month = 'August';
+        break;
+      case 9:
+        month = 'September';
+        break;
+      case 10:
+        month = 'Octorber';
+        break;
+      case 11:
+        month = 'November';
+        break;
+      case 12:
+        month = 'December';
+        break;
+      default:
+        break;
+    }
+    return 'on: $day $month, ${dt.year}';
+  }
+
+  String duration(DateTime f, DateTime t) {
+    Duration df = t.difference(f);
+    if (df.inHours < 1) {
+      return '${df.inMinutes} mins';
+    }
+    return '${df.inHours} hrs';
   }
 
   Future<User?> getPatient(String id) async {
