@@ -60,12 +60,16 @@ class _TestFormState extends State<TestForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 30),
               const Text(
                 'Details',
                 style: TextStyle(fontSize: 16),
               ),
-              PatientInforForm(name: name, gender: gender, dob: dob),
+              PatientInforForm(
+                test: widget.test,
+                name: name,
+                gender: gender,
+                dob: dob,
+              ),
               const Divider(),
               widget.test.type == 5
                   ? BloodForm(
@@ -95,6 +99,7 @@ class _TestFormState extends State<TestForm> {
                         pickImg();
                       },
                       child: Container(
+                        margin: const EdgeInsets.only(left: 5),
                         padding: const EdgeInsets.symmetric(
                           vertical: 10.0,
                           horizontal: 20.0,
@@ -165,6 +170,18 @@ class _TestFormState extends State<TestForm> {
   }
 
   clearField() {
+    name.text == '';
+    gender.text == '';
+    dob.text == '';
+    hermoglobin.text == '';
+    wbc.text == '';
+    rbc.text == '';
+    platelets.text == '';
+    cholesterol.text == '';
+    triglycerides.text == '';
+    glucoseF.text == '';
+    glucoseP.text == '';
+    images.clear();
     setState(() {});
   }
 
@@ -188,12 +205,11 @@ class _TestFormState extends State<TestForm> {
         running = true;
       });
       final FireStoreController fireCon = Get.find();
-      User? usr = await fireCon.userData(widget.test.client);
       BloodTest blt = BloodTest(
         date: DateTime.now(),
-        name: usr!.name,
-        dob: DateTime.now(),
-        gender: int.tryParse(gender.text)!,
+        name: name.text,
+        dob: DateTime.parse(dob.text),
+        gender: gender.text == 'Male' ? 1 : 0,
         hermoglobin: double.parse(hermoglobin.text),
         wbc: double.parse(wbc.text),
         rbc: int.tryParse(rbc.text)!,
@@ -227,12 +243,11 @@ class _TestFormState extends State<TestForm> {
         imt.add(testUrl!);
       }
       final FireStoreController fireCon = Get.find();
-      User? usr = await fireCon.userData(widget.test.client);
       ImagingTest it = ImagingTest(
+        name: name.text,
         date: DateTime.now(),
-        name: usr!.name,
-        dob: DateTime.now(),
-        gender: int.tryParse(gender.text)!,
+        dob: DateTime.parse(dob.text),
+        gender: gender.text == 'Male' ? 1 : 0,
         images: imt,
       );
       String? ids = await fireCon.createImgTest(it);
@@ -249,6 +264,7 @@ class _TestFormState extends State<TestForm> {
         });
       }
     }
+    clearField();
   }
 
   pickImg() async {
