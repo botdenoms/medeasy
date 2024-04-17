@@ -882,6 +882,7 @@ class FireStoreController extends GetxController {
           to: DateTime.fromMillisecondsSinceEpoch(element['to'].seconds * 1000),
           tests: [...element['tests']],
           id: element.id,
+          signs: element.data().containsKey('signs') ? element['signs'] : "",
         );
         if (sch.patient == id || sch.specialist == id) {
           retList.add(sch);
@@ -910,6 +911,7 @@ class FireStoreController extends GetxController {
           to: DateTime.fromMillisecondsSinceEpoch(element['to'].seconds * 1000),
           tests: [...element['tests']],
           id: element.id,
+          signs: element.data().containsKey('signs') ? element['signs'] : "",
         );
         if (sch.patient == id || sch.specialist == id) {
           final dg = await getDiagnosisByScheduleId(sch.id!);

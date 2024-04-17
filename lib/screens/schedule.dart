@@ -32,6 +32,7 @@ class _SchedulerState extends State<Scheduler> {
   List<Test> userTests = [];
   List<int> selectedTests = [];
   String pickedId = '';
+  TextEditingController signs = TextEditingController();
 
   @override
   void initState() {
@@ -99,6 +100,20 @@ class _SchedulerState extends State<Scheduler> {
                     )
                   : const Center(child: Text('Time not pickekd')),
               const SizedBox(height: 10),
+              const Text(
+                'symptoms',
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 2),
+              TextField(
+                controller: signs,
+                maxLines: 8,
+                minLines: 3,
+                decoration: const InputDecoration(hintText: 'description ....'),
+                onSubmitted: (value) => FocusScope.of(context).unfocus(),
+                onTapOutside: (event) => FocusScope.of(context).unfocus(),
+              ),
+              const SizedBox(height: 5),
               const Text(
                 'Tests',
                 style: TextStyle(fontSize: 13),
@@ -453,6 +468,7 @@ class _SchedulerState extends State<Scheduler> {
           timeEnd.minute,
         ),
         tests: tmp,
+        signs: signs.text,
       );
       final FireStoreController fireCon = Get.find();
       final resp = await fireCon.createSchedule(sch);

@@ -31,33 +31,6 @@ class _AlertsState extends State<Alerts> {
       userId = usrId;
       loading = false;
     });
-    // List<Schedule> tmp = [];
-    // if (dgs!.isEmpty) {
-    //   setState(() {
-    //     diagnosis = dgs;
-    //     schedules = schdls!;
-    //     userId = usrId;
-    //     loading = false;
-    //   });
-    // } else {
-    //   List<String> ids = [];
-    //   for (Diagnosis el in dgs) {
-    //     ids.add(el.schedule);
-    //   }
-    //   for (Schedule sch in schdls!) {
-    //     if (ids.contains(sch.id!)) {
-    //       // filter out
-    //     } else {
-    //       tmp.add(sch);
-    //     }
-    //   }
-    //   setState(() {
-    //     diagnosis = dgs;
-    //     schedules = tmp;
-    //     userId = usrId;
-    //     loading = false;
-    //   });
-    // }
   }
 
   @override

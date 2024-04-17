@@ -49,6 +49,19 @@ class _ScheduleCardState extends State<ScheduleCard> {
           ),
           const SizedBox(height: 5),
           Text(
+            widget.schedule.signs! == ""
+                ? "symptoms description unavailable"
+                : "symptoms description available",
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: widget.schedule.signs! == ""
+                  ? Colors.redAccent
+                  : Colors.greenAccent,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
             'Tests Attached: ${widget.schedule.tests!.length}',
             style: const TextStyle(fontSize: 17),
           ),

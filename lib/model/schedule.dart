@@ -4,6 +4,7 @@ class Schedule {
   final bool online;
   final DateTime from;
   final DateTime to;
+  String? signs;
   String? id;
   List<String>? tests;
 
@@ -13,6 +14,7 @@ class Schedule {
     required this.online,
     required this.from,
     required this.to,
+    this.signs,
     this.tests,
     this.id,
   });
@@ -25,6 +27,7 @@ class Schedule {
       'from': from,
       'to': to,
       'tests': tests,
+      'signs': signs,
     };
   }
 }

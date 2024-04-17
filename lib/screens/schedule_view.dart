@@ -77,6 +77,21 @@ class _ScheduleViewDetailsState extends State<ScheduleViewDetails> {
                 ],
               ),
               const SizedBox(height: 10),
+              const Text(
+                'symptom',
+                style: TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                widget.schedule.signs! == ""
+                    ? "No symptoms description \n added"
+                    : widget.schedule.signs!,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 10),
               Text(
                 'Tests Attached: ${widget.schedule.tests!.length}',
                 style: const TextStyle(fontSize: 14),
