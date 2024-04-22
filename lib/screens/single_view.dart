@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SingleViewer extends StatefulWidget {
-  const SingleViewer({super.key});
+  const SingleViewer({super.key, required this.url});
+  final String url;
 
   @override
   State<SingleViewer> createState() => _SingleViewerState();
@@ -39,6 +40,12 @@ class _SingleViewerState extends State<SingleViewer> {
             ),
           ),
         ],
+      ),
+      body: Image.network(
+        widget.url,
+        fit: BoxFit.fill,
+        height: double.infinity,
+        width: double.infinity,
       ),
     );
   }

@@ -61,33 +61,9 @@ class _SpecialistViewState extends State<SpecialistView> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.specialist.name,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: const [
-                        Icon(
-                          Icons.star_outlined,
-                          size: 24,
-                          color: Colors.greenAccent,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          '0.0',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.greenAccent,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                Text(
+                  widget.specialist.name,
+                  style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 10),
                 Row(

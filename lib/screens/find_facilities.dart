@@ -49,14 +49,14 @@ class _FacilitiesState extends State<Facilities> {
               children: [
                 const SizedBox(height: 10.0),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: const [
                     CircleAvatar(
-                      // radius: 28,
                       child: Icon(
                         Icons.search_rounded,
                       ),
                     ),
+                    SizedBox(width: 5),
                     Text(
                       "Search ...",
                       style: TextStyle(fontSize: 16),

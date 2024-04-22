@@ -30,7 +30,9 @@ class _ImagingDataState extends State<ImagingData> {
         //  to single view screen
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (BuildContext context) => const SingleViewer(),
+            builder: (BuildContext context) => SingleViewer(
+              url: widget.imagingData.images[index],
+            ),
           ),
         );
       },

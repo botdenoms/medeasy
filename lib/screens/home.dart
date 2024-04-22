@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: double.infinity,
                     child: Center(
                       child: CircularProgressIndicator(
-                        color: Colors.black38,
+                        color: Colors.greenAccent,
                       ),
                     ),
                   ),
